@@ -88,6 +88,7 @@ export const radii = {
   s: "8px",
   m: "12px",
   l: "16px",
+  frame: "20px",
   xl: "32px",
   full: "9999px",
 } as const;

@@ -165,3 +165,8 @@
   background-color: var(--background);
   background-image: linear-gradient(var(--badge-bg), var(--badge-bg));
 }
+
+.table-root {
+  --surface: var(--ag-background-panel);
+  --surface-secondary: var(--ag-background-card);
+}

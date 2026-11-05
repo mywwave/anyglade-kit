@@ -288,6 +288,7 @@
 .ag-rounded-s { border-radius: var(--ag-radius-s); }
 .ag-rounded-m { border-radius: var(--ag-radius-m); }
 .ag-rounded-l { border-radius: var(--ag-radius-l); }
+.ag-rounded-frame { border-radius: var(--ag-radius-frame); }
 .ag-rounded-xl { border-radius: var(--ag-radius-xl); }
 .ag-rounded-full { border-radius: var(--ag-radius-full); }
 .ag-shadow-none { box-shadow: var(--ag-shadow-none); }
@@ -758,6 +759,7 @@
   .sm\:ag-rounded-s { border-radius: var(--ag-radius-s); }
   .sm\:ag-rounded-m { border-radius: var(--ag-radius-m); }
   .sm\:ag-rounded-l { border-radius: var(--ag-radius-l); }
+  .sm\:ag-rounded-frame { border-radius: var(--ag-radius-frame); }
   .sm\:ag-rounded-xl { border-radius: var(--ag-radius-xl); }
   .sm\:ag-rounded-full { border-radius: var(--ag-radius-full); }
   .sm\:ag-shadow-none { box-shadow: var(--ag-shadow-none); }
@@ -1183,6 +1185,7 @@
   .md\:ag-rounded-s { border-radius: var(--ag-radius-s); }
   .md\:ag-rounded-m { border-radius: var(--ag-radius-m); }
   .md\:ag-rounded-l { border-radius: var(--ag-radius-l); }
+  .md\:ag-rounded-frame { border-radius: var(--ag-radius-frame); }
   .md\:ag-rounded-xl { border-radius: var(--ag-radius-xl); }
   .md\:ag-rounded-full { border-radius: var(--ag-radius-full); }
   .md\:ag-shadow-none { box-shadow: var(--ag-shadow-none); }
@@ -1608,6 +1611,7 @@
   .lg\:ag-rounded-s { border-radius: var(--ag-radius-s); }
   .lg\:ag-rounded-m { border-radius: var(--ag-radius-m); }
   .lg\:ag-rounded-l { border-radius: var(--ag-radius-l); }
+  .lg\:ag-rounded-frame { border-radius: var(--ag-radius-frame); }
   .lg\:ag-rounded-xl { border-radius: var(--ag-radius-xl); }
   .lg\:ag-rounded-full { border-radius: var(--ag-radius-full); }
   .lg\:ag-shadow-none { box-shadow: var(--ag-shadow-none); }
@@ -2033,6 +2037,7 @@
   .xl\:ag-rounded-s { border-radius: var(--ag-radius-s); }
   .xl\:ag-rounded-m { border-radius: var(--ag-radius-m); }
   .xl\:ag-rounded-l { border-radius: var(--ag-radius-l); }
+  .xl\:ag-rounded-frame { border-radius: var(--ag-radius-frame); }
   .xl\:ag-rounded-xl { border-radius: var(--ag-radius-xl); }
   .xl\:ag-rounded-full { border-radius: var(--ag-radius-full); }
   .xl\:ag-shadow-none { box-shadow: var(--ag-shadow-none); }

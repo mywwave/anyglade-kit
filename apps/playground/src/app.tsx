@@ -1,9 +1,22 @@
 import { Box, Button, PageHeader, Text, Toast, useTheme } from "@anyglade/kit";
-import { categories } from "./demos.ts";
+import { useState } from "react";
+import { blockCategories, componentCategories } from "./demos.ts";
+
+const views = {
+  components: { label: "Компоненты", categories: componentCategories },
+  blocks: { label: "Блоки", categories: blockCategories },
+};
+
+type View = keyof typeof views;
+
+const viewNames = Object.keys(views) as View[];
 
 export function App() {
   const { resolvedTheme, setTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
+  const [view, setView] = useState<View>("blocks");
+  const { categories } = views[view];
+  const isBlocks = view === "blocks";
 
   return (
     <Box
@@ -14,7 +27,7 @@ export function App() {
     >
       <Box
         as="nav"
-        aria-label="Components"
+        aria-label="Разделы"
         display={{ base: "none", md: "flex" }}
         flexDirection="column"
         gap="xl"
@@ -24,6 +37,19 @@ export function App() {
         overflowY="auto"
       >
         <img src="/logo.svg" alt="" width={51} height={28} />
+        <Box flexDirection="column" gap="xs">
+          {viewNames.map((name) => (
+            <Button
+              key={name}
+              fullWidth
+              size="sm"
+              variant={name === view ? "secondary" : "ghost"}
+              onPress={() => setView(name)}
+            >
+              {views[name].label}
+            </Button>
+          ))}
+        </Box>
         {categories.map((category) => (
           <Box key={category.id} flexDirection="column">
             <Text variant="caption" color="subtle">
@@ -64,20 +90,24 @@ export function App() {
           flexDirection="column"
           gap="4xl"
           width="100%"
-          maxWidth={1024}
+          maxWidth={1120}
           height="fit-content"
           paddingVertical="2xl"
         >
           <PageHeader
             title="@anyglade/kit"
-            description="Components and tokens rendered from the package source."
+            description={
+              isBlocks
+                ? "Готовые секции из компонентов kit."
+                : "Компоненты и токены из исходников пакета."
+            }
             actions={
               <Button
                 size="sm"
                 variant="secondary"
                 onPress={() => setTheme(isDark ? "light" : "dark")}
               >
-                {isDark ? "Light theme" : "Dark theme"}
+                {isDark ? "Светлая тема" : "Тёмная тема"}
               </Button>
             }
           />
@@ -91,9 +121,24 @@ export function App() {
                   <Text as="h3" variant="title">
                     {name}
                   </Text>
-                  <Box display="block" minWidth={0} overflowX="auto" padding="xs">
-                    <Component />
-                  </Box>
+                  {isBlocks ? (
+                    <Box
+                      display="block"
+                      minWidth={0}
+                      overflow="hidden"
+                      backgroundColor="background-primary"
+                      borderRadius="l"
+                      borderWidth={1}
+                      borderStyle="solid"
+                      borderColor="border-primary"
+                    >
+                      <Component />
+                    </Box>
+                  ) : (
+                    <Box display="block" minWidth={0} overflowX="auto" padding="xs">
+                      <Component />
+                    </Box>
+                  )}
                 </Box>
               ))}
             </Box>
