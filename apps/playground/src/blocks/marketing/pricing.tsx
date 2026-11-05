@@ -1,90 +1,85 @@
-import { Box, Button, Frame, FrameTile, Separator, Text } from "@anyglade/kit";
-import { Check } from "@anyglade/kit/icons";
+import { Box, Button, Label, Slider, Text } from "@anyglade/kit";
+import { useState } from "react";
 import { formatRubles } from "../format.ts";
 
 const plans = [
-  {
-    name: "Старт",
-    note: "Для проверки идеи",
-    price: 0,
-    fee: "5% + 30 ₽",
-    features: ["Все функции продаж", "Поддержка по почте"],
-  },
-  {
-    name: "Рост",
-    note: "Для первых клиентов",
-    price: 1900,
-    fee: "3,8% + 20 ₽",
-    features: ["Ранний доступ к новому", "Приоритетная поддержка"],
-  },
-  {
-    name: "Масштаб",
-    note: "Для растущего бизнеса",
-    price: 9900,
-    fee: "3,4% + 15 ₽",
-    features: ["Ранний доступ к новому", "Выделенный чат", "Единый вход"],
-  },
+  { name: "Старт", monthly: 0, rate: 0.05 },
+  { name: "Рост", monthly: 1900, rate: 0.038 },
+  { name: "Масштаб", monthly: 9900, rate: 0.034 },
 ];
 
+const rublesFormat = { style: "currency", currency: "RUB", maximumFractionDigits: 0 } as const;
+
+const costOf = (plan: (typeof plans)[number], turnover: number) =>
+  plan.monthly + plan.rate * turnover;
+
 export function PricingBlock() {
+  const [turnover, setTurnover] = useState(600000);
+  const quotes = plans.map((plan) => ({ ...plan, cost: costOf(plan, turnover) }));
+  const best = quotes.reduce((lowest, quote) => (quote.cost < lowest.cost ? quote : lowest));
+
   return (
-    <Box as="section" flexDirection="column" gap="2xl" padding={{ base: "xl", md: "3xl" }}>
-      <Box flexDirection="column" gap="s" alignItems="center" textAlign="center">
-        <Text as="h2" variant="heading-m">
-          Цена растёт вместе с вами
-        </Text>
-        <Text variant="body" color="muted">
-          Начните бесплатно и платите, только когда появятся продажи
-        </Text>
-      </Box>
-      <Frame title="Тарифы" meta="Можно сменить в любой момент">
-        <Box
-          display="grid"
-          gridTemplateColumns={{ base: "minmax(0, 1fr)", md: "repeat(3, minmax(0, 1fr))" }}
-          gap="xs"
-        >
-          {plans.map((plan) => (
-            <FrameTile key={plan.name}>
-              <Box flexDirection="column" gap="2xs">
-                <Text as="h3" variant="heading-xxs">
-                  {plan.name}
-                </Text>
-                <Text color="muted">{plan.note}</Text>
-              </Box>
-              <Box alignItems="baseline" gap="xs">
-                <Text as="span" variant="heading-m" tabularNums>
-                  {plan.price === 0 ? "Бесплатно" : formatRubles(plan.price)}
-                </Text>
-                {plan.price === 0 ? null : (
-                  <Text as="span" color="muted">
-                    в месяц
-                  </Text>
-                )}
-              </Box>
-              <Box justifyContent="between" gap="s">
-                <Text as="span" color="muted">
-                  Комиссия
-                </Text>
-                <Text as="span" tabularNums>
-                  {plan.fee}
-                </Text>
-              </Box>
-              <Button fullWidth variant={plan.name === "Рост" ? "primary" : "secondary"}>
-                Выбрать
-              </Button>
-              <Separator />
-              <Box as="ul" flexDirection="column" gap="s">
-                {plan.features.map((feature) => (
-                  <Box as="li" key={feature} display="flex" alignItems="center" gap="s">
-                    <Check />
-                    <Text as="span">{feature}</Text>
-                  </Box>
-                ))}
-              </Box>
-            </FrameTile>
-          ))}
+    <Box
+      as="section"
+      display="grid"
+      gridTemplateColumns={{ base: "minmax(0, 1fr)", md: "minmax(0, 2fr) minmax(0, 3fr)" }}
+      gap="3xl"
+      padding={{ base: "xl", md: "3xl" }}
+    >
+      <Box flexDirection="column" gap="2xl">
+        <Box display="block">
+          <Text as="h2" variant="heading-m">
+            Цена растёт вместе с вами.
+          </Text>
+          <Text as="p" variant="heading-m" color="muted">
+            Укажите оборот.
+          </Text>
         </Box>
-      </Frame>
+        <Slider
+          aria-label="Оборот в месяц"
+          className="w-full"
+          formatOptions={rublesFormat}
+          maxValue={5000000}
+          minValue={100000}
+          step={100000}
+          value={turnover}
+          onChange={(value) => setTurnover(value as number)}
+        >
+          <Label>Оборот в месяц</Label>
+          <Slider.Output />
+          <Slider.Track>
+            <Slider.Fill />
+            <Slider.Thumb />
+          </Slider.Track>
+        </Slider>
+      </Box>
+      <Box flexDirection="column" gap="2xl">
+        <Box flexDirection="column" gap="xs">
+          <Text color="muted">Вам подойдёт тариф «{best.name}»</Text>
+          <Text as="p" variant="heading-xl" tabularNums wrap="nowrap">
+            {formatRubles(best.cost)}
+          </Text>
+          <Text color="muted">в месяц вместе с комиссией</Text>
+        </Box>
+        <Box as="ul" flexDirection="column" gap="m">
+          {quotes.map((quote) => {
+            const isBest = quote.name === best.name;
+            return (
+              <Box as="li" key={quote.name} display="flex" justifyContent="between" gap="l">
+                <Text as="span" color={isBest ? "default" : "muted"}>
+                  {quote.name}, комиссия {(quote.rate * 100).toLocaleString("ru-RU")}%
+                </Text>
+                <Text as="span" tabularNums color={isBest ? "default" : "muted"}>
+                  {formatRubles(quote.cost)}
+                </Text>
+              </Box>
+            );
+          })}
+        </Box>
+        <Box display="block">
+          <Button size="lg">Выбрать «{best.name}»</Button>
+        </Box>
+      </Box>
     </Box>
   );
 }

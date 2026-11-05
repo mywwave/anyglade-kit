@@ -33,7 +33,7 @@
 
   --muted: var(--ag-text-secondary);
 
-  --default: light-dark(var(--ag-gray-100), var(--ag-ink-700));
+  --default: light-dark(var(--ag-gray-200), var(--ag-ink-700));
   --default-foreground: var(--ag-text-primary);
 
   --field-background: light-dark(var(--ag-white), var(--ag-ink-800));

@@ -170,3 +170,28 @@
   --surface: var(--ag-background-panel);
   --surface-secondary: var(--ag-background-card);
 }
+
+.input-otp {
+  width: fit-content;
+}
+
+.number-field__group {
+  grid-template-columns: auto auto auto;
+  width: fit-content;
+}
+
+.number-field__input {
+  width: var(--ag-space-3xl);
+  padding-inline: 0;
+  text-align: center;
+}
+
+.number-field__increment-button,
+.number-field__decrement-button {
+  border: none;
+}
+
+.tabs__tab {
+  gap: var(--ag-space-xs);
+  padding-inline: var(--ag-space-m);
+}

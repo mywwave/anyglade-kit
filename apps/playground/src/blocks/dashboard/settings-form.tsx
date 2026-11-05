@@ -4,16 +4,21 @@ import {
   Description,
   Input,
   Label,
-  ListBox,
-  Select,
-  Separator,
   Switch,
   Text,
   TextField,
+  toast,
+  tokens,
 } from "@anyglade/kit";
-import type { ReactNode } from "react";
+import { useState, type FormEvent, type ReactNode } from "react";
 
-const notifications = ["Новые заказы", "Неудачные платежи", "Еженедельный отчёт"];
+const notificationNames = ["Новые заказы", "Неудачные платежи", "Еженедельный отчёт"] as const;
+
+const savedSettings = {
+  company: "ООО «Вектор»",
+  email: "billing@example.com",
+  notifications: ["Неудачные платежи"] as string[],
+};
 
 interface SettingsSectionProps {
   title: string;
@@ -24,6 +29,7 @@ interface SettingsSectionProps {
 function SettingsSection({ title, description, children }: SettingsSectionProps) {
   return (
     <Box
+      as="section"
       display="grid"
       gridTemplateColumns={{ base: "minmax(0, 1fr)", md: "minmax(0, 1fr) minmax(0, 2fr)" }}
       gap="xl"
@@ -42,48 +48,67 @@ function SettingsSection({ title, description, children }: SettingsSectionProps)
 }
 
 export function SettingsFormBlock() {
+  const [saved, setSaved] = useState(savedSettings);
+  const [draft, setDraft] = useState(savedSettings);
+  const isDirty = JSON.stringify(saved) !== JSON.stringify(draft);
+
+  function toggle(name: string, isEnabled: boolean) {
+    setDraft((value) => ({
+      ...value,
+      notifications: isEnabled
+        ? [...value.notifications, name]
+        : value.notifications.filter((item) => item !== name),
+    }));
+  }
+
+  function submit(event: FormEvent) {
+    event.preventDefault();
+    setSaved(draft);
+    toast("Настройки сохранены");
+  }
+
   return (
     <Box
       as="form"
       flexDirection="column"
-      gap="2xl"
+      gap="3xl"
+      width="100%"
+      maxWidth={tokens.widths.content}
+      marginHorizontal="auto"
       padding={{ base: "l", md: "2xl" }}
-      onSubmit={(event) => event.preventDefault()}
+      onSubmit={submit}
     >
       <SettingsSection title="Организация" description="Эти данные попадут в счета.">
-        <TextField className="w-full" defaultValue="ООО «Вектор»" name="company">
+        <TextField
+          className="w-full"
+          isRequired
+          name="company"
+          value={draft.company}
+          onChange={(company) => setDraft((value) => ({ ...value, company }))}
+        >
           <Label>Название</Label>
           <Input />
         </TextField>
-        <TextField className="w-full" defaultValue="billing@example.com" name="email" type="email">
+        <TextField
+          className="w-full"
+          isRequired
+          name="email"
+          type="email"
+          value={draft.email}
+          onChange={(email) => setDraft((value) => ({ ...value, email }))}
+        >
           <Label>Почта для счетов</Label>
           <Input />
-          <Description>На этот адрес придут закрывающие документы.</Description>
+          <Description>Сюда придут закрывающие документы.</Description>
         </TextField>
-        <Select className="w-full" defaultSelectedKey="rub" placeholder="Выберите валюту">
-          <Label>Валюта</Label>
-          <Select.Trigger>
-            <Select.Value />
-            <Select.Indicator />
-          </Select.Trigger>
-          <Select.Popover>
-            <ListBox>
-              <ListBox.Item id="rub" textValue="Рубль">
-                Рубль
-                <ListBox.ItemIndicator />
-              </ListBox.Item>
-              <ListBox.Item id="usd" textValue="Доллар">
-                Доллар
-                <ListBox.ItemIndicator />
-              </ListBox.Item>
-            </ListBox>
-          </Select.Popover>
-        </Select>
       </SettingsSection>
-      <Separator />
       <SettingsSection title="Уведомления" description="Письма о важных событиях.">
-        {notifications.map((name) => (
-          <Switch key={name} defaultSelected>
+        {notificationNames.map((name) => (
+          <Switch
+            key={name}
+            isSelected={draft.notifications.includes(name)}
+            onChange={(isEnabled) => toggle(name, isEnabled)}
+          >
             <Switch.Content>
               <Switch.Control>
                 <Switch.Thumb />
@@ -93,12 +118,16 @@ export function SettingsFormBlock() {
           </Switch>
         ))}
       </SettingsSection>
-      <Separator />
-      <Box justifyContent="end" gap="s">
-        <Button size="sm" variant="ghost">
+      <Box alignItems="center" justifyContent="end" gap="m">
+        {isDirty ? (
+          <Text aria-live="polite" color="muted">
+            Есть несохранённые изменения
+          </Text>
+        ) : null}
+        <Button isDisabled={!isDirty} size="sm" variant="ghost" onPress={() => setDraft(saved)}>
           Отменить
         </Button>
-        <Button size="sm" type="submit">
+        <Button isDisabled={!isDirty} size="sm" type="submit">
           Сохранить
         </Button>
       </Box>

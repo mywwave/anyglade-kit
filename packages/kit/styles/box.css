@@ -277,6 +277,7 @@
 .ag-text-text-secondary { color: var(--ag-text-secondary); }
 .ag-text-text-tertiary { color: var(--ag-text-tertiary); }
 .ag-text-text-disabled { color: var(--ag-text-disabled); }
+.ag-text-text-inverse { color: var(--ag-text-inverse); }
 .ag-text-text-accent { color: var(--ag-text-accent); }
 .ag-text-text-success { color: var(--ag-text-success); }
 .ag-text-text-danger { color: var(--ag-text-danger); }
@@ -446,6 +447,7 @@
 .ag-tone-muted { color: var(--ag-text-secondary); }
 .ag-tone-subtle { color: var(--ag-text-tertiary); }
 .ag-tone-disabled { color: var(--ag-text-disabled); }
+.ag-tone-inverse { color: var(--ag-text-inverse); }
 .ag-tone-accent { color: var(--ag-text-accent); }
 .ag-tone-success { color: var(--ag-text-success); }
 .ag-tone-warning { color: var(--ag-text-warning); }
@@ -748,6 +750,7 @@
   .sm\:ag-text-text-secondary { color: var(--ag-text-secondary); }
   .sm\:ag-text-text-tertiary { color: var(--ag-text-tertiary); }
   .sm\:ag-text-text-disabled { color: var(--ag-text-disabled); }
+  .sm\:ag-text-text-inverse { color: var(--ag-text-inverse); }
   .sm\:ag-text-text-accent { color: var(--ag-text-accent); }
   .sm\:ag-text-text-success { color: var(--ag-text-success); }
   .sm\:ag-text-text-danger { color: var(--ag-text-danger); }
@@ -1174,6 +1177,7 @@
   .md\:ag-text-text-secondary { color: var(--ag-text-secondary); }
   .md\:ag-text-text-tertiary { color: var(--ag-text-tertiary); }
   .md\:ag-text-text-disabled { color: var(--ag-text-disabled); }
+  .md\:ag-text-text-inverse { color: var(--ag-text-inverse); }
   .md\:ag-text-text-accent { color: var(--ag-text-accent); }
   .md\:ag-text-text-success { color: var(--ag-text-success); }
   .md\:ag-text-text-danger { color: var(--ag-text-danger); }
@@ -1600,6 +1604,7 @@
   .lg\:ag-text-text-secondary { color: var(--ag-text-secondary); }
   .lg\:ag-text-text-tertiary { color: var(--ag-text-tertiary); }
   .lg\:ag-text-text-disabled { color: var(--ag-text-disabled); }
+  .lg\:ag-text-text-inverse { color: var(--ag-text-inverse); }
   .lg\:ag-text-text-accent { color: var(--ag-text-accent); }
   .lg\:ag-text-text-success { color: var(--ag-text-success); }
   .lg\:ag-text-text-danger { color: var(--ag-text-danger); }
@@ -2026,6 +2031,7 @@
   .xl\:ag-text-text-secondary { color: var(--ag-text-secondary); }
   .xl\:ag-text-text-tertiary { color: var(--ag-text-tertiary); }
   .xl\:ag-text-text-disabled { color: var(--ag-text-disabled); }
+  .xl\:ag-text-text-inverse { color: var(--ag-text-inverse); }
   .xl\:ag-text-text-accent { color: var(--ag-text-accent); }
   .xl\:ag-text-text-success { color: var(--ag-text-success); }
   .xl\:ag-text-text-danger { color: var(--ag-text-danger); }
@@ -2188,6 +2194,7 @@
   .hover\:ag-text-text-secondary:hover { color: var(--ag-text-secondary); }
   .hover\:ag-text-text-tertiary:hover { color: var(--ag-text-tertiary); }
   .hover\:ag-text-text-disabled:hover { color: var(--ag-text-disabled); }
+  .hover\:ag-text-text-inverse:hover { color: var(--ag-text-inverse); }
   .hover\:ag-text-text-accent:hover { color: var(--ag-text-accent); }
   .hover\:ag-text-text-success:hover { color: var(--ag-text-success); }
   .hover\:ag-text-text-danger:hover { color: var(--ag-text-danger); }
@@ -2217,6 +2224,7 @@
 .focus\:ag-text-text-secondary:focus { color: var(--ag-text-secondary); }
 .focus\:ag-text-text-tertiary:focus { color: var(--ag-text-tertiary); }
 .focus\:ag-text-text-disabled:focus { color: var(--ag-text-disabled); }
+.focus\:ag-text-text-inverse:focus { color: var(--ag-text-inverse); }
 .focus\:ag-text-text-accent:focus { color: var(--ag-text-accent); }
 .focus\:ag-text-text-success:focus { color: var(--ag-text-success); }
 .focus\:ag-text-text-danger:focus { color: var(--ag-text-danger); }
@@ -2245,6 +2253,7 @@
 .focusVisible\:ag-text-text-secondary:focus-visible { color: var(--ag-text-secondary); }
 .focusVisible\:ag-text-text-tertiary:focus-visible { color: var(--ag-text-tertiary); }
 .focusVisible\:ag-text-text-disabled:focus-visible { color: var(--ag-text-disabled); }
+.focusVisible\:ag-text-text-inverse:focus-visible { color: var(--ag-text-inverse); }
 .focusVisible\:ag-text-text-accent:focus-visible { color: var(--ag-text-accent); }
 .focusVisible\:ag-text-text-success:focus-visible { color: var(--ag-text-success); }
 .focusVisible\:ag-text-text-danger:focus-visible { color: var(--ag-text-danger); }
@@ -2273,6 +2282,7 @@
 .focusWithin\:ag-text-text-secondary:focus-within { color: var(--ag-text-secondary); }
 .focusWithin\:ag-text-text-tertiary:focus-within { color: var(--ag-text-tertiary); }
 .focusWithin\:ag-text-text-disabled:focus-within { color: var(--ag-text-disabled); }
+.focusWithin\:ag-text-text-inverse:focus-within { color: var(--ag-text-inverse); }
 .focusWithin\:ag-text-text-accent:focus-within { color: var(--ag-text-accent); }
 .focusWithin\:ag-text-text-success:focus-within { color: var(--ag-text-success); }
 .focusWithin\:ag-text-text-danger:focus-within { color: var(--ag-text-danger); }
@@ -2301,6 +2311,7 @@
 .active\:ag-text-text-secondary:active { color: var(--ag-text-secondary); }
 .active\:ag-text-text-tertiary:active { color: var(--ag-text-tertiary); }
 .active\:ag-text-text-disabled:active { color: var(--ag-text-disabled); }
+.active\:ag-text-text-inverse:active { color: var(--ag-text-inverse); }
 .active\:ag-text-text-accent:active { color: var(--ag-text-accent); }
 .active\:ag-text-text-success:active { color: var(--ag-text-success); }
 .active\:ag-text-text-danger:active { color: var(--ag-text-danger); }

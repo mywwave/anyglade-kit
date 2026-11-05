@@ -59,6 +59,7 @@ export const colors = {
   "text-secondary": ["gray-500", "ink-400"],
   "text-tertiary": ["gray-400", "ink-500"],
   "text-disabled": ["gray-300", "ink-600"],
+  "text-inverse": ["white", "black"],
   "text-accent": ["blue-600", "blue-400"],
   "text-success": ["emerald-500", "emerald-500"],
   "text-danger": ["red-500", "red-500"],
@@ -147,6 +148,13 @@ export const fontWeights = {
   semibold: "600",
 } as const;
 
+/** Reading and input widths, so content never stretches to fill its container. */
+export const widths = {
+  form: 400,
+  content: 720,
+  wide: 880,
+} as const;
+
 export const breakpoints = {
   sm: "40rem",
   md: "48rem",
@@ -207,6 +215,7 @@ export const textColors = {
   muted: "text-secondary",
   subtle: "text-tertiary",
   disabled: "text-disabled",
+  inverse: "text-inverse",
   accent: "text-accent",
   success: "text-success",
   warning: "text-warning",

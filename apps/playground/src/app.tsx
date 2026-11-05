@@ -1,20 +1,28 @@
 import { Box, Button, PageHeader, Text, Toast, useTheme } from "@anyglade/kit";
 import { useState } from "react";
 import { blockCategories, componentCategories } from "./demos.ts";
+import { Showcase } from "./showcase.tsx";
 
 const views = {
+  showcase: { label: "Витрина", categories: [] },
   components: { label: "Компоненты", categories: componentCategories },
   blocks: { label: "Блоки", categories: blockCategories },
 };
 
 type View = keyof typeof views;
 
+const descriptions: Record<View, string> = {
+  showcase: "Компоненты kit в работе.",
+  components: "Компоненты и токены из исходников пакета.",
+  blocks: "Готовые секции из компонентов kit.",
+};
+
 const viewNames = Object.keys(views) as View[];
 
 export function App() {
   const { resolvedTheme, setTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
-  const [view, setView] = useState<View>("blocks");
+  const [view, setView] = useState<View>("showcase");
   const { categories } = views[view];
   const isBlocks = view === "blocks";
 
@@ -36,7 +44,9 @@ export function App() {
         padding="m"
         overflowY="auto"
       >
-        <img src="/logo.svg" alt="" width={51} height={28} />
+        <Box justifyContent="center">
+          <img src="/logo.svg" alt="" width={51} height={28} />
+        </Box>
         <Box flexDirection="column" gap="xs">
           {viewNames.map((name) => (
             <Button
@@ -96,11 +106,7 @@ export function App() {
         >
           <PageHeader
             title="@anyglade/kit"
-            description={
-              isBlocks
-                ? "Готовые секции из компонентов kit."
-                : "Компоненты и токены из исходников пакета."
-            }
+            description={descriptions[view]}
             actions={
               <Button
                 size="sm"
@@ -111,6 +117,7 @@ export function App() {
               </Button>
             }
           />
+          {view === "showcase" ? <Showcase /> : null}
           {categories.map((category) => (
             <Box as="section" key={category.id} flexDirection="column" gap="3xl">
               <Text as="h2" variant="heading-xs">

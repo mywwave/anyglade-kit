@@ -17,10 +17,8 @@ export function EmptyPanel({ icon, title, description, actions }: EmptyPanelProp
       gap="m"
       padding="3xl"
       textAlign="center"
+      backgroundColor="background-secondary"
       borderRadius="m"
-      borderWidth={1}
-      borderStyle="solid"
-      borderColor="border-primary"
     >
       {icon ? <Box color="text-secondary">{icon}</Box> : null}
       <Box flexDirection="column" gap="xs">

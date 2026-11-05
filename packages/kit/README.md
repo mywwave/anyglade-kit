@@ -62,7 +62,7 @@ export function Card() {
 }
 ```
 
-`Box` по умолчанию `display: flex`, кроме `span`, `label`, `li` и `a`. Элемент меняется через `as`. Значения токенов доступны в JavaScript через `tokens`.
+`Box` по умолчанию `display: flex`, кроме `span`, `label`, `li` и `a`. Элемент меняется через `as`. Значения токенов доступны в JavaScript через `tokens`. Ширину содержимого задают `tokens.widths`: `form`, `content`, `wide`.
 
 ## Паттерны
 

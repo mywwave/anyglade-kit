@@ -18,9 +18,6 @@ export function Frame({ title, meta, children }: FrameProps) {
       minWidth={0}
       backgroundColor="background-canvas"
       borderRadius="frame"
-      borderWidth={1}
-      borderStyle="solid"
-      borderColor="border-primary"
     >
       {title || meta ? (
         <Box

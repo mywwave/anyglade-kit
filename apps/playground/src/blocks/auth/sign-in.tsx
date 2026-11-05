@@ -1,57 +1,108 @@
-import { Box, Button, Input, Label, Link, Separator, Text, TextField } from "@anyglade/kit";
+import { Box, Button, Input, Text, tokens } from "@anyglade/kit";
+import { ArrowLeft } from "@anyglade/kit/icons";
+import { useState, type FormEvent } from "react";
 
 export function SignInBlock() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isPasswordStep, setIsPasswordStep] = useState(false);
+  const [isSignedIn, setIsSignedIn] = useState(false);
+
+  function submit(event: FormEvent) {
+    event.preventDefault();
+    if (isPasswordStep) {
+      setIsSignedIn(true);
+    } else {
+      setIsPasswordStep(true);
+    }
+  }
+
+  function restart() {
+    setPassword("");
+    setIsPasswordStep(false);
+    setIsSignedIn(false);
+  }
+
+  if (isSignedIn) {
+    return (
+      <Box
+        flexDirection="column"
+        alignItems="center"
+        gap="xl"
+        textAlign="center"
+        padding={{ base: "xl", md: "4xl" }}
+      >
+        <Text as="h2" variant="heading-m">
+          С возвращением
+        </Text>
+        <Button variant="secondary" onPress={restart}>
+          Выйти
+        </Button>
+      </Box>
+    );
+  }
+
   return (
     <Box
-      justifyContent="center"
+      as="form"
+      flexDirection="column"
+      gap="xl"
+      width="100%"
+      maxWidth={tokens.widths.form}
+      marginHorizontal="auto"
       paddingHorizontal="l"
-      paddingVertical="4xl"
-      backgroundColor="background-canvas"
+      paddingVertical={{ base: "2xl", md: "4xl" }}
+      onSubmit={submit}
     >
-      <Box
-        as="form"
-        flexDirection="column"
-        gap="xl"
-        width="100%"
-        maxWidth={380}
-        padding="xl"
-        backgroundColor="background-panel"
-        borderRadius="l"
-        borderWidth={1}
-        borderStyle="solid"
-        borderColor="border-secondary"
-        onSubmit={(event) => event.preventDefault()}
-      >
-        <Box flexDirection="column" gap="xs">
-          <Text as="h2" variant="heading-xs">
-            Вход
+      <Box display="block">
+        <Text as="h2" variant="heading-m">
+          {isPasswordStep ? "Теперь пароль" : "Какая у вас почта?"}
+        </Text>
+        {isPasswordStep ? (
+          <Text as="p" variant="heading-m" color="muted" truncate>
+            {email}
           </Text>
-          <Text color="muted">Рады видеть вас снова</Text>
-        </Box>
-        <Box flexDirection="column" gap="l">
-          <TextField className="w-full" isRequired name="email" type="email">
-            <Label>Почта</Label>
-            <Input placeholder="you@example.com" />
-          </TextField>
-          <TextField className="w-full" isRequired name="password" type="password">
-            <Label>Пароль</Label>
-            <Input />
-          </TextField>
-        </Box>
-        <Button fullWidth type="submit">
-          Войти
-        </Button>
-        <Separator />
-        <Button fullWidth variant="secondary">
-          Войти по ссылке на почту
-        </Button>
-        <Box justifyContent="center" gap="xs">
-          <Text as="span" color="muted">
-            Нет аккаунта?
-          </Text>
-          <Link href="#SignIn">Создать</Link>
-        </Box>
+        ) : null}
       </Box>
+      <Box flexDirection="column" gap="m">
+        {isPasswordStep ? (
+          <Input
+            key="password"
+            aria-label="Пароль"
+            autoComplete="current-password"
+            className="w-full"
+            required
+            type="password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+          />
+        ) : (
+          <Input
+            key="email"
+            aria-label="Почта"
+            autoComplete="email"
+            className="w-full"
+            placeholder="you@example.com"
+            required
+            type="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+          />
+        )}
+        <Button fullWidth size="lg" type="submit">
+          {isPasswordStep ? "Войти" : "Продолжить"}
+        </Button>
+      </Box>
+      {isPasswordStep ? (
+        <Button fullWidth size="sm" variant="ghost" onPress={restart}>
+          <ArrowLeft />
+          Другая почта
+        </Button>
+      ) : (
+        <Button fullWidth size="sm" variant="ghost">
+          Создать аккаунт
+        </Button>
+      )}
     </Box>
   );
 }

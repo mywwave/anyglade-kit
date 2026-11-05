@@ -7,7 +7,7 @@ export function NumberFieldDemo() {
         <Label>Primary variant</Label>
         <NumberField.Group>
           <NumberField.DecrementButton />
-          <NumberField.Input className="w-30" />
+          <NumberField.Input />
           <NumberField.IncrementButton />
         </NumberField.Group>
       </NumberField>
@@ -15,7 +15,7 @@ export function NumberFieldDemo() {
         <Label>Secondary variant</Label>
         <NumberField.Group>
           <NumberField.DecrementButton />
-          <NumberField.Input className="w-30" />
+          <NumberField.Input />
           <NumberField.IncrementButton />
         </NumberField.Group>
       </NumberField>

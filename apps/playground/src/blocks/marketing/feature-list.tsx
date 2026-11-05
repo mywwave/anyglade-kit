@@ -1,41 +1,28 @@
-import { Box, Text } from "@anyglade/kit";
-
-const features = [
-  {
-    title: "Подключение за день",
-    text: "API и готовые страницы оплаты закрывают основной сценарий.",
-  },
-  { title: "Точный учёт", text: "События превращаются в начисления без ручной сверки." },
-  { title: "Понятные отчёты", text: "Выручка и маржа видны в реальном времени." },
-];
+import { Box, Button, Text } from "@anyglade/kit";
 
 export function FeatureListBlock() {
   return (
     <Box
       as="section"
-      display="grid"
-      gridTemplateColumns={{ base: "minmax(0, 1fr)", md: "minmax(0, 3fr) minmax(0, 2fr)" }}
-      gap="3xl"
-      padding={{ base: "xl", md: "3xl" }}
+      flexDirection="column"
+      alignItems="start"
+      gap="2xl"
+      paddingHorizontal={{ base: "xl", md: "3xl" }}
+      paddingVertical={{ base: "3xl", md: "4xl" }}
     >
-      <Box display="block">
-        <Text as="h2" variant="heading-m">
-          Запускайте продажи сегодня.
-        </Text>
-        <Text as="p" variant="heading-m" color="muted">
-          Оплата, подписки и закрывающие документы уже встроены.
+      <Box display="block" maxWidth={880}>
+        <Text as="h2" variant="heading-l" wrap="pretty">
+          Подключите оплату за день.{" "}
+          <Text as="span" variant="heading-l" color="muted">
+            Начисления сходятся без ручной сверки.
+          </Text>{" "}
+          Отчёт готов к понедельнику.{" "}
+          <Text as="span" variant="heading-l" color="muted">
+            Закрывающие документы уходят сами.
+          </Text>
         </Text>
       </Box>
-      <Box as="ul" flexDirection="column" gap="xl">
-        {features.map((feature) => (
-          <Box as="li" key={feature.title} display="flex" flexDirection="column" gap="xs">
-            <Text as="h3" variant="body" weight="medium">
-              {feature.title}
-            </Text>
-            <Text color="muted">{feature.text}</Text>
-          </Box>
-        ))}
-      </Box>
+      <Button variant="secondary">Как это устроено</Button>
     </Box>
   );
 }

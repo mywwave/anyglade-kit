@@ -1,43 +1,68 @@
-import { Box, Button, Description, Radio, RadioGroup, Text } from "@anyglade/kit";
+import { Box, Button, Radio, RadioGroup, Text, tokens } from "@anyglade/kit";
 import { useState } from "react";
 import { formatRubles } from "../format.ts";
 
+const MONTHS = 12;
+
 const plans = [
-  { id: "month", name: "Помесячно", note: "Без обязательств", price: 1900 },
-  { id: "year", name: "На год", note: "Экономия 20%", price: 1520 },
+  { id: "month", name: "Каждый месяц", monthly: 1900 },
+  { id: "year", name: "Сразу за год", monthly: 1520 },
 ];
+
+const [monthPlan] = plans;
 
 export function PlanPickerBlock() {
   const [selected, setSelected] = useState("year");
-  const price = plans.find((plan) => plan.id === selected)?.price ?? 0;
+  const plan = plans.find((item) => item.id === selected) ?? monthPlan;
+
+  if (!plan || !monthPlan) {
+    return null;
+  }
+
+  const saving = (monthPlan.monthly - plan.monthly) * MONTHS;
 
   return (
-    <Box justifyContent="center" padding={{ base: "l", md: "2xl" }}>
-      <Box flexDirection="column" gap="xl" width="100%" maxWidth={440}>
-        <Text as="h2" variant="heading-xs">
-          Выберите период
+    <Box
+      display="grid"
+      gridTemplateColumns={{ base: "minmax(0, 1fr)", md: "minmax(0, 1fr) minmax(0, 1fr)" }}
+      alignItems="end"
+      gap="2xl"
+      width="100%"
+      maxWidth={tokens.widths.content}
+      marginHorizontal="auto"
+      padding={{ base: "l", md: "2xl" }}
+    >
+      <Box flexDirection="column" gap="xs">
+        <Text color="muted">{saving > 0 ? "Экономия за год" : "Без обязательств"}</Text>
+        <Text as="p" variant="heading-l" tabularNums>
+          {saving > 0 ? formatRubles(saving) : formatRubles(plan.monthly)}
         </Text>
+      </Box>
+      <Box flexDirection="column" gap="l">
         <RadioGroup
           aria-label="Период оплаты"
+          className="w-full"
           name="period"
           value={selected}
           onChange={setSelected}
         >
-          {plans.map((plan) => (
-            <Radio key={plan.id} value={plan.id}>
-              <Radio.Content>
+          {plans.map((item) => (
+            <Radio key={item.id} className="w-full" value={item.id}>
+              <Radio.Content className="w-full">
                 <Radio.Control>
                   <Radio.Indicator />
                 </Radio.Control>
-                {plan.name}
+                <Box as="span" display="flex" flexGrow={1} justifyContent="between" gap="l">
+                  <Text as="span">{item.name}</Text>
+                  <Text as="span" tabularNums>
+                    {formatRubles(item.monthly)} в месяц
+                  </Text>
+                </Box>
               </Radio.Content>
-              <Description>
-                {plan.note}, {formatRubles(plan.price)} в месяц
-              </Description>
             </Radio>
           ))}
         </RadioGroup>
-        <Button fullWidth>Продолжить за {formatRubles(price)} в месяц</Button>
+        <Button fullWidth>Продолжить</Button>
       </Box>
     </Box>
   );

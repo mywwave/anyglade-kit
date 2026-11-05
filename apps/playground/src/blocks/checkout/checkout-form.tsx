@@ -1,56 +1,38 @@
-import {
-  Box,
-  Button,
-  Frame,
-  FrameTile,
-  Input,
-  Label,
-  Separator,
-  Text,
-  TextField,
-} from "@anyglade/kit";
+import { Box, Button, Input, Label, NumberField, Text, TextField, tokens } from "@anyglade/kit";
+import { useState, type FormEvent } from "react";
 import { formatRubles } from "../format.ts";
 
-const lines = [
-  { label: "Тариф «Рост», месяц", amount: 1900 },
-  { label: "Дополнительные места, 3", amount: 900 },
-];
-
-const total = lines.reduce((sum, line) => sum + line.amount, 0);
+const PLAN_PRICE = 1900;
+const SEAT_PRICE = 300;
 
 export function CheckoutFormBlock() {
+  const [seats, setSeats] = useState(3);
+  const [isPaid, setIsPaid] = useState(false);
+  const total = PLAN_PRICE + seats * SEAT_PRICE;
+
+  function submit(event: FormEvent) {
+    event.preventDefault();
+    setIsPaid(true);
+  }
+
   return (
     <Box
       display="grid"
-      gridTemplateColumns={{ base: "minmax(0, 1fr)", md: "minmax(0, 1fr) minmax(0, 1fr)" }}
-      alignItems="start"
-      gap="xl"
-      padding={{ base: "l", md: "2xl" }}
+      gridTemplateColumns={{ base: "minmax(0, 1fr)", md: "minmax(0, 3fr) minmax(0, 2fr)" }}
     >
-      <Frame title="Ваш заказ" meta="Отмена в любой момент">
-        <FrameTile>
-          {lines.map((line) => (
-            <Box key={line.label} justifyContent="between" gap="l">
-              <Text as="span" color="muted">
-                {line.label}
-              </Text>
-              <Text as="span" tabularNums>
-                {formatRubles(line.amount)}
-              </Text>
-            </Box>
-          ))}
-          <Separator />
-          <Box alignItems="baseline" justifyContent="between" gap="l">
-            <Text as="span" variant="title">
-              Итого
-            </Text>
-            <Text as="span" variant="heading-s" tabularNums>
-              {formatRubles(total)}
-            </Text>
-          </Box>
-        </FrameTile>
-      </Frame>
-      <Box as="form" flexDirection="column" gap="l" onSubmit={(event) => event.preventDefault()}>
+      <Box
+        as="form"
+        flexDirection="column"
+        gap="l"
+        width="100%"
+        maxWidth={tokens.widths.form + 64}
+        marginHorizontal="auto"
+        padding={{ base: "l", md: "2xl" }}
+        onSubmit={submit}
+      >
+        <Text as="h2" variant="heading-xs">
+          Оплата
+        </Text>
         <TextField className="w-full" isRequired name="email" type="email">
           <Label>Почта</Label>
           <Input placeholder="you@example.com" />
@@ -69,12 +51,42 @@ export function CheckoutFormBlock() {
             <Input inputMode="numeric" placeholder="000" />
           </TextField>
         </Box>
-        <Button fullWidth size="lg" type="submit">
-          Оплатить {formatRubles(total)}
+        <Button fullWidth isDisabled={isPaid} size="lg" type="submit">
+          {isPaid ? "Оплачено" : `Оплатить ${formatRubles(total)}`}
         </Button>
         <Text variant="caption" color="muted" align="center">
-          Демонстрационная форма, данные никуда не отправляются.
+          Демонстрация: данные никуда не отправляются.
         </Text>
+      </Box>
+      <Box
+        flexDirection="column"
+        justifyContent="between"
+        gap="2xl"
+        padding={{ base: "l", md: "2xl" }}
+        backgroundColor="background-canvas"
+      >
+        <Box flexDirection="column" gap="xl">
+          <Box flexDirection="column" gap="xs">
+            <Text as="h3" variant="body" weight="medium">
+              Тариф «Рост»
+            </Text>
+            <Text color="muted">{formatRubles(PLAN_PRICE)} в месяц</Text>
+          </Box>
+          <NumberField maxValue={50} minValue={0} value={seats} onChange={setSeats}>
+            <Label>Дополнительные места</Label>
+            <NumberField.Group>
+              <NumberField.DecrementButton />
+              <NumberField.Input />
+              <NumberField.IncrementButton />
+            </NumberField.Group>
+          </NumberField>
+        </Box>
+        <Box flexDirection="column" gap="xs">
+          <Text color="muted">Итого в месяц</Text>
+          <Text as="p" variant="heading-l" tabularNums>
+            {formatRubles(total)}
+          </Text>
+        </Box>
       </Box>
     </Box>
   );
