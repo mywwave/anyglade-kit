@@ -1,15 +1,5 @@
-import { Avatar, Box, Button, Drawer, Text, useTheme } from "@anyglade/kit";
-import {
-  ArrowLeft,
-  Bars,
-  ChartColumn,
-  CircleCheck,
-  House,
-  Moon,
-  Persons,
-  SquareListUl,
-  Sun,
-} from "@anyglade/kit/icons";
+import { Avatar, Box, Button, Drawer, Text } from "@anyglade/kit";
+import { Bars, ChartColumn, CircleCheck, House, Persons, SquareListUl } from "@anyglade/kit/icons";
 import { useState, type ComponentType, type ReactNode } from "react";
 import { Analytics } from "./analytics.tsx";
 import { Customers } from "./customers.tsx";
@@ -40,7 +30,6 @@ function Navigation({ active, counts, onSelect, footer }: NavigationProps) {
     <Box flexDirection="column" justifyContent="between" gap="xl" flexGrow={1} minHeight={0}>
       <Box flexDirection="column" gap="xl">
         <Box alignItems="center" gap="s" paddingHorizontal="s">
-          <img src="/logo.svg" alt="" width={36} height={20} />
           <Text as="span" variant="title">
             Касание
           </Text>
@@ -74,13 +63,7 @@ function Navigation({ active, counts, onSelect, footer }: NavigationProps) {
   );
 }
 
-interface CrmAppProps {
-  onExit: () => void;
-}
-
-export function CrmApp({ onExit }: CrmAppProps) {
-  const { resolvedTheme, setTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
+export function CrmApp() {
   const [screen, setScreen] = useState<Screen>("overview");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [deals, setDeals] = useState(initialDeals);
@@ -123,35 +106,18 @@ export function CrmApp({ onExit }: CrmAppProps) {
   };
 
   const footer = (
-    <Box flexDirection="column" gap="s">
-      <Box alignItems="center" gap="s" paddingHorizontal="s">
-        <Avatar size="sm">
-          <Avatar.Image alt="Анна Смирнова" src={`${AVATARS}/blue.jpg`} />
-          <Avatar.Fallback>АС</Avatar.Fallback>
-        </Avatar>
-        <Box flexDirection="column" minWidth={0}>
-          <Text variant="title" truncate>
-            Анна Смирнова
-          </Text>
-          <Text variant="caption" color="muted" truncate>
-            Отдел продаж
-          </Text>
-        </Box>
-      </Box>
-      <Box gap="xs">
-        <Button
-          isIconOnly
-          aria-label={isDark ? "Светлая тема" : "Тёмная тема"}
-          size="sm"
-          variant="ghost"
-          onPress={() => setTheme(isDark ? "light" : "dark")}
-        >
-          {isDark ? <Sun /> : <Moon />}
-        </Button>
-        <Button size="sm" variant="ghost" onPress={onExit}>
-          <ArrowLeft />
-          К витрине
-        </Button>
+    <Box alignItems="center" gap="s" paddingHorizontal="s">
+      <Avatar size="sm">
+        <Avatar.Image alt="Анна Смирнова" src={`${AVATARS}/blue.jpg`} />
+        <Avatar.Fallback>АС</Avatar.Fallback>
+      </Avatar>
+      <Box flexDirection="column" minWidth={0}>
+        <Text variant="title" truncate>
+          Анна Смирнова
+        </Text>
+        <Text variant="caption" color="muted" truncate>
+          Отдел продаж
+        </Text>
       </Box>
     </Box>
   );
@@ -159,9 +125,9 @@ export function CrmApp({ onExit }: CrmAppProps) {
   return (
     <Box
       flexDirection={{ base: "column", md: "row" }}
-      height="100vh"
-      backgroundColor="background-canvas"
-      padding={{ base: "none", md: "s" }}
+      width="100%"
+      paddingHorizontal={{ base: "none", md: "s" }}
+      paddingBottom={{ base: "none", md: "s" }}
       gap={{ base: "none", md: "s" }}
     >
       <Box

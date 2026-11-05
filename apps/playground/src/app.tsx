@@ -1,8 +1,9 @@
-import { Box, Button, PageHeader, Text, Toast, useTheme } from "@anyglade/kit";
+import { Box, Button, PageHeader, Text, Toast } from "@anyglade/kit";
 import { useState } from "react";
 import { CrmApp } from "./crm/crm-app.tsx";
 import { blockCategories, componentCategories } from "./demos.ts";
 import { Showcase } from "./showcase.tsx";
+import { ThemePanel } from "./theme/theme-panel.tsx";
 
 const views = {
   showcase: { label: "Витрина", categories: [] },
@@ -23,73 +24,91 @@ const descriptions: Record<View, string> = {
 const viewNames = Object.keys(views) as View[];
 
 export function App() {
-  const { resolvedTheme, setTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
   const [view, setView] = useState<View>("showcase");
+
+  return (
+    <Box flexDirection="column" height="100dvh" backgroundColor="background-canvas">
+      <Box
+        as="header"
+        alignItems="center"
+        justifyContent="between"
+        gap="m"
+        flexShrink={0}
+        paddingHorizontal="m"
+        paddingVertical="s"
+      >
+        <Box alignItems="center" gap="l" minWidth={0}>
+          <img src="/logo.svg" alt="" width={44} height={24} />
+          <Box as="nav" aria-label="Разделы" gap="xs" overflowX="auto">
+            {viewNames.map((name) => (
+              <Button
+                key={name}
+                size="sm"
+                variant={name === view ? "secondary" : "ghost"}
+                onPress={() => setView(name)}
+              >
+                {views[name].label}
+              </Button>
+            ))}
+          </Box>
+        </Box>
+        <ThemePanel />
+      </Box>
+      <Box flexGrow={1} minHeight={0}>
+        {view === "crm" ? <CrmApp /> : <Documentation view={view} />}
+      </Box>
+      <Toast.Provider />
+    </Box>
+  );
+}
+
+function Documentation({ view }: { view: Exclude<View, "crm"> }) {
   const { categories } = views[view];
   const isBlocks = view === "blocks";
 
-  if (view === "crm") {
-    return <CrmApp onExit={() => setView("showcase")} />;
-  }
-
   return (
     <Box
-      height="100vh"
-      backgroundColor="background-canvas"
-      padding={{ base: "none", md: "s" }}
+      width="100%"
+      paddingHorizontal={{ base: "none", md: "s" }}
+      paddingBottom={{ base: "none", md: "s" }}
       gap="s"
     >
-      <Box
-        as="nav"
-        aria-label="Разделы"
-        display={{ base: "none", md: "flex" }}
-        flexDirection="column"
-        gap="xl"
-        width={208}
-        flexShrink={0}
-        padding="m"
-        overflowY="auto"
-      >
-        <Box justifyContent="center">
-          <img src="/logo.svg" alt="" width={51} height={28} />
-        </Box>
-        <Box flexDirection="column" gap="xs">
-          {viewNames.map((name) => (
-            <Button
-              key={name}
-              fullWidth
-              size="sm"
-              variant={name === view ? "secondary" : "ghost"}
-              onPress={() => setView(name)}
-            >
-              {views[name].label}
-            </Button>
+      {categories.length > 0 ? (
+        <Box
+          as="nav"
+          aria-label="Содержание"
+          display={{ base: "none", md: "flex" }}
+          flexDirection="column"
+          gap="xl"
+          width={208}
+          flexShrink={0}
+          padding="m"
+          overflowY="auto"
+        >
+          {categories.map((category) => (
+            <Box key={category.id} flexDirection="column">
+              <Text variant="caption" color="subtle">
+                {category.label}
+              </Text>
+              {category.demos.map(({ name }) => (
+                <Box
+                  as="a"
+                  key={name}
+                  href={`#${name}`}
+                  paddingVertical="xs"
+                  color={{ base: "text-secondary", hover: "text-primary" }}
+                  transitionProperty="colors"
+                  transitionDuration="fast"
+                >
+                  <Text as="span" weight="medium">
+                    {name}
+                  </Text>
+                </Box>
+              ))}
+            </Box>
           ))}
         </Box>
-        {categories.map((category) => (
-          <Box key={category.id} flexDirection="column">
-            <Text variant="caption" color="subtle">
-              {category.label}
-            </Text>
-            {category.demos.map(({ name }) => (
-              <Box
-                as="a"
-                key={name}
-                href={`#${name}`}
-                paddingVertical="xs"
-                color={{ base: "text-secondary", hover: "text-primary" }}
-                transitionProperty="colors"
-                transitionDuration="fast"
-              >
-                <Text as="span" weight="medium">
-                  {name}
-                </Text>
-              </Box>
-            ))}
-          </Box>
-        ))}
-      </Box>
+      ) : null}
       <Box
         as="main"
         flexGrow={1}
@@ -111,19 +130,7 @@ export function App() {
           height="fit-content"
           paddingVertical="2xl"
         >
-          <PageHeader
-            title="@anyglade/kit"
-            description={descriptions[view]}
-            actions={
-              <Button
-                size="sm"
-                variant="secondary"
-                onPress={() => setTheme(isDark ? "light" : "dark")}
-              >
-                {isDark ? "Светлая тема" : "Тёмная тема"}
-              </Button>
-            }
-          />
+          <PageHeader title="@anyglade/kit" description={descriptions[view]} />
           {view === "showcase" ? <Showcase /> : null}
           {categories.map((category) => (
             <Box as="section" key={category.id} flexDirection="column" gap="3xl">
@@ -159,7 +166,6 @@ export function App() {
           ))}
         </Box>
       </Box>
-      <Toast.Provider />
     </Box>
   );
 }
