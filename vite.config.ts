@@ -5,7 +5,11 @@ export default defineConfig({
     "*": "vp check --fix",
   },
   fmt: {
-    ignorePatterns: ["packages/kit/styles/box.css", "packages/kit/styles/tokens.css"],
+    ignorePatterns: [
+      "packages/kit/styles/box.css",
+      "packages/kit/styles/tokens.css",
+      ".claude/skills/anyglade-design-system/references/generated/**",
+    ],
   },
   lint: {
     plugins: ["oxc", "typescript", "unicorn", "react", "jsx-a11y"],

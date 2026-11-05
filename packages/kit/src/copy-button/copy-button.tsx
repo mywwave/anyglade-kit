@@ -4,6 +4,7 @@ import { Check, Copy } from "@gravity-ui/icons";
 import { useEffect, useState } from "react";
 import { Box } from "../box/box.tsx";
 import { Button, type ButtonProps } from "../button/button.tsx";
+import { TextSwap } from "../text-swap/text-swap.tsx";
 import { timings } from "../tokens.ts";
 
 export interface CopyButtonProps extends Pick<ButtonProps, "fullWidth" | "size" | "variant"> {
@@ -57,7 +58,7 @@ export function CopyButton({
       >
         <Icon />
       </Box>
-      {isLabelVisible ? text : null}
+      {isLabelVisible ? <TextSwap text={text} /> : null}
     </Button>
   );
 }

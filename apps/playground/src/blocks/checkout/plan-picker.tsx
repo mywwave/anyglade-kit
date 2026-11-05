@@ -1,4 +1,4 @@
-import { Box, Button, Radio, RadioGroup, Text, toast, tokens } from "@anyglade/kit";
+import { Box, Button, Radio, RadioGroup, Text, TextSwap, toast, tokens } from "@anyglade/kit";
 import { useState } from "react";
 import { simulateRequest } from "../../simulate.ts";
 import { formatRubles } from "../format.ts";
@@ -72,7 +72,7 @@ export function PlanPickerBlock() {
           ))}
         </RadioGroup>
         <Button fullWidth isDisabled={connected === selected} onPress={connect}>
-          {connected === selected ? "Подключено" : "Продолжить"}
+          <TextSwap text={connected === selected ? "Подключено" : "Продолжить"} />
         </Button>
       </Box>
     </Box>

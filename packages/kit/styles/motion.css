@@ -32,6 +32,117 @@
   }
 }
 
+@keyframes ag-swap-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--ag-space-s));
+  }
+}
+
+@keyframes ag-swap-out {
+  to {
+    opacity: 0;
+    transform: translateY(calc(var(--ag-space-s) * -1));
+  }
+}
+
+.ag-swap {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  overflow: clip;
+  overflow-clip-margin: var(--ag-space-2xs);
+  text-overflow: ellipsis;
+  vertical-align: bottom;
+  white-space: nowrap;
+}
+
+.ag-swap__entering {
+  display: inline-block;
+  animation: ag-swap-in var(--ag-duration-base) var(--ag-ease-decelerate) backwards;
+}
+
+.ag-swap__leaving {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  animation: ag-swap-out var(--ag-duration-fast) var(--ag-ease-accelerate) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ag-swap__entering {
+    animation-name: ag-fade;
+  }
+}
+
+.ag-turn {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+
+  &:last-child {
+    min-height: var(--ag-conversation-room);
+  }
+}
+
+.ag-step {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  animation: ag-enter var(--ag-duration-base) var(--ag-ease-decelerate) backwards;
+  animation-delay: calc(var(--ag-step-index) * var(--ag-duration-stagger));
+}
+
+@keyframes ag-shimmer {
+  from {
+    background-position: 100% 0;
+  }
+
+  to {
+    background-position: 0 0;
+  }
+}
+
+/*
+ * A second copy of the text carries the highlight, so the real letters never repaint.
+ * Inline-block gives both copies one box: an inline span is as tall as the font, not
+ * the line, and the copy would sit lower and ghost.
+ */
+.ag-shimmer {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: bottom;
+  white-space: nowrap;
+
+  &[data-layer]::after {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    color: transparent;
+    text-overflow: ellipsis;
+    background-image: linear-gradient(
+      90deg,
+      transparent 40%,
+      var(--ag-text-primary) 50%,
+      transparent 60%
+    );
+    background-size: 300% 100%;
+    background-clip: text;
+    content: attr(data-text);
+    pointer-events: none;
+    animation: ag-shimmer var(--ag-duration-shimmer) linear infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &[data-layer]::after {
+      display: none;
+    }
+  }
+}
+
 /* Only elements with a view-transition-name move. The page itself swaps at once. */
 ::view-transition-old(root),
 ::view-transition-new(root) {

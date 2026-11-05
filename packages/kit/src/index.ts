@@ -21,6 +21,7 @@ export {
   type SortAccessors,
   type SortableColumnProps,
 } from "./sortable-table/sortable-table.tsx";
+export { Shimmer, type ShimmerProps } from "./shimmer/shimmer.tsx";
 export { Stat, type StatProps } from "./stat/stat.tsx";
 export {
   Text,
@@ -32,5 +33,6 @@ export {
   type TextWeight,
   type TextWrap,
 } from "./text/text.tsx";
+export { TextSwap, type TextSwapProps } from "./text-swap/text-swap.tsx";
 export * as tokens from "./tokens.ts";
 export type { Selection, SortDescriptor } from "react-aria-components";

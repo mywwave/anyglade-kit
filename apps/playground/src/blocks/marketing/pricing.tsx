@@ -1,4 +1,4 @@
-import { Box, Button, Label, Slider, Text, toast } from "@anyglade/kit";
+import { Box, Button, Label, Slider, Text, TextSwap, toast } from "@anyglade/kit";
 import { useState } from "react";
 import { simulateRequest } from "../../simulate.ts";
 import { formatRubles } from "../format.ts";
@@ -87,7 +87,13 @@ export function PricingBlock() {
         </Box>
         <Box display="block">
           <Button isDisabled={chosenPlan === best.name} size="lg" onPress={choose}>
-            {chosenPlan === best.name ? `Тариф «${best.name}» подключён` : `Выбрать «${best.name}»`}
+            <TextSwap
+              text={
+                chosenPlan === best.name
+                  ? `Тариф «${best.name}» подключён`
+                  : `Выбрать «${best.name}»`
+              }
+            />
           </Button>
         </Box>
       </Box>

@@ -1,5 +1,6 @@
 import { Box, Button, PageHeader, Text, Toast } from "@anyglade/kit";
 import { useState } from "react";
+import { AssistantApp } from "./assistant/assistant-app.tsx";
 import { CrmApp } from "./crm/crm-app.tsx";
 import { blockCategories, componentCategories } from "./demos.ts";
 import { Showcase } from "./showcase.tsx";
@@ -8,6 +9,7 @@ import { ThemePanel } from "./theme/theme-panel.tsx";
 const views = {
   showcase: { label: "Витрина", categories: [] },
   crm: { label: "CRM", categories: [] },
+  assistant: { label: "Помощник", categories: [] },
   components: { label: "Компоненты", categories: componentCategories },
   blocks: { label: "Блоки", categories: blockCategories },
 };
@@ -17,6 +19,7 @@ type View = keyof typeof views;
 const descriptions: Record<View, string> = {
   showcase: "Компоненты kit в работе.",
   crm: "",
+  assistant: "",
   components: "Компоненты и токены из исходников пакета.",
   blocks: "Готовые секции из компонентов kit.",
 };
@@ -27,9 +30,18 @@ export function App() {
   const [view, setView] = useState<View>("showcase");
 
   return (
-    <Box flexDirection="column" height="100dvh" backgroundColor="background-canvas">
+    <Box
+      flexDirection="column"
+      height={view === "assistant" ? undefined : "100dvh"}
+      minHeight="100dvh"
+      backgroundColor="background-canvas"
+    >
       <Box
         as="header"
+        position="sticky"
+        top={0}
+        zIndex={10}
+        backgroundColor="background-canvas"
         alignItems="center"
         justifyContent="between"
         gap="m"
@@ -55,14 +67,16 @@ export function App() {
         <ThemePanel />
       </Box>
       <Box flexGrow={1} minHeight={0}>
-        {view === "crm" ? <CrmApp /> : <Documentation view={view} />}
+        {view === "crm" ? <CrmApp /> : null}
+        {view === "assistant" ? <AssistantApp /> : null}
+        {view !== "crm" && view !== "assistant" ? <Documentation view={view} /> : null}
       </Box>
       <Toast.Provider />
     </Box>
   );
 }
 
-function Documentation({ view }: { view: Exclude<View, "crm"> }) {
+function Documentation({ view }: { view: Exclude<View, "crm" | "assistant"> }) {
   const { categories } = views[view];
   const isBlocks = view === "blocks";
 

@@ -114,6 +114,8 @@ export const durations = {
   base: "200ms",
   slow: "320ms",
   slower: "480ms",
+  shimmer: "2000ms",
+  stagger: "60ms",
 } as const;
 
 export const easings = {

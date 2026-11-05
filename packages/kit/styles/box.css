@@ -402,6 +402,8 @@
 .ag-duration-base { transition-duration: var(--ag-duration-base); }
 .ag-duration-slow { transition-duration: var(--ag-duration-slow); }
 .ag-duration-slower { transition-duration: var(--ag-duration-slower); }
+.ag-duration-shimmer { transition-duration: var(--ag-duration-shimmer); }
+.ag-duration-stagger { transition-duration: var(--ag-duration-stagger); }
 .ag-ease-standard { transition-timing-function: var(--ag-ease-standard); }
 .ag-ease-decelerate { transition-timing-function: var(--ag-ease-decelerate); }
 .ag-ease-accelerate { transition-timing-function: var(--ag-ease-accelerate); }
@@ -880,6 +882,8 @@
   .sm\:ag-duration-base { transition-duration: var(--ag-duration-base); }
   .sm\:ag-duration-slow { transition-duration: var(--ag-duration-slow); }
   .sm\:ag-duration-slower { transition-duration: var(--ag-duration-slower); }
+  .sm\:ag-duration-shimmer { transition-duration: var(--ag-duration-shimmer); }
+  .sm\:ag-duration-stagger { transition-duration: var(--ag-duration-stagger); }
   .sm\:ag-ease-standard { transition-timing-function: var(--ag-ease-standard); }
   .sm\:ag-ease-decelerate { transition-timing-function: var(--ag-ease-decelerate); }
   .sm\:ag-ease-accelerate { transition-timing-function: var(--ag-ease-accelerate); }
@@ -1312,6 +1316,8 @@
   .md\:ag-duration-base { transition-duration: var(--ag-duration-base); }
   .md\:ag-duration-slow { transition-duration: var(--ag-duration-slow); }
   .md\:ag-duration-slower { transition-duration: var(--ag-duration-slower); }
+  .md\:ag-duration-shimmer { transition-duration: var(--ag-duration-shimmer); }
+  .md\:ag-duration-stagger { transition-duration: var(--ag-duration-stagger); }
   .md\:ag-ease-standard { transition-timing-function: var(--ag-ease-standard); }
   .md\:ag-ease-decelerate { transition-timing-function: var(--ag-ease-decelerate); }
   .md\:ag-ease-accelerate { transition-timing-function: var(--ag-ease-accelerate); }
@@ -1744,6 +1750,8 @@
   .lg\:ag-duration-base { transition-duration: var(--ag-duration-base); }
   .lg\:ag-duration-slow { transition-duration: var(--ag-duration-slow); }
   .lg\:ag-duration-slower { transition-duration: var(--ag-duration-slower); }
+  .lg\:ag-duration-shimmer { transition-duration: var(--ag-duration-shimmer); }
+  .lg\:ag-duration-stagger { transition-duration: var(--ag-duration-stagger); }
   .lg\:ag-ease-standard { transition-timing-function: var(--ag-ease-standard); }
   .lg\:ag-ease-decelerate { transition-timing-function: var(--ag-ease-decelerate); }
   .lg\:ag-ease-accelerate { transition-timing-function: var(--ag-ease-accelerate); }
@@ -2176,6 +2184,8 @@
   .xl\:ag-duration-base { transition-duration: var(--ag-duration-base); }
   .xl\:ag-duration-slow { transition-duration: var(--ag-duration-slow); }
   .xl\:ag-duration-slower { transition-duration: var(--ag-duration-slower); }
+  .xl\:ag-duration-shimmer { transition-duration: var(--ag-duration-shimmer); }
+  .xl\:ag-duration-stagger { transition-duration: var(--ag-duration-stagger); }
   .xl\:ag-ease-standard { transition-timing-function: var(--ag-ease-standard); }
   .xl\:ag-ease-decelerate { transition-timing-function: var(--ag-ease-decelerate); }
   .xl\:ag-ease-accelerate { transition-timing-function: var(--ag-ease-accelerate); }

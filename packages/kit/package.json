@@ -25,6 +25,10 @@
       "types": "./dist/charts.d.ts",
       "default": "./dist/charts.js"
     },
+    "./ai": {
+      "types": "./dist/ai.d.ts",
+      "default": "./dist/ai.js"
+    },
     "./oxlint": "./oxlint/index.mjs",
     "./styles.css": "./styles/index.css",
     "./package.json": "./package.json"

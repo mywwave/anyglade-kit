@@ -1,4 +1,4 @@
-import { Box, Button, Input, Text, tokens } from "@anyglade/kit";
+import { Box, Button, Input, Text, TextSwap, tokens } from "@anyglade/kit";
 import { ArrowLeft } from "@anyglade/kit/icons";
 import { useState } from "react";
 import { simulateRequest } from "../../simulate.ts";
@@ -116,7 +116,7 @@ export function SignInBlock() {
           />
         )}
         <Button fullWidth size="lg" type="submit">
-          {isPasswordStep ? text.submit : "Продолжить"}
+          <TextSwap text={isPasswordStep ? text.submit : "Продолжить"} />
         </Button>
       </Box>
       {isPasswordStep ? (
@@ -131,7 +131,7 @@ export function SignInBlock() {
           variant="ghost"
           onPress={() => setIntent(intent === "signIn" ? "signUp" : "signIn")}
         >
-          {intent === "signIn" ? "Создать аккаунт" : "Уже есть аккаунт"}
+          <TextSwap text={intent === "signIn" ? "Создать аккаунт" : "Уже есть аккаунт"} />
         </Button>
       )}
     </Box>

@@ -89,6 +89,8 @@
   --ag-duration-base: 200ms;
   --ag-duration-slow: 320ms;
   --ag-duration-slower: 480ms;
+  --ag-duration-shimmer: 2000ms;
+  --ag-duration-stagger: 60ms;
   --ag-ease-standard: cubic-bezier(0.2, 0, 0, 1);
   --ag-ease-decelerate: cubic-bezier(0, 0, 0, 1);
   --ag-ease-accelerate: cubic-bezier(0.3, 0, 1, 1);

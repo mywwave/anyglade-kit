@@ -17,7 +17,8 @@
     "paths": {
       "@anyglade/kit": ["../../packages/kit/src/index.ts"],
       "@anyglade/kit/icons": ["../../packages/kit/src/icons.ts"],
-      "@anyglade/kit/charts": ["../../packages/kit/src/charts.ts"]
+      "@anyglade/kit/charts": ["../../packages/kit/src/charts.ts"],
+      "@anyglade/kit/ai": ["../../packages/kit/src/ai.ts"]
     }
   },
   "include": ["src"]
