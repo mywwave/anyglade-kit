@@ -1,0 +1,13 @@
+:root,
+.light,
+[data-theme="light"] {
+  --accent: oklch(0.55 0.15 165);
+  --accent-foreground: oklch(0.99 0 0);
+  --radius: 0.5rem;
+}
+
+.dark,
+[data-theme="dark"] {
+  --accent: oklch(0.72 0.14 165);
+  --accent-foreground: oklch(0.2 0.02 165);
+}

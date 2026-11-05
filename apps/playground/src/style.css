@@ -1,0 +1,4 @@
+@import "tailwindcss";
+@import "@anyglade/kit/styles.css";
+
+@source "../../../packages/kit/src";

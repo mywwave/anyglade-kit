@@ -1,0 +1,4 @@
+@import "@heroui/styles";
+@import "./theme.css" layer(theme);
+
+@source "../dist";
