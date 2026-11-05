@@ -32,6 +32,12 @@
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .ag-floating[data-dragging] .ag-floating__surface {
+    transform: none;
+  }
+}
+
 @keyframes ag-swap-in {
   from {
     opacity: 0;

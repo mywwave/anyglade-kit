@@ -74,6 +74,9 @@ test("Message leaves out empty actions and gives the user a bubble", () => {
   expect(renderToStaticMarkup(<Message author="user">Вопрос</Message>)).toContain(
     "ag-bg-background-card",
   );
+  expect(renderToStaticMarkup(<Message author="contact">Привет</Message>)).toContain(
+    "ag-items-start",
+  );
 });
 
 test("Plan reports progress in the words it was given and keeps its title while it runs", () => {

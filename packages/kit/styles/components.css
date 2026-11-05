@@ -229,6 +229,110 @@
   }
 }
 
+.ag-floating {
+  position: fixed;
+  inset: 0 auto auto 0;
+  z-index: 40;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  color: inherit;
+  background: none;
+  outline: none;
+
+  &[data-dragging] {
+    will-change: transform;
+  }
+}
+
+.ag-floating__surface {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100dvh - 2 * var(--ag-space-s));
+  overflow: hidden;
+  border-radius: var(--ag-radius-l);
+  color: var(--overlay-foreground);
+  background-color: var(--overlay);
+  box-shadow: var(--overlay-shadow);
+  transform-origin: top center;
+  transition: transform var(--ag-duration-fast) var(--ag-ease-standard);
+  animation: ag-pop var(--ag-duration-fast) var(--ag-ease-decelerate) backwards;
+
+  &[data-exiting] {
+    animation: ag-pop var(--ag-duration-fast) var(--ag-ease-accelerate) reverse forwards;
+  }
+}
+
+.ag-floating[data-dragging] .ag-floating__surface {
+  transform: scale(1.02);
+}
+
+.ag-floating__header {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--ag-space-2xs);
+  padding: var(--ag-space-s);
+}
+
+.ag-floating__handle {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  min-width: 0;
+  min-height: 2rem;
+  padding-inline: var(--ag-space-s);
+  border-radius: var(--ag-radius-s);
+  outline: none;
+  cursor: grab;
+  touch-action: none;
+
+  &:focus-visible {
+    outline: 2px solid var(--focus);
+  }
+}
+
+.ag-floating[data-dragging] .ag-floating__handle {
+  cursor: grabbing;
+}
+
+.ag-floating__body {
+  flex: 1;
+  min-height: 0;
+  padding: var(--ag-space-xs) var(--ag-space-l) var(--ag-space-l);
+  overflow-y: auto;
+}
+
+.ag-item-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ag-space-2xs);
+  outline: none;
+}
+
+.ag-item-list__row {
+  padding: var(--ag-space-s);
+  border-radius: var(--ag-radius-m);
+  outline: none;
+  cursor: var(--cursor-interactive);
+  transition: background-color var(--ag-duration-fast) var(--ag-ease-standard);
+}
+
+.ag-item-list__row--hovered {
+  background-color: var(--ag-background-secondary);
+}
+
+.ag-item-list__row--current {
+  background-color: var(--default);
+}
+
+.ag-item-list__row--focused {
+  outline: 2px solid var(--focus);
+  outline-offset: -2px;
+}
+
 .ag-tree {
   display: flex;
   flex-direction: column;
@@ -255,7 +359,7 @@
 }
 
 .ag-tree__item[data-selected] {
-  background-color: var(--ag-background-card);
+  background-color: var(--default);
 }
 
 .ag-tree__item:not([data-has-child-items]) {

@@ -27,7 +27,7 @@ export interface ConversationProps {
    * Leave no padding under the conversation, or the footer shifts by that much as it docks.
    */
   footer: ReactNode;
-  /** Id of the latest turn. When it changes, the view moves to that turn. */
+  /** Id of the latest turn. When it changes, the view eases there. On mount it jumps. */
   followKey?: string;
   /** Height of whatever is stuck to the top of the page, in pixels. */
   topInset?: number;
@@ -57,6 +57,7 @@ export function Conversation({
   const scroller = useRef<HTMLElement | null>(null);
   const isFollowing = useRef(true);
   const frame = useRef(0);
+  const hasFollowed = useRef(false);
   const [isAtEnd, setIsAtEnd] = useState(true);
 
   function follow() {
@@ -128,8 +129,13 @@ export function Conversation({
   useEffect(() => {
     if (followKey !== undefined) {
       isFollowing.current = true;
-      follow();
+      if (hasFollowed.current) {
+        follow();
+      } else if (scroller.current) {
+        scroller.current.scrollTop = scroller.current.scrollHeight;
+      }
     }
+    hasFollowed.current = true;
   }, [followKey]);
 
   function scrollToEnd() {

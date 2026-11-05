@@ -10,5 +10,6 @@ export function withTransition(update: () => void) {
     update();
     return;
   }
-  document.startViewTransition(() => flushSync(update));
+  // A newer transition skips this one. The update still applies, only the animation is dropped.
+  document.startViewTransition(() => flushSync(update)).ready.catch(() => undefined);
 }

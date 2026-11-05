@@ -165,6 +165,7 @@ export const fontWeights = {
 
 /** Reading and input widths, so content never stretches to fill its container. */
 export const widths = {
+  panel: 320,
   form: 400,
   content: 720,
   wide: 880,

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { AssistantApp } from "./assistant/assistant-app.tsx";
 import { CrmApp } from "./crm/crm-app.tsx";
 import { blockCategories, componentCategories } from "./demos.ts";
+import { MessengerApp } from "./messenger/messenger-app.tsx";
 import { Showcase } from "./showcase.tsx";
 import { ThemePanel } from "./theme/theme-panel.tsx";
 
@@ -10,6 +11,7 @@ const views = {
   showcase: { label: "Витрина", categories: [] },
   crm: { label: "CRM", categories: [] },
   assistant: { label: "Помощник", categories: [] },
+  messenger: { label: "Сообщения", categories: [] },
   components: { label: "Компоненты", categories: componentCategories },
   blocks: { label: "Блоки", categories: blockCategories },
 };
@@ -20,6 +22,7 @@ const descriptions: Record<View, string> = {
   showcase: "Компоненты kit в работе.",
   crm: "",
   assistant: "",
+  messenger: "",
   components: "Компоненты и токены из исходников пакета.",
   blocks: "Готовые секции из компонентов kit.",
 };
@@ -69,14 +72,17 @@ export function App() {
       <Box flexGrow={1} minHeight={0}>
         {view === "crm" ? <CrmApp /> : null}
         {view === "assistant" ? <AssistantApp /> : null}
-        {view !== "crm" && view !== "assistant" ? <Documentation view={view} /> : null}
+        {view === "messenger" ? <MessengerApp /> : null}
+        {view !== "crm" && view !== "assistant" && view !== "messenger" ? (
+          <Documentation view={view} />
+        ) : null}
       </Box>
       <Toast.Provider />
     </Box>
   );
 }
 
-function Documentation({ view }: { view: Exclude<View, "crm" | "assistant"> }) {
+function Documentation({ view }: { view: Exclude<View, "crm" | "assistant" | "messenger"> }) {
   const { categories } = views[view];
   const isBlocks = view === "blocks";
 

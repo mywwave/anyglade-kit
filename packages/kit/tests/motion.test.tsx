@@ -1,6 +1,14 @@
 import { renderToStaticMarkup } from "react-dom/server";
-import { expect, test } from "vite-plus/test";
-import { Box, Button, CopyButton, Loadable, SegmentedControl, useTableSort } from "../src/index.ts";
+import { expect, test, vi } from "vite-plus/test";
+import {
+  Box,
+  Button,
+  CopyButton,
+  Loadable,
+  SegmentedControl,
+  useTableSort,
+  withTransition,
+} from "../src/index.ts";
 
 test("Button stays free of a loader until work has run long enough", () => {
   const html = renderToStaticMarkup(<Button isPending>Сохранить</Button>);
@@ -87,4 +95,22 @@ test("useTableSort orders text and numbers and keeps unknown columns as they are
 
 test("Box maps motion presets to generated classes", () => {
   expect(renderToStaticMarkup(<Box motion="enter" />)).toContain("ag-motion-enter");
+});
+
+test("withTransition handles being skipped by a newer transition", () => {
+  const ready = { catch: vi.fn() };
+  const update = vi.fn();
+  vi.stubGlobal("matchMedia", () => ({ matches: false }));
+  vi.stubGlobal("document", {
+    startViewTransition: (callback: () => void) => {
+      callback();
+      return { ready };
+    },
+  });
+
+  withTransition(update);
+  vi.unstubAllGlobals();
+
+  expect(update).toHaveBeenCalledOnce();
+  expect(ready.catch).toHaveBeenCalledOnce();
 });

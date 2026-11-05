@@ -4,7 +4,7 @@
 
 ## @anyglade/kit
 
-`Box`, `Button`, `CopyButton`, `DetailRow`, `EmptyPanel`, `Frame`, `FrameTile`, `Loadable`, `PageHeader`, `SegmentedControl`, `Shimmer`, `SortableColumn`, `Stat`, `Text`, `TextSwap`, `TreeNav`, `useLoadingIndicator`, `useTableSort`, `withTransition`
+`Box`, `Button`, `CopyButton`, `DetailRow`, `EmptyPanel`, `FloatingPanel`, `Frame`, `FrameTile`, `ItemList`, `Loadable`, `PageHeader`, `SegmentedControl`, `Shimmer`, `SortableColumn`, `Stat`, `Text`, `TextSwap`, `TreeNav`, `useLoadingIndicator`, `useTableSort`, `withTransition`
 
 ## @anyglade/kit/ai
 
@@ -187,7 +187,7 @@ export interface ConversationProps {
    * Leave no padding under the conversation, or the footer shifts by that much as it docks.
    */
   footer: ReactNode;
-  /** Id of the latest turn. When it changes, the view moves to that turn. */
+  /** Id of the latest turn. When it changes, the view eases there. On mount it jumps. */
   followKey?: string;
   /** Height of whatever is stuck to the top of the page, in pixels. */
   topInset?: number;
@@ -248,6 +248,23 @@ export interface FileTreeProps {
 ```
 
 ```ts
+export interface FloatingPanelProps {
+  /** Heading and drag handle. A change flows in place, so a pinned panel can follow the page. */
+  title: string;
+  isOpen: boolean;
+  onOpenChange: (isOpen: boolean) => void;
+  /** The button that opens the panel. An unpinned panel stands next to it. */
+  triggerRef: RefObject<HTMLElement | null>;
+  pinLabel: string;
+  unpinLabel: string;
+  /** Spoken on the handle. Arrow keys move the panel as well. */
+  moveLabel: string;
+  closeLabel: string;
+  children: ReactNode;
+}
+```
+
+```ts
 export interface FrameProps {
   title?: ReactNode;
   meta?: ReactNode;
@@ -262,6 +279,20 @@ export interface FrameTileProps {
 ```
 
 ```ts
+export interface ItemListProps<T extends { id: string }> {
+  label: string;
+  items: readonly T[];
+  /** The open item. It stays marked while focus moves elsewhere. */
+  currentId?: string | null;
+  onOpen: (id: string) => void;
+  /** What a screen reader and type-ahead get for the row. */
+  getText: (item: T) => string;
+  /** The row may hold its own buttons, which a plain list box does not allow. */
+  renderItem: (item: T) => ReactNode;
+}
+```
+
+```ts
 export interface LoadableProps {
   isLoading: boolean;
   /** Repeats the layout of the content, so nothing jumps when it arrives. */
@@ -272,10 +303,13 @@ export interface LoadableProps {
 
 ```ts
 export interface MessageProps {
-  author: "user" | "assistant";
+  /** `contact` is the other person in a chat: a bubble on the left. */
+  author: "user" | "assistant" | "contact";
   children: ReactNode;
   /** Copy, retry and so on, under the reply. */
   actions?: ReactNode;
+  /** Already there when the chat opened, so it does not animate. */
+  isHistory?: boolean;
 }
 ```
 

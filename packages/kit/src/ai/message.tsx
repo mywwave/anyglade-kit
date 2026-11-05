@@ -6,16 +6,23 @@ import { Text } from "../text/text.tsx";
 import { Citation, type Source } from "./sources.tsx";
 
 export interface MessageProps {
-  author: "user" | "assistant";
+  /** `contact` is the other person in a chat: a bubble on the left. */
+  author: "user" | "assistant" | "contact";
   children: ReactNode;
   /** Copy, retry and so on, under the reply. */
   actions?: ReactNode;
+  /** Already there when the chat opened, so it does not animate. */
+  isHistory?: boolean;
 }
 
-export function Message({ author, children, actions }: MessageProps) {
-  if (author === "user") {
+export function Message({ author, children, actions, isHistory = false }: MessageProps) {
+  if (author !== "assistant") {
     return (
-      <Box flexDirection="column" alignItems="end" motion="enter">
+      <Box
+        flexDirection="column"
+        alignItems={author === "user" ? "end" : "start"}
+        motion={isHistory ? undefined : "enter"}
+      >
         <Box
           flexDirection="column"
           gap="s"
@@ -34,7 +41,12 @@ export function Message({ author, children, actions }: MessageProps) {
   return (
     <Box flexDirection="column" gap="s" minWidth={0}>
       {Children.toArray(children).map((part, index) => (
-        <Box key={index} flexDirection="column" minWidth={0} motion="enter">
+        <Box
+          key={index}
+          flexDirection="column"
+          minWidth={0}
+          motion={isHistory ? undefined : "enter"}
+        >
           {part}
         </Box>
       ))}
