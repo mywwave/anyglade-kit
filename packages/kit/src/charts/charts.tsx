@@ -20,6 +20,8 @@ import {
 import { Box } from "../box/box.tsx";
 import { Text } from "../text/text.tsx";
 
+const SPARKLINE_COLOR = "var(--ag-text-secondary)";
+
 const SERIES_COLORS = [
   "var(--ag-chart-primary)",
   "var(--ag-chart-secondary)",
@@ -401,7 +403,7 @@ export function Sparkline({ label, values, height = 32 }: SparklineProps) {
             dataKey="value"
             dot={false}
             isAnimationActive={false}
-            stroke={SERIES_COLORS[0]}
+            stroke={SPARKLINE_COLOR}
             strokeWidth={1.5}
             type="monotone"
           />

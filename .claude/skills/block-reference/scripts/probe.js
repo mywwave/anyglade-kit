@@ -75,6 +75,9 @@ function inspect(article) {
     if (/^0\d\b/.test(text) || /^шаг \d/i.test(text)) signals.numbering += 1;
   }
 
+  const primaryButtons = preview.querySelectorAll(".button--primary").length;
+  if (primaryButtons > 1) issues.add(`основных кнопок ${primaryButtons}`);
+
   return { issues: [...issues].slice(0, 6), signals };
 }
 

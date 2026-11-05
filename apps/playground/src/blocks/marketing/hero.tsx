@@ -1,6 +1,7 @@
-import { Box, Button, Frame, FrameTile, Text } from "@anyglade/kit";
+import { Box, Button, Frame, FrameTile, Text, toast } from "@anyglade/kit";
 import { ChevronRight } from "@anyglade/kit/icons";
 import { useEffect, useRef, useState } from "react";
+import { simulateRequest } from "../../simulate.ts";
 import { formatRubles } from "../format.ts";
 
 interface Payment {
@@ -30,21 +31,35 @@ export function HeroBlock() {
   const [payments, setPayments] = useState(firstPayments);
   const nextId = useRef(VISIBLE_PAYMENTS);
 
+  function receive(payment: Omit<Payment, "id">) {
+    const id = nextId.current;
+    nextId.current += 1;
+    setTotal((value) => value + payment.amount);
+    setPayments((list) => [{ ...payment, id }, ...list].slice(0, VISIBLE_PAYMENTS));
+  }
+
   useEffect(() => {
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
       return undefined;
     }
     const timer = setInterval(() => {
-      const id = nextId.current;
-      const payment = customers[id % customers.length];
-      nextId.current += 1;
+      const payment = customers[nextId.current % customers.length];
       if (payment) {
-        setTotal((value) => value + payment.amount);
-        setPayments((list) => [{ ...payment, id }, ...list].slice(0, VISIBLE_PAYMENTS));
+        receive(payment);
       }
     }, TICK_MS);
     return () => clearInterval(timer);
   }, []);
+
+  async function start() {
+    await simulateRequest();
+    toast("Кабинет создан, письмо со входом отправлено");
+  }
+
+  async function sendTestPayment() {
+    await simulateRequest(700);
+    receive({ customer: "Тестовый платёж", amount: 1000 });
+  }
 
   return (
     <Box
@@ -71,12 +86,12 @@ export function HeroBlock() {
           </Text>
         </Box>
         <Box flexWrap="wrap" gap="s">
-          <Button size="lg">
+          <Button size="lg" onPress={start}>
             Начать бесплатно
             <ChevronRight />
           </Button>
-          <Button size="lg" variant="ghost">
-            Посмотреть демо
+          <Button size="lg" variant="ghost" onPress={sendTestPayment}>
+            Провести тестовый платёж
           </Button>
         </Box>
       </Box>
@@ -84,7 +99,14 @@ export function HeroBlock() {
         <FrameTile>
           <Box as="ul" flexDirection="column" gap="l" aria-live="polite">
             {payments.map((payment) => (
-              <Box as="li" key={payment.id} display="flex" justifyContent="between" gap="l">
+              <Box
+                as="li"
+                key={payment.id}
+                display="flex"
+                justifyContent="between"
+                gap="l"
+                motion={payment.id < VISIBLE_PAYMENTS ? undefined : "enter"}
+              >
                 <Text as="span" truncate>
                   {payment.customer}
                 </Text>

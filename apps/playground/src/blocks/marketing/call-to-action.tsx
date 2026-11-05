@@ -1,12 +1,13 @@
 import { Box, Button, Input, Text } from "@anyglade/kit";
-import { useState, type FormEvent } from "react";
+import { useState } from "react";
+import { simulateRequest } from "../../simulate.ts";
 
 export function CallToActionBlock() {
   const [email, setEmail] = useState("");
   const [sentTo, setSentTo] = useState<string | null>(null);
 
-  function submit(event: FormEvent) {
-    event.preventDefault();
+  async function send() {
+    await simulateRequest();
     setSentTo(email);
   }
 
@@ -31,11 +32,16 @@ export function CallToActionBlock() {
         </Text>
       </Box>
       {sentTo ? (
-        <Text aria-live="polite" variant="body">
-          Ссылка для входа отправлена на {sentTo}
-        </Text>
+        <Box flexDirection="column" alignItems="start" gap="m" motion="enter">
+          <Text aria-live="polite" variant="body">
+            Ссылка для входа отправлена на {sentTo}
+          </Text>
+          <Button size="sm" variant="secondary" onPress={() => setSentTo(null)}>
+            Указать другую почту
+          </Button>
+        </Box>
       ) : (
-        <Box as="form" gap="s" onSubmit={submit}>
+        <Box as="form" gap="s" action={send}>
           <Input
             aria-label="Рабочая почта"
             className="w-full"

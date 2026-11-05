@@ -12,6 +12,11 @@
 .dark,
 [data-theme="light"],
 [data-theme="dark"] {
+  --ease-smooth: var(--ag-ease-standard);
+  --ease-out: var(--ag-ease-decelerate);
+  --ease-out-quad: var(--ag-ease-decelerate);
+  --ease-out-fluid: var(--ag-ease-standard);
+
   --radius: 0.5rem;
   --field-radius: var(--ag-radius-m);
   --field-border-width: 1px;
@@ -43,6 +48,8 @@
 
   --accent: var(--ag-text-primary);
   --accent-foreground: light-dark(var(--ag-white), var(--ag-black));
+  --ag-accent-control: var(--accent);
+  --ag-accent-control-foreground: var(--accent-foreground);
   --accent-soft-foreground: var(--ag-text-primary);
 
   --success: var(--ag-text-success);

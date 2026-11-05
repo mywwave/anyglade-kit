@@ -3,19 +3,18 @@ import {
   Button,
   ColorField,
   ColorSwatchPicker,
+  CopyButton,
   Label,
   Popover,
+  SegmentedControl,
   Slider,
   Text,
-  ToggleButton,
-  ToggleButtonGroup,
-  toast,
   useTheme,
 } from "@anyglade/kit";
 import { Sliders } from "@anyglade/kit/icons";
 import type { ReactNode } from "react";
+import { accentPresets } from "./accent.ts";
 import {
-  accentPresets,
   settingsToCss,
   useThemeSettings,
   type ButtonShape,
@@ -49,23 +48,7 @@ interface OptionsProps<T extends string> {
 function Options<T extends string>({ label, options, value, onChange }: OptionsProps<T>) {
   return (
     <Setting label={label}>
-      <ToggleButtonGroup
-        aria-label={label}
-        disallowEmptySelection
-        selectedKeys={new Set([value])}
-        selectionMode="single"
-        size="sm"
-        onSelectionChange={(keys) => {
-          const [key] = keys;
-          onChange(key as T);
-        }}
-      >
-        {options.map((option) => (
-          <ToggleButton key={option.id} id={option.id}>
-            {option.label}
-          </ToggleButton>
-        ))}
-      </ToggleButtonGroup>
+      <SegmentedControl label={label} options={options} value={value} onChange={onChange} />
     </Setting>
   );
 }
@@ -113,11 +96,6 @@ function Setting({ label, children }: { label: string; children: ReactNode }) {
 export function ThemePanel() {
   const { theme, setTheme } = useTheme();
   const { settings, update, reset } = useThemeSettings();
-
-  async function copyCss() {
-    await navigator.clipboard.writeText(settingsToCss(settings));
-    toast("CSS темы скопирован");
-  }
 
   function resetAll() {
     reset();
@@ -197,9 +175,15 @@ export function ThemePanel() {
               onChange={(textScale) => update({ textScale })}
             />
             <Box gap="s">
-              <Button fullWidth size="sm" onPress={copyCss}>
-                Скопировать CSS
-              </Button>
+              <CopyButton
+                fullWidth
+                isLabelVisible
+                copiedLabel="CSS скопирован"
+                label="Скопировать CSS"
+                size="sm"
+                value={settingsToCss(settings)}
+                variant="primary"
+              />
               <Button size="sm" variant="ghost" onPress={resetAll}>
                 Сбросить
               </Button>

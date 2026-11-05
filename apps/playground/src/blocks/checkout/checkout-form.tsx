@@ -1,5 +1,6 @@
 import { Box, Button, Input, Label, NumberField, Text, TextField, tokens } from "@anyglade/kit";
-import { useState, type FormEvent } from "react";
+import { useState } from "react";
+import { simulateRequest } from "../../simulate.ts";
 import { formatRubles } from "../format.ts";
 
 const PLAN_PRICE = 1900;
@@ -10,8 +11,8 @@ export function CheckoutFormBlock() {
   const [isPaid, setIsPaid] = useState(false);
   const total = PLAN_PRICE + seats * SEAT_PRICE;
 
-  function submit(event: FormEvent) {
-    event.preventDefault();
+  async function pay() {
+    await simulateRequest(1400);
     setIsPaid(true);
   }
 
@@ -20,44 +21,68 @@ export function CheckoutFormBlock() {
       display="grid"
       gridTemplateColumns={{ base: "minmax(0, 1fr)", md: "minmax(0, 3fr) minmax(0, 2fr)" }}
     >
-      <Box
-        as="form"
-        flexDirection="column"
-        gap="l"
-        width="100%"
-        maxWidth={tokens.widths.form + 64}
-        marginHorizontal="auto"
-        padding={{ base: "l", md: "2xl" }}
-        onSubmit={submit}
-      >
-        <Text as="h2" variant="heading-xs">
-          Оплата
-        </Text>
-        <TextField className="w-full" isRequired name="email" type="email">
-          <Label>Почта</Label>
-          <Input placeholder="you@example.com" />
-        </TextField>
-        <TextField className="w-full" isRequired name="card">
-          <Label>Номер карты</Label>
-          <Input inputMode="numeric" placeholder="0000 0000 0000 0000" />
-        </TextField>
-        <Box display="grid" gridTemplateColumns="repeat(2, minmax(0, 1fr))" gap="m">
-          <TextField className="w-full" isRequired name="expiry">
-            <Label>Срок</Label>
-            <Input placeholder="ММ / ГГ" />
-          </TextField>
-          <TextField className="w-full" isRequired name="cvc">
-            <Label>CVC</Label>
-            <Input inputMode="numeric" placeholder="000" />
-          </TextField>
+      {isPaid ? (
+        <Box
+          flexDirection="column"
+          alignItems="start"
+          justifyContent="center"
+          gap="xl"
+          width="100%"
+          maxWidth={tokens.widths.form + 64}
+          marginHorizontal="auto"
+          motion="enter"
+          padding={{ base: "l", md: "2xl" }}
+        >
+          <Box flexDirection="column" gap="xs">
+            <Text as="h2" variant="heading-xs">
+              Оплата прошла
+            </Text>
+            <Text color="muted">Чек отправлен на почту, списано {formatRubles(total)}</Text>
+          </Box>
+          <Button variant="secondary" onPress={() => setIsPaid(false)}>
+            Новая оплата
+          </Button>
         </Box>
-        <Button fullWidth isDisabled={isPaid} size="lg" type="submit">
-          {isPaid ? "Оплачено" : `Оплатить ${formatRubles(total)}`}
-        </Button>
-        <Text variant="caption" color="muted" align="center">
-          Демонстрация: данные никуда не отправляются.
-        </Text>
-      </Box>
+      ) : (
+        <Box
+          as="form"
+          flexDirection="column"
+          gap="l"
+          width="100%"
+          maxWidth={tokens.widths.form + 64}
+          marginHorizontal="auto"
+          padding={{ base: "l", md: "2xl" }}
+          action={pay}
+        >
+          <Text as="h2" variant="heading-xs">
+            Оплата
+          </Text>
+          <TextField className="w-full" isRequired name="email" type="email">
+            <Label>Почта</Label>
+            <Input placeholder="you@example.com" />
+          </TextField>
+          <TextField className="w-full" isRequired name="card">
+            <Label>Номер карты</Label>
+            <Input inputMode="numeric" placeholder="0000 0000 0000 0000" />
+          </TextField>
+          <Box display="grid" gridTemplateColumns="repeat(2, minmax(0, 1fr))" gap="m">
+            <TextField className="w-full" isRequired name="expiry">
+              <Label>Срок</Label>
+              <Input placeholder="ММ / ГГ" />
+            </TextField>
+            <TextField className="w-full" isRequired name="cvc">
+              <Label>CVC</Label>
+              <Input inputMode="numeric" placeholder="000" />
+            </TextField>
+          </Box>
+          <Button fullWidth size="lg" type="submit">
+            Оплатить {formatRubles(total)}
+          </Button>
+          <Text variant="caption" color="muted" align="center">
+            Демонстрация: данные никуда не отправляются.
+          </Text>
+        </Box>
+      )}
       <Box
         flexDirection="column"
         justifyContent="between"

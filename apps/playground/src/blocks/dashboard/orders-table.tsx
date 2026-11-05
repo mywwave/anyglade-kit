@@ -3,12 +3,16 @@ import {
   Button,
   Input,
   Pagination,
+  SegmentedControl,
+  SortableColumn,
   Table,
   Text,
-  ToggleButton,
-  ToggleButtonGroup,
+  useTableSort,
+  withTransition,
+  type SortAccessors,
 } from "@anyglade/kit";
 import { useMemo, useState } from "react";
+import { simulateRequest } from "../../simulate.ts";
 import { formatRubles } from "../format.ts";
 
 const statuses = {
@@ -49,13 +53,21 @@ const initialOrders: Order[] = [
 
 const PAGE_SIZE = 5;
 
+const sortAccessors: SortAccessors<Order> = {
+  id: (order) => order.id,
+  customer: (order) => order.customer,
+  status: (order) => statuses[order.status].label,
+  date: (order) => Number.parseInt(order.date, 10),
+  amount: (order) => order.amount,
+};
+
 export function OrdersTableBlock() {
   const [orders, setOrders] = useState(initialOrders);
   const [filter, setFilter] = useState<Filter>("all");
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
 
-  const found = useMemo(() => {
+  const filtered = useMemo(() => {
     const normalized = query.trim().toLowerCase();
     return orders.filter(
       (order) =>
@@ -64,20 +76,34 @@ export function OrdersTableBlock() {
     );
   }, [orders, filter, query]);
 
+  const { sorted: found, tableProps } = useTableSort(filtered, sortAccessors, {
+    column: "id",
+    direction: "descending",
+  });
+
   const pageCount = Math.max(1, Math.ceil(found.length / PAGE_SIZE));
   const currentPage = Math.min(page, pageCount);
   const visible = found.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
   const pages = Array.from({ length: pageCount }, (_, index) => index + 1);
 
-  function reset() {
-    setFilter("all");
-    setQuery("");
-    setPage(1);
+  function filterBy(next: Filter) {
+    withTransition(() => {
+      setFilter(next);
+      setPage(1);
+    });
   }
 
-  function retry(id: string) {
-    setOrders((list) =>
-      list.map((order) => (order.id === id ? { ...order, status: "paid" } : order)),
+  function reset() {
+    setQuery("");
+    filterBy("all");
+  }
+
+  async function retry(id: string) {
+    await simulateRequest();
+    withTransition(() =>
+      setOrders((list) =>
+        list.map((order) => (order.id === id ? { ...order, status: "paid" } : order)),
+      ),
     );
   }
 
@@ -89,24 +115,14 @@ export function OrdersTableBlock() {
         justifyContent="between"
         gap="m"
       >
-        <ToggleButtonGroup
-          aria-label="Статус заказа"
-          disallowEmptySelection
-          selectedKeys={new Set([filter])}
-          selectionMode="single"
-          size="sm"
-          onSelectionChange={(keys) => {
-            const [key] = keys;
-            setFilter(key as Filter);
-            setPage(1);
-          }}
-        >
-          {filters.map((item) => (
-            <ToggleButton key={item.id} id={item.id}>
-              {item.label}
-            </ToggleButton>
-          ))}
-        </ToggleButtonGroup>
+        <Box display="block" overflowX="auto">
+          <SegmentedControl
+            label="Статус заказа"
+            options={filters}
+            value={filter}
+            onChange={filterBy}
+          />
+        </Box>
         <Input
           aria-label="Поиск по заказам"
           className="w-full md:w-64"
@@ -128,17 +144,23 @@ export function OrdersTableBlock() {
       ) : (
         <Table>
           <Table.ScrollContainer>
-            <Table.Content aria-label="Заказы" className="min-w-150">
+            <Table.Content aria-label="Заказы" className="min-w-150" {...tableProps}>
               <Table.Header>
-                <Table.Column isRowHeader>Заказ</Table.Column>
-                <Table.Column>Клиент</Table.Column>
-                <Table.Column>Статус</Table.Column>
-                <Table.Column>Дата</Table.Column>
-                <Table.Column>Сумма</Table.Column>
+                <SortableColumn isRowHeader id="id">
+                  Заказ
+                </SortableColumn>
+                <SortableColumn id="customer">Клиент</SortableColumn>
+                <SortableColumn id="status">Статус</SortableColumn>
+                <SortableColumn id="date">Дата</SortableColumn>
+                <SortableColumn id="amount">Сумма</SortableColumn>
               </Table.Header>
               <Table.Body>
                 {visible.map((order) => (
-                  <Table.Row key={order.id} id={order.id}>
+                  <Table.Row
+                    key={order.id}
+                    id={order.id}
+                    style={{ viewTransitionName: `order-${order.id}` }}
+                  >
                     <Table.Cell>
                       <Text as="span" monospace>
                         {order.id}

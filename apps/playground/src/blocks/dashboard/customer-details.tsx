@@ -1,13 +1,7 @@
-import { Avatar, Box, Button, DetailRow, Stat, Text, toast, tokens } from "@anyglade/kit";
-import { Copy } from "@anyglade/kit/icons";
+import { Avatar, Box, CopyButton, DetailRow, Stat, Text, tokens } from "@anyglade/kit";
 import { formatRubles } from "../format.ts";
 
 const CUSTOMER_ID = "cus_8fK2mQ";
-
-async function copyId() {
-  await navigator.clipboard.writeText(CUSTOMER_ID);
-  toast("Идентификатор скопирован");
-}
 
 export function CustomerDetailsBlock() {
   return (
@@ -48,15 +42,11 @@ export function CustomerDetailsBlock() {
               </Text>
             }
             action={
-              <Button
-                isIconOnly
-                aria-label="Скопировать идентификатор"
-                size="sm"
-                variant="ghost"
-                onPress={copyId}
-              >
-                <Copy />
-              </Button>
+              <CopyButton
+                copiedLabel="Идентификатор скопирован"
+                label="Скопировать идентификатор"
+                value={CUSTOMER_ID}
+              />
             }
           />
           <DetailRow label="Статус" value="Активна" />

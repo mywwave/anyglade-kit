@@ -35,7 +35,9 @@ setTimeout(() => { document.getElementById("out").textContent = f.contentDocumen
 </script>
 EOF
 
-(cd "$OUT/site" && npx -y serve@14 -l "$PORT" . > "$OUT/serve.log" 2>&1 &)
+node "$(native "$SKILL/serve.mjs")" "$(native "$OUT/site")" "$PORT" > "$OUT/serve.log" 2>&1 < /dev/null &
+SERVER=$!
+trap 'kill "$SERVER" 2> /dev/null; rm -rf "$OUT/profile"' EXIT
 for _ in $(seq 1 15); do
   [ "$(curl -s -o /dev/null -w '%{http_code}' "http://localhost:$PORT/probe.js")" = 200 ] && break
   sleep 1
@@ -43,13 +45,14 @@ done
 
 browser() {
   rm -rf "$OUT/profile"
-  "$BROWSER_BIN" --headless=new --disable-gpu --no-sandbox --hide-scrollbars \
+  timeout -k 5 60 "$BROWSER_BIN" --headless=new --disable-gpu --no-sandbox --hide-scrollbars \
     --run-all-compositor-stages-before-draw --user-data-dir="$(native "$OUT/profile")" "$@" 2> /dev/null
 }
 dump() { sed -n "s#.*<pre id=\"$1\"[^>]*>\(.*\)</pre>.*#\1#p" | sed 's/&quot;/"/g; s/&gt;/>/g; s/&lt;/</g; s/&amp;/\&/g'; }
 
 browser --window-size=1280,900 --virtual-time-budget=6000 --dump-dom "http://localhost:$PORT/?theme=dark" | dump probe > "$OUT/desktop.json"
 browser --window-size=700,900 --virtual-time-budget=9000 --dump-dom "http://localhost:$PORT/phone?theme=dark" | dump out > "$OUT/phone.json"
+[ -s "$OUT/desktop.json" ] && [ -s "$OUT/phone.json" ] || { echo "Браузер не вернул результат за 60 с"; exit 1; }
 node "$(native "$SKILL/report.mjs")" "$(native "$OUT/desktop.json")" "$(native "$OUT/phone.json")"
 
 if [ -n "$IDS" ]; then
@@ -62,12 +65,3 @@ if [ -n "$IDS" ]; then
   echo
   echo "Скриншоты: $(native "$OUT/shots")"
 fi
-
-if command -v netstat > /dev/null && command -v taskkill > /dev/null; then
-  netstat -ano | grep ":$PORT " | grep LISTENING | awk '{print $5}' | sort -u | while read -r pid; do
-    taskkill //PID "$pid" //T //F > /dev/null 2>&1
-  done
-else
-  pkill -f "serve@14 -l $PORT" 2> /dev/null
-fi
-rm -rf "$OUT/profile"

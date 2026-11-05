@@ -10,6 +10,7 @@ const steps = [
 
 export function EmptyStatesBlock() {
   const [done, setDone] = useState<string[]>([]);
+  const [isFiltered, setIsFiltered] = useState(true);
 
   function toggle(id: string, isDone: boolean) {
     setDone((list) => (isDone ? [...list, id] : list.filter((item) => item !== id)));
@@ -55,11 +56,13 @@ export function EmptyStatesBlock() {
       </Box>
       <EmptyPanel
         icon={<Magnifier />}
-        title="Ничего не найдено"
-        description="Измените запрос или фильтры."
+        title={isFiltered ? "Ничего не найдено" : "Заказов ещё нет"}
+        description={
+          isFiltered ? "Измените запрос или фильтры." : "Фильтры сброшены, показан весь список."
+        }
         actions={
-          <Button size="sm" variant="secondary">
-            Сбросить фильтры
+          <Button size="sm" variant="secondary" onPress={() => setIsFiltered(!isFiltered)}>
+            {isFiltered ? "Сбросить фильтры" : "Вернуть фильтры"}
           </Button>
         }
       />

@@ -47,6 +47,9 @@ const overflow = keywords("hidden", "auto", "scroll", "visible");
 const borderWidth = { 0: "0", 1: "1px", 2: "2px" };
 const flexFactor = { 0: "0", 1: "1" };
 
+const motionPreset = (name: string, duration: string, easing: string) =>
+  `ag-${name} var(--ag-duration-${duration}) var(--ag-ease-${easing}) backwards`;
+
 /** Props that accept only named values. Each value becomes one generated class. */
 export const tokenProps = {
   padding: { slug: "p", css: "padding", values: space },
@@ -147,6 +150,15 @@ export const tokenProps = {
   visibility: { slug: "visibility", css: "visibility", values: keywords("visible", "hidden") },
   userSelect: { slug: "select", css: "user-select", values: keywords("none", "text", "all") },
 
+  motion: {
+    slug: "motion",
+    css: "animation",
+    values: {
+      fade: motionPreset("fade", "base", "standard"),
+      enter: motionPreset("enter", "base", "decelerate"),
+      pop: motionPreset("pop", "fast", "decelerate"),
+    },
+  },
   transitionProperty: {
     slug: "transition",
     css: "transition-property",
@@ -186,6 +198,7 @@ export const freeProps = {
   left: { slug: "left", css: "left", unit: "px" },
   inset: { slug: "inset", css: "inset", unit: "px" },
 
+  viewTransitionName: { slug: "vt", css: "view-transition-name" },
   flex: { slug: "flex-v", css: "flex" },
   aspectRatio: { slug: "aspect", css: "aspect-ratio" },
   zIndex: { slug: "z", css: "z-index" },

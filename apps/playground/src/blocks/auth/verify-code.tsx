@@ -1,9 +1,11 @@
-import { Box, Button, InputOTP, Text } from "@anyglade/kit";
+import { Box, Button, InputOTP, Spinner, Text, toast, useLoadingIndicator } from "@anyglade/kit";
 import { Check } from "@anyglade/kit/icons";
 import { useEffect, useState } from "react";
+import { simulateRequest } from "../../simulate.ts";
 
 const CODE_LENGTH = 6;
 const RESEND_SECONDS = 30;
+const WRONG_CODE = "000000";
 const firstSlots = [0, 1, 2];
 const secondSlots = [3, 4, 5];
 
@@ -11,6 +13,9 @@ export function VerifyCodeBlock() {
   const [code, setCode] = useState("");
   const [isVerified, setIsVerified] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(RESEND_SECONDS);
+  const [isChecking, setIsChecking] = useState(false);
+  const [isWrong, setIsWrong] = useState(false);
+  const isSpinnerVisible = useLoadingIndicator(isChecking);
 
   useEffect(() => {
     if (secondsLeft === 0 || isVerified) {
@@ -23,7 +28,27 @@ export function VerifyCodeBlock() {
   function restart() {
     setCode("");
     setIsVerified(false);
+    setIsWrong(false);
     setSecondsLeft(RESEND_SECONDS);
+  }
+
+  async function verify(value: string) {
+    setIsChecking(true);
+    setIsWrong(false);
+    await simulateRequest();
+    setIsChecking(false);
+    if (value === WRONG_CODE) {
+      setIsWrong(true);
+      setCode("");
+    } else {
+      setIsVerified(true);
+    }
+  }
+
+  async function resend() {
+    await simulateRequest();
+    setSecondsLeft(RESEND_SECONDS);
+    toast("Новый код отправлен");
   }
 
   if (isVerified) {
@@ -62,14 +87,16 @@ export function VerifyCodeBlock() {
         <Text as="h2" variant="heading-s">
           Введите код из письма
         </Text>
-        <Text color="muted">Отправили на anna@example.com. Подойдёт любой код.</Text>
+        <Text color="muted">Отправили на anna@example.com. Подойдёт любой код, кроме 000000.</Text>
       </Box>
       <InputOTP
         aria-label="Код подтверждения"
+        isDisabled={isChecking}
+        isInvalid={isWrong}
         maxLength={CODE_LENGTH}
         value={code}
         onChange={setCode}
-        onComplete={() => setIsVerified(true)}
+        onComplete={verify}
       >
         <InputOTP.Group>
           {firstSlots.map((index) => (
@@ -83,14 +110,18 @@ export function VerifyCodeBlock() {
           ))}
         </InputOTP.Group>
       </InputOTP>
-      <Button
-        isDisabled={secondsLeft > 0}
-        size="sm"
-        variant="ghost"
-        onPress={() => setSecondsLeft(RESEND_SECONDS)}
-      >
-        {secondsLeft > 0 ? `Отправить ещё раз через ${secondsLeft} с` : "Отправить ещё раз"}
-      </Button>
+      {isWrong ? (
+        <Text aria-live="polite" color="danger">
+          Код не подошёл, попробуйте ещё раз
+        </Text>
+      ) : null}
+      {isSpinnerVisible ? (
+        <Spinner aria-label="Проверяем код" size="sm" />
+      ) : (
+        <Button isDisabled={secondsLeft > 0} size="sm" variant="ghost" onPress={resend}>
+          {secondsLeft > 0 ? `Отправить ещё раз через ${secondsLeft} с` : "Отправить ещё раз"}
+        </Button>
+      )}
     </Box>
   );
 }

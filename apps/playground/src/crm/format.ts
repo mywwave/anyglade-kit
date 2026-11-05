@@ -7,6 +7,18 @@ const compact = new Intl.NumberFormat("ru-RU", {
 
 export const formatCompactRubles = (value: number) => compact.format(value);
 
+export function downloadCsv(fileName: string, rows: string[][]) {
+  const lines = rows.map((row) => row.map((cell) => `"${cell.replaceAll('"', '""')}"`).join(";"));
+  const url = URL.createObjectURL(
+    new Blob([`\uFEFF${lines.join("\n")}`], { type: "text/csv;charset=utf-8" }),
+  );
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = fileName;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
 export function pluralize(count: number, one: string, few: string, many: string) {
   const lastTwo = Math.abs(count) % 100;
   const last = lastTwo % 10;

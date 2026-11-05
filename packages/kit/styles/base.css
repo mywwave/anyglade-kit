@@ -9,9 +9,7 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   :root {
-    --ag-duration-fast: 0ms;
-    --ag-duration-base: 0ms;
-    --ag-duration-slow: 0ms;
-    --ag-duration-slower: 0ms;
+    --ag-duration-slow: var(--ag-duration-base);
+    --ag-duration-slower: var(--ag-duration-base);
   }
 }

@@ -11,6 +11,7 @@ export const palette = {
   "gray-900": "oklch(0.21 0.034 264.665)",
 
   "ink-50": "hsl(0 0% 85%)",
+  "ink-100": "hsl(0 0% 88%)",
   "ink-400": "hsl(0 0% 52%)",
   "ink-500": "hsl(0 0% 46%)",
   "ink-600": "hsl(0 0% 16%)",
@@ -50,13 +51,12 @@ export const colors = {
   "background-secondary": ["gray-50", "ink-900"],
   "background-card": ["gray-100", "ink-800"],
   "background-emphasis": ["gray-400", "ink-500"],
-  "background-inverse": ["gray-900", "white"],
-  "background-accent": ["blue-50", "blue-950"],
+  "background-inverse": ["gray-900", "ink-100"],
   "background-warning": ["amber-50", "amber-950"],
   "background-success": ["emerald-50", "emerald-950"],
   "background-danger": ["red-50", "red-950"],
 
-  "text-primary": ["black", "white"],
+  "text-primary": ["black", "ink-100"],
   "text-secondary": ["gray-500", "ink-400"],
   "text-tertiary": ["gray-400", "ink-500"],
   "text-disabled": ["gray-300", "ink-600"],
@@ -71,7 +71,7 @@ export const colors = {
   "border-control": ["gray-300", "ink-600"],
   "border-warning": ["amber-300", "amber-700"],
 
-  "chart-primary": ["gray-900", "white"],
+  "chart-primary": ["gray-900", "ink-100"],
   "chart-secondary": ["gray-400", "ink-400"],
   "chart-tertiary": ["gray-200", "ink-600"],
 } as const satisfies Record<string, ColorPair>;
@@ -120,6 +120,13 @@ export const easings = {
   standard: "cubic-bezier(0.2, 0, 0, 1)",
   decelerate: "cubic-bezier(0, 0, 0, 1)",
   accelerate: "cubic-bezier(0.3, 0, 1, 1)",
+} as const;
+
+/** Pacing of feedback, in milliseconds: fast work never flashes a loader. */
+export const timings = {
+  loaderDelay: 150,
+  loaderMinimum: 400,
+  confirmation: 1500,
 } as const;
 
 export const fontSizes = {

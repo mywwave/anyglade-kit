@@ -1,0 +1,44 @@
+@keyframes ag-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes ag-enter {
+  from {
+    opacity: 0;
+    transform: translateY(var(--ag-space-xs));
+  }
+}
+
+@keyframes ag-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @keyframes ag-enter {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes ag-pop {
+    from {
+      opacity: 0;
+    }
+  }
+}
+
+/* Only elements with a view-transition-name move. The page itself swaps at once. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+}
+
+::view-transition-group(*) {
+  animation-duration: var(--ag-duration-base);
+  animation-timing-function: var(--ag-ease-standard);
+}

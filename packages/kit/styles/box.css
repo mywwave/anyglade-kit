@@ -270,7 +270,6 @@
 .ag-bg-background-card { background-color: var(--ag-background-card); }
 .ag-bg-background-emphasis { background-color: var(--ag-background-emphasis); }
 .ag-bg-background-inverse { background-color: var(--ag-background-inverse); }
-.ag-bg-background-accent { background-color: var(--ag-background-accent); }
 .ag-bg-background-warning { background-color: var(--ag-background-warning); }
 .ag-bg-background-success { background-color: var(--ag-background-success); }
 .ag-bg-background-danger { background-color: var(--ag-background-danger); }
@@ -389,6 +388,9 @@
 .ag-select-none { user-select: none; }
 .ag-select-text { user-select: text; }
 .ag-select-all { user-select: all; }
+.ag-motion-fade { animation: ag-fade var(--ag-duration-base) var(--ag-ease-standard) backwards; }
+.ag-motion-enter { animation: ag-enter var(--ag-duration-base) var(--ag-ease-decelerate) backwards; }
+.ag-motion-pop { animation: ag-pop var(--ag-duration-fast) var(--ag-ease-decelerate) backwards; }
 .ag-transition-none { transition-property: none; }
 .ag-transition-colors { transition-property: color, background-color, border-color; }
 .ag-transition-opacity { transition-property: opacity; }
@@ -415,6 +417,7 @@
 .ag-bottom { bottom: var(--ag-bottom); }
 .ag-left { left: var(--ag-left); }
 .ag-inset { inset: var(--ag-inset); }
+.ag-vt { view-transition-name: var(--ag-vt); }
 .ag-flex-v { flex: var(--ag-flex-v); }
 .ag-aspect { aspect-ratio: var(--ag-aspect); }
 .ag-z { z-index: var(--ag-z); }
@@ -745,7 +748,6 @@
   .sm\:ag-bg-background-card { background-color: var(--ag-background-card); }
   .sm\:ag-bg-background-emphasis { background-color: var(--ag-background-emphasis); }
   .sm\:ag-bg-background-inverse { background-color: var(--ag-background-inverse); }
-  .sm\:ag-bg-background-accent { background-color: var(--ag-background-accent); }
   .sm\:ag-bg-background-warning { background-color: var(--ag-background-warning); }
   .sm\:ag-bg-background-success { background-color: var(--ag-background-success); }
   .sm\:ag-bg-background-danger { background-color: var(--ag-background-danger); }
@@ -864,6 +866,9 @@
   .sm\:ag-select-none { user-select: none; }
   .sm\:ag-select-text { user-select: text; }
   .sm\:ag-select-all { user-select: all; }
+  .sm\:ag-motion-fade { animation: ag-fade var(--ag-duration-base) var(--ag-ease-standard) backwards; }
+  .sm\:ag-motion-enter { animation: ag-enter var(--ag-duration-base) var(--ag-ease-decelerate) backwards; }
+  .sm\:ag-motion-pop { animation: ag-pop var(--ag-duration-fast) var(--ag-ease-decelerate) backwards; }
   .sm\:ag-transition-none { transition-property: none; }
   .sm\:ag-transition-colors { transition-property: color, background-color, border-color; }
   .sm\:ag-transition-opacity { transition-property: opacity; }
@@ -890,6 +895,7 @@
   .sm\:ag-bottom { bottom: var(--ag-bottom-sm); }
   .sm\:ag-left { left: var(--ag-left-sm); }
   .sm\:ag-inset { inset: var(--ag-inset-sm); }
+  .sm\:ag-vt { view-transition-name: var(--ag-vt-sm); }
   .sm\:ag-flex-v { flex: var(--ag-flex-v-sm); }
   .sm\:ag-aspect { aspect-ratio: var(--ag-aspect-sm); }
   .sm\:ag-z { z-index: var(--ag-z-sm); }
@@ -1174,7 +1180,6 @@
   .md\:ag-bg-background-card { background-color: var(--ag-background-card); }
   .md\:ag-bg-background-emphasis { background-color: var(--ag-background-emphasis); }
   .md\:ag-bg-background-inverse { background-color: var(--ag-background-inverse); }
-  .md\:ag-bg-background-accent { background-color: var(--ag-background-accent); }
   .md\:ag-bg-background-warning { background-color: var(--ag-background-warning); }
   .md\:ag-bg-background-success { background-color: var(--ag-background-success); }
   .md\:ag-bg-background-danger { background-color: var(--ag-background-danger); }
@@ -1293,6 +1298,9 @@
   .md\:ag-select-none { user-select: none; }
   .md\:ag-select-text { user-select: text; }
   .md\:ag-select-all { user-select: all; }
+  .md\:ag-motion-fade { animation: ag-fade var(--ag-duration-base) var(--ag-ease-standard) backwards; }
+  .md\:ag-motion-enter { animation: ag-enter var(--ag-duration-base) var(--ag-ease-decelerate) backwards; }
+  .md\:ag-motion-pop { animation: ag-pop var(--ag-duration-fast) var(--ag-ease-decelerate) backwards; }
   .md\:ag-transition-none { transition-property: none; }
   .md\:ag-transition-colors { transition-property: color, background-color, border-color; }
   .md\:ag-transition-opacity { transition-property: opacity; }
@@ -1319,6 +1327,7 @@
   .md\:ag-bottom { bottom: var(--ag-bottom-md); }
   .md\:ag-left { left: var(--ag-left-md); }
   .md\:ag-inset { inset: var(--ag-inset-md); }
+  .md\:ag-vt { view-transition-name: var(--ag-vt-md); }
   .md\:ag-flex-v { flex: var(--ag-flex-v-md); }
   .md\:ag-aspect { aspect-ratio: var(--ag-aspect-md); }
   .md\:ag-z { z-index: var(--ag-z-md); }
@@ -1603,7 +1612,6 @@
   .lg\:ag-bg-background-card { background-color: var(--ag-background-card); }
   .lg\:ag-bg-background-emphasis { background-color: var(--ag-background-emphasis); }
   .lg\:ag-bg-background-inverse { background-color: var(--ag-background-inverse); }
-  .lg\:ag-bg-background-accent { background-color: var(--ag-background-accent); }
   .lg\:ag-bg-background-warning { background-color: var(--ag-background-warning); }
   .lg\:ag-bg-background-success { background-color: var(--ag-background-success); }
   .lg\:ag-bg-background-danger { background-color: var(--ag-background-danger); }
@@ -1722,6 +1730,9 @@
   .lg\:ag-select-none { user-select: none; }
   .lg\:ag-select-text { user-select: text; }
   .lg\:ag-select-all { user-select: all; }
+  .lg\:ag-motion-fade { animation: ag-fade var(--ag-duration-base) var(--ag-ease-standard) backwards; }
+  .lg\:ag-motion-enter { animation: ag-enter var(--ag-duration-base) var(--ag-ease-decelerate) backwards; }
+  .lg\:ag-motion-pop { animation: ag-pop var(--ag-duration-fast) var(--ag-ease-decelerate) backwards; }
   .lg\:ag-transition-none { transition-property: none; }
   .lg\:ag-transition-colors { transition-property: color, background-color, border-color; }
   .lg\:ag-transition-opacity { transition-property: opacity; }
@@ -1748,6 +1759,7 @@
   .lg\:ag-bottom { bottom: var(--ag-bottom-lg); }
   .lg\:ag-left { left: var(--ag-left-lg); }
   .lg\:ag-inset { inset: var(--ag-inset-lg); }
+  .lg\:ag-vt { view-transition-name: var(--ag-vt-lg); }
   .lg\:ag-flex-v { flex: var(--ag-flex-v-lg); }
   .lg\:ag-aspect { aspect-ratio: var(--ag-aspect-lg); }
   .lg\:ag-z { z-index: var(--ag-z-lg); }
@@ -2032,7 +2044,6 @@
   .xl\:ag-bg-background-card { background-color: var(--ag-background-card); }
   .xl\:ag-bg-background-emphasis { background-color: var(--ag-background-emphasis); }
   .xl\:ag-bg-background-inverse { background-color: var(--ag-background-inverse); }
-  .xl\:ag-bg-background-accent { background-color: var(--ag-background-accent); }
   .xl\:ag-bg-background-warning { background-color: var(--ag-background-warning); }
   .xl\:ag-bg-background-success { background-color: var(--ag-background-success); }
   .xl\:ag-bg-background-danger { background-color: var(--ag-background-danger); }
@@ -2151,6 +2162,9 @@
   .xl\:ag-select-none { user-select: none; }
   .xl\:ag-select-text { user-select: text; }
   .xl\:ag-select-all { user-select: all; }
+  .xl\:ag-motion-fade { animation: ag-fade var(--ag-duration-base) var(--ag-ease-standard) backwards; }
+  .xl\:ag-motion-enter { animation: ag-enter var(--ag-duration-base) var(--ag-ease-decelerate) backwards; }
+  .xl\:ag-motion-pop { animation: ag-pop var(--ag-duration-fast) var(--ag-ease-decelerate) backwards; }
   .xl\:ag-transition-none { transition-property: none; }
   .xl\:ag-transition-colors { transition-property: color, background-color, border-color; }
   .xl\:ag-transition-opacity { transition-property: opacity; }
@@ -2177,6 +2191,7 @@
   .xl\:ag-bottom { bottom: var(--ag-bottom-xl); }
   .xl\:ag-left { left: var(--ag-left-xl); }
   .xl\:ag-inset { inset: var(--ag-inset-xl); }
+  .xl\:ag-vt { view-transition-name: var(--ag-vt-xl); }
   .xl\:ag-flex-v { flex: var(--ag-flex-v-xl); }
   .xl\:ag-aspect { aspect-ratio: var(--ag-aspect-xl); }
   .xl\:ag-z { z-index: var(--ag-z-xl); }
@@ -2197,7 +2212,6 @@
   .hover\:ag-bg-background-card:hover { background-color: var(--ag-background-card); }
   .hover\:ag-bg-background-emphasis:hover { background-color: var(--ag-background-emphasis); }
   .hover\:ag-bg-background-inverse:hover { background-color: var(--ag-background-inverse); }
-  .hover\:ag-bg-background-accent:hover { background-color: var(--ag-background-accent); }
   .hover\:ag-bg-background-warning:hover { background-color: var(--ag-background-warning); }
   .hover\:ag-bg-background-success:hover { background-color: var(--ag-background-success); }
   .hover\:ag-bg-background-danger:hover { background-color: var(--ag-background-danger); }
@@ -2229,7 +2243,6 @@
 .focus\:ag-bg-background-card:focus { background-color: var(--ag-background-card); }
 .focus\:ag-bg-background-emphasis:focus { background-color: var(--ag-background-emphasis); }
 .focus\:ag-bg-background-inverse:focus { background-color: var(--ag-background-inverse); }
-.focus\:ag-bg-background-accent:focus { background-color: var(--ag-background-accent); }
 .focus\:ag-bg-background-warning:focus { background-color: var(--ag-background-warning); }
 .focus\:ag-bg-background-success:focus { background-color: var(--ag-background-success); }
 .focus\:ag-bg-background-danger:focus { background-color: var(--ag-background-danger); }
@@ -2260,7 +2273,6 @@
 .focusVisible\:ag-bg-background-card:focus-visible { background-color: var(--ag-background-card); }
 .focusVisible\:ag-bg-background-emphasis:focus-visible { background-color: var(--ag-background-emphasis); }
 .focusVisible\:ag-bg-background-inverse:focus-visible { background-color: var(--ag-background-inverse); }
-.focusVisible\:ag-bg-background-accent:focus-visible { background-color: var(--ag-background-accent); }
 .focusVisible\:ag-bg-background-warning:focus-visible { background-color: var(--ag-background-warning); }
 .focusVisible\:ag-bg-background-success:focus-visible { background-color: var(--ag-background-success); }
 .focusVisible\:ag-bg-background-danger:focus-visible { background-color: var(--ag-background-danger); }
@@ -2291,7 +2303,6 @@
 .focusWithin\:ag-bg-background-card:focus-within { background-color: var(--ag-background-card); }
 .focusWithin\:ag-bg-background-emphasis:focus-within { background-color: var(--ag-background-emphasis); }
 .focusWithin\:ag-bg-background-inverse:focus-within { background-color: var(--ag-background-inverse); }
-.focusWithin\:ag-bg-background-accent:focus-within { background-color: var(--ag-background-accent); }
 .focusWithin\:ag-bg-background-warning:focus-within { background-color: var(--ag-background-warning); }
 .focusWithin\:ag-bg-background-success:focus-within { background-color: var(--ag-background-success); }
 .focusWithin\:ag-bg-background-danger:focus-within { background-color: var(--ag-background-danger); }
@@ -2322,7 +2333,6 @@
 .active\:ag-bg-background-card:active { background-color: var(--ag-background-card); }
 .active\:ag-bg-background-emphasis:active { background-color: var(--ag-background-emphasis); }
 .active\:ag-bg-background-inverse:active { background-color: var(--ag-background-inverse); }
-.active\:ag-bg-background-accent:active { background-color: var(--ag-background-accent); }
 .active\:ag-bg-background-warning:active { background-color: var(--ag-background-warning); }
 .active\:ag-bg-background-success:active { background-color: var(--ag-background-success); }
 .active\:ag-bg-background-danger:active { background-color: var(--ag-background-danger); }

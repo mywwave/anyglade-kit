@@ -1,15 +1,6 @@
 import { tokens } from "@anyglade/kit";
 import { useEffect, useState } from "react";
-
-export const accentPresets = [
-  "#2563EB",
-  "#4F46E5",
-  "#7C3AED",
-  "#DB2777",
-  "#EA580C",
-  "#059669",
-  "#0891B2",
-];
+import { accentVariables } from "./accent.ts";
 
 const textScales = {
   compact: "87.5%",
@@ -40,29 +31,9 @@ export const defaultSettings: ThemeSettings = {
 };
 
 const STORAGE_KEY = "anyglade-theme-settings";
-const LIGHT_TEXT_THRESHOLD = 0.45;
-
-function readingColor(hex: string) {
-  const channels = [1, 3, 5].map((start) => {
-    const value = Number.parseInt(hex.slice(start, start + 2), 16) / 255;
-    return value <= 0.03928 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
-  });
-  const [red = 0, green = 0, blue = 0] = channels;
-  const luminance = 0.2126 * red + 0.7152 * green + 0.0722 * blue;
-  return luminance > LIGHT_TEXT_THRESHOLD ? "#000000" : "#ffffff";
-}
 
 function themeVariables({ accent, radius, spacing, buttonShape }: ThemeSettings) {
-  const variables: Record<string, string> = {};
-
-  if (accent) {
-    variables["--accent"] = accent;
-    variables["--accent-foreground"] = readingColor(accent);
-    variables["--focus"] = accent;
-    variables["--link"] = accent;
-    variables["--ag-text-accent"] = accent;
-    variables["--ag-chart-primary"] = accent;
-  }
+  const variables: Record<string, string> = accent ? accentVariables(accent) : {};
 
   if (radius !== defaultSettings.radius) {
     const scale = radius / 100;

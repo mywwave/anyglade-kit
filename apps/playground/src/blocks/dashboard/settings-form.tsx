@@ -10,7 +10,8 @@ import {
   toast,
   tokens,
 } from "@anyglade/kit";
-import { useState, type FormEvent, type ReactNode } from "react";
+import { useState, useTransition, type FormEvent, type ReactNode } from "react";
+import { simulateRequest } from "../../simulate.ts";
 
 const notificationNames = ["Новые заказы", "Неудачные платежи", "Еженедельный отчёт"] as const;
 
@@ -50,6 +51,7 @@ function SettingsSection({ title, description, children }: SettingsSectionProps)
 export function SettingsFormBlock() {
   const [saved, setSaved] = useState(savedSettings);
   const [draft, setDraft] = useState(savedSettings);
+  const [isSaving, startSaving] = useTransition();
   const isDirty = JSON.stringify(saved) !== JSON.stringify(draft);
 
   function toggle(name: string, isEnabled: boolean) {
@@ -61,10 +63,13 @@ export function SettingsFormBlock() {
     }));
   }
 
-  function submit(event: FormEvent) {
+  function save(event: FormEvent) {
     event.preventDefault();
-    setSaved(draft);
-    toast("Настройки сохранены");
+    startSaving(async () => {
+      await simulateRequest();
+      setSaved(draft);
+      toast("Настройки сохранены");
+    });
   }
 
   return (
@@ -76,7 +81,7 @@ export function SettingsFormBlock() {
       maxWidth={tokens.widths.content}
       marginHorizontal="auto"
       padding={{ base: "l", md: "2xl" }}
-      onSubmit={submit}
+      onSubmit={save}
     >
       <SettingsSection title="Организация" description="Эти данные попадут в счета.">
         <TextField
@@ -127,7 +132,7 @@ export function SettingsFormBlock() {
         <Button isDisabled={!isDirty} size="sm" variant="ghost" onPress={() => setDraft(saved)}>
           Отменить
         </Button>
-        <Button isDisabled={!isDirty} size="sm" type="submit">
+        <Button isDisabled={!isDirty} isPending={isSaving} size="sm" type="submit">
           Сохранить
         </Button>
       </Box>

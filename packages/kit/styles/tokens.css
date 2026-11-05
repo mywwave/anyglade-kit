@@ -11,6 +11,7 @@
   --ag-gray-500: oklch(0.551 0.027 264.364);
   --ag-gray-900: oklch(0.21 0.034 264.665);
   --ag-ink-50: hsl(0 0% 85%);
+  --ag-ink-100: hsl(0 0% 88%);
   --ag-ink-400: hsl(0 0% 52%);
   --ag-ink-500: hsl(0 0% 46%);
   --ag-ink-600: hsl(0 0% 16%);
@@ -40,12 +41,11 @@
   --ag-background-secondary: light-dark(var(--ag-gray-50), var(--ag-ink-900));
   --ag-background-card: light-dark(var(--ag-gray-100), var(--ag-ink-800));
   --ag-background-emphasis: light-dark(var(--ag-gray-400), var(--ag-ink-500));
-  --ag-background-inverse: light-dark(var(--ag-gray-900), var(--ag-white));
-  --ag-background-accent: light-dark(var(--ag-blue-50), var(--ag-blue-950));
+  --ag-background-inverse: light-dark(var(--ag-gray-900), var(--ag-ink-100));
   --ag-background-warning: light-dark(var(--ag-amber-50), var(--ag-amber-950));
   --ag-background-success: light-dark(var(--ag-emerald-50), var(--ag-emerald-950));
   --ag-background-danger: light-dark(var(--ag-red-50), var(--ag-red-950));
-  --ag-text-primary: light-dark(var(--ag-black), var(--ag-white));
+  --ag-text-primary: light-dark(var(--ag-black), var(--ag-ink-100));
   --ag-text-secondary: light-dark(var(--ag-gray-500), var(--ag-ink-400));
   --ag-text-tertiary: light-dark(var(--ag-gray-400), var(--ag-ink-500));
   --ag-text-disabled: light-dark(var(--ag-gray-300), var(--ag-ink-600));
@@ -58,7 +58,7 @@
   --ag-border-secondary: light-dark(var(--ag-gray-100), var(--ag-ink-800));
   --ag-border-control: light-dark(var(--ag-gray-300), var(--ag-ink-600));
   --ag-border-warning: light-dark(var(--ag-amber-300), var(--ag-amber-700));
-  --ag-chart-primary: light-dark(var(--ag-gray-900), var(--ag-white));
+  --ag-chart-primary: light-dark(var(--ag-gray-900), var(--ag-ink-100));
   --ag-chart-secondary: light-dark(var(--ag-gray-400), var(--ag-ink-400));
   --ag-chart-tertiary: light-dark(var(--ag-gray-200), var(--ag-ink-600));
   --ag-space-none: 0;

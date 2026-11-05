@@ -1,4 +1,4 @@
-import { Box, Button, Checkbox, Stat, Text, ToggleButton, ToggleButtonGroup } from "@anyglade/kit";
+import { Box, Button, Checkbox, SegmentedControl, Stat, Text } from "@anyglade/kit";
 import { DonutChart, LineChart, Sparkline } from "@anyglade/kit/charts";
 import { useState } from "react";
 import { formatRubles } from "../blocks/format.ts";
@@ -13,14 +13,12 @@ import {
 } from "./data.ts";
 import { formatCompactRubles, pluralize } from "./format.ts";
 
-const periods = {
-  half: { label: "6 месяцев", months: 6 },
-  year: { label: "12 месяцев", months: 12 },
-};
+const periods = [
+  { id: "half", label: "6 месяцев" },
+  { id: "year", label: "12 месяцев" },
+] as const;
 
-type Period = keyof typeof periods;
-
-const periodNames = Object.keys(periods) as Period[];
+type Period = (typeof periods)[number]["id"];
 
 interface OverviewProps {
   deals: Deal[];
@@ -39,6 +37,8 @@ export function Overview({ deals, tasks, onToggleTask, onOpenDeals }: OverviewPr
   const wonTotal = won.reduce((sum, deal) => sum + deal.amount, 0);
   const openTotal = open.reduce((sum, deal) => sum + deal.amount, 0);
   const today = tasks.filter((task) => task.group === "today");
+  const months = period === "half" ? 6 : 12;
+  const conversion = deals.length === 0 ? 0 : Math.round((won.length / deals.length) * 100);
 
   const funnel = stages.map((stage) => {
     const items = deals.filter((deal) => deal.stage === stage.id);
@@ -70,11 +70,7 @@ export function Overview({ deals, tasks, onToggleTask, onOpenDeals }: OverviewPr
               : `${formatCompactRubles(atRisk)} под риском`}
           </Text>
         </Box>
-        {stalled.length > 0 ? (
-          <Button variant="secondary" onPress={onOpenDeals}>
-            Открыть сделки
-          </Button>
-        ) : null}
+        {stalled.length > 0 ? <Button onPress={onOpenDeals}>Открыть сделки</Button> : null}
       </Box>
 
       <Box
@@ -91,7 +87,7 @@ export function Overview({ deals, tasks, onToggleTask, onOpenDeals }: OverviewPr
           <Sparkline label="Динамика сделок в работе" values={trends.deals} />
         </Box>
         <Box flexDirection="column" gap="s" minWidth={0}>
-          <Stat label="Конверсия" value="31%" />
+          <Stat label="Конверсия" value={`${conversion}%`} />
           <Sparkline label="Динамика конверсии" values={trends.conversion} />
         </Box>
         <Box flexDirection="column" gap="s" minWidth={0}>
@@ -110,27 +106,16 @@ export function Overview({ deals, tasks, onToggleTask, onOpenDeals }: OverviewPr
             <Text as="h2" variant="heading-xxs">
               Выручка и план
             </Text>
-            <ToggleButtonGroup
-              aria-label="Период"
-              disallowEmptySelection
-              selectedKeys={new Set([period])}
-              selectionMode="single"
-              size="sm"
-              onSelectionChange={(keys) => {
-                const [key] = keys;
-                setPeriod(key as Period);
-              }}
-            >
-              {periodNames.map((name) => (
-                <ToggleButton key={name} id={name}>
-                  {periods[name].label}
-                </ToggleButton>
-              ))}
-            </ToggleButtonGroup>
+            <SegmentedControl
+              label="Период"
+              options={periods}
+              value={period}
+              onChange={setPeriod}
+            />
           </Box>
           <LineChart
             label="Выручка и план по месяцам"
-            data={revenueByMonth.slice(-periods[period].months)}
+            data={revenueByMonth.slice(-months)}
             format={formatRubles}
             height={260}
             series={[

@@ -1,11 +1,19 @@
-import { Avatar, Box, Button, Drawer, Text } from "@anyglade/kit";
+import { Avatar, Box, Button, Drawer, Loadable, Text, withTransition } from "@anyglade/kit";
 import { Bars, ChartColumn, CircleCheck, House, Persons, SquareListUl } from "@anyglade/kit/icons";
-import { useState, type ComponentType, type ReactNode } from "react";
+import { useEffect, useState, type ComponentType, type ReactNode } from "react";
 import { Analytics } from "./analytics.tsx";
 import { Customers } from "./customers.tsx";
-import { AVATARS, STALLED_AFTER_DAYS, initialDeals, initialTasks, type StageId } from "./data.ts";
-import { Deals } from "./deals.tsx";
+import {
+  AVATARS,
+  STALLED_AFTER_DAYS,
+  initialDeals,
+  initialTasks,
+  type StageId,
+  type TaskGroup,
+} from "./data.ts";
+import { Deals, type DealsView } from "./deals.tsx";
 import { Overview } from "./overview.tsx";
+import { BoardSkeleton, DashboardSkeleton, ListSkeleton, TableSkeleton } from "./skeletons.tsx";
 import { Tasks } from "./tasks.tsx";
 
 type Screen = "overview" | "deals" | "customers" | "tasks" | "analytics";
@@ -17,6 +25,16 @@ const screens: { id: Screen; label: string; icon: ComponentType }[] = [
   { id: "tasks", label: "Задачи", icon: CircleCheck },
   { id: "analytics", label: "Аналитика", icon: ChartColumn },
 ];
+
+const skeletons: Record<Screen, ReactNode> = {
+  overview: <DashboardSkeleton />,
+  deals: <BoardSkeleton />,
+  customers: <TableSkeleton />,
+  tasks: <ListSkeleton />,
+  analytics: <DashboardSkeleton />,
+};
+
+const SCREEN_LOAD_MS = 700;
 
 interface NavigationProps {
   active: Screen;
@@ -68,11 +86,32 @@ export function CrmApp() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [deals, setDeals] = useState(initialDeals);
   const [tasks, setTasks] = useState(initialTasks);
+  const [dealsView, setDealsView] = useState<DealsView>("all");
+  const [loadedScreens, setLoadedScreens] = useState<ReadonlySet<Screen>>(new Set());
+  const isLoading = !loadedScreens.has(screen);
+
+  useEffect(() => {
+    if (!isLoading) {
+      return undefined;
+    }
+    const timer = setTimeout(
+      () => setLoadedScreens((list) => new Set(list).add(screen)),
+      SCREEN_LOAD_MS,
+    );
+    return () => clearTimeout(timer);
+  }, [isLoading, screen]);
 
   function moveDeal(id: string, stage: StageId) {
-    setDeals((list) =>
-      list.map((deal) => (deal.id === id ? { ...deal, stage, daysInStage: 0 } : deal)),
+    withTransition(() =>
+      setDeals((list) =>
+        list.map((deal) => (deal.id === id ? { ...deal, stage, daysInStage: 0 } : deal)),
+      ),
     );
+  }
+
+  function openStalledDeals() {
+    setDealsView("stalled");
+    setScreen("deals");
   }
 
   function toggleTask(id: string) {
@@ -81,17 +120,17 @@ export function CrmApp() {
     );
   }
 
-  function addTask(title: string) {
-    setTasks((list) => [
-      {
-        id: `T-${list.length + 1}-${title}`,
-        title,
-        company: "Без компании",
-        group: "today",
-        isDone: false,
-      },
-      ...list,
-    ]);
+  function addTask(title: string, group: TaskGroup) {
+    const task = { id: crypto.randomUUID(), title, company: "Без компании", group, isDone: false };
+    withTransition(() => setTasks((list) => [task, ...list]));
+  }
+
+  function removeTask(id: string) {
+    withTransition(() => setTasks((list) => list.filter((task) => task.id !== id)));
+  }
+
+  function clearDoneTasks() {
+    withTransition(() => setTasks((list) => list.filter((task) => !task.isDone)));
   }
 
   function select(next: Screen) {
@@ -191,20 +230,30 @@ export function CrmApp() {
           height="fit-content"
           paddingVertical="2xl"
         >
-          {screen === "overview" ? (
-            <Overview
-              deals={deals}
-              tasks={tasks}
-              onOpenDeals={() => setScreen("deals")}
-              onToggleTask={toggleTask}
-            />
-          ) : null}
-          {screen === "deals" ? <Deals deals={deals} onMove={moveDeal} /> : null}
-          {screen === "customers" ? <Customers /> : null}
-          {screen === "tasks" ? (
-            <Tasks tasks={tasks} onAdd={addTask} onToggle={toggleTask} />
-          ) : null}
-          {screen === "analytics" ? <Analytics /> : null}
+          <Loadable isLoading={isLoading} skeleton={skeletons[screen]}>
+            {screen === "overview" ? (
+              <Overview
+                deals={deals}
+                tasks={tasks}
+                onOpenDeals={openStalledDeals}
+                onToggleTask={toggleTask}
+              />
+            ) : null}
+            {screen === "deals" ? (
+              <Deals deals={deals} view={dealsView} onMove={moveDeal} onViewChange={setDealsView} />
+            ) : null}
+            {screen === "customers" ? <Customers /> : null}
+            {screen === "tasks" ? (
+              <Tasks
+                tasks={tasks}
+                onAdd={addTask}
+                onClearDone={clearDoneTasks}
+                onRemove={removeTask}
+                onToggle={toggleTask}
+              />
+            ) : null}
+            {screen === "analytics" ? <Analytics /> : null}
+          </Loadable>
         </Box>
       </Box>
     </Box>

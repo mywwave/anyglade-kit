@@ -1,5 +1,6 @@
-import { Box, Button, Label, Slider, Text } from "@anyglade/kit";
+import { Box, Button, Label, Slider, Text, toast } from "@anyglade/kit";
 import { useState } from "react";
+import { simulateRequest } from "../../simulate.ts";
 import { formatRubles } from "../format.ts";
 
 const plans = [
@@ -15,8 +16,16 @@ const costOf = (plan: (typeof plans)[number], turnover: number) =>
 
 export function PricingBlock() {
   const [turnover, setTurnover] = useState(600000);
+  const [chosenPlan, setChosenPlan] = useState<string | null>(null);
   const quotes = plans.map((plan) => ({ ...plan, cost: costOf(plan, turnover) }));
   const best = quotes.reduce((lowest, quote) => (quote.cost < lowest.cost ? quote : lowest));
+
+  async function choose() {
+    const name = best.name;
+    await simulateRequest();
+    setChosenPlan(name);
+    toast(`Тариф «${name}» подключён`);
+  }
 
   return (
     <Box
@@ -77,7 +86,9 @@ export function PricingBlock() {
           })}
         </Box>
         <Box display="block">
-          <Button size="lg">Выбрать «{best.name}»</Button>
+          <Button isDisabled={chosenPlan === best.name} size="lg" onPress={choose}>
+            {chosenPlan === best.name ? `Тариф «${best.name}» подключён` : `Выбрать «${best.name}»`}
+          </Button>
         </Box>
       </Box>
     </Box>

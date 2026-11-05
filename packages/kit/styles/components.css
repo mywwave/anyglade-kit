@@ -12,6 +12,90 @@
   @media (prefers-reduced-motion: reduce) {
     transition: none;
   }
+
+  /* The label stays in the flow, so a loader never changes the button width. */
+  > :not(.spinner) {
+    transition: opacity var(--ag-duration-fast) var(--ag-ease-standard);
+  }
+
+  &[data-pending="true"] {
+    opacity: 1;
+  }
+
+  &[data-loading] {
+    -webkit-text-fill-color: transparent;
+
+    > :not(.spinner) {
+      opacity: 0;
+    }
+
+    > .spinner {
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      transition: opacity var(--ag-duration-base) var(--ag-ease-standard);
+
+      @starting-style {
+        opacity: 0;
+      }
+    }
+  }
+}
+
+/* Nothing labels these fills, so they use the accent tone that reads on the surface. */
+.checkbox,
+.radio,
+.switch,
+.slider,
+.spinner,
+.progress-bar,
+.progress-circle,
+.meter {
+  --accent: var(--ag-accent-control);
+  --accent-foreground: var(--ag-accent-control-foreground);
+}
+
+.ag-segmented {
+  gap: var(--ag-space-2xs);
+  padding: var(--ag-space-2xs);
+  border-radius: var(--ag-radius-full);
+  background-color: var(--default);
+}
+
+.ag-segmented .ag-segmented__item {
+  --toggle-button-bg: transparent;
+  --toggle-button-bg-hover: transparent;
+  --toggle-button-bg-pressed: transparent;
+  --toggle-button-bg-selected: transparent;
+  --toggle-button-bg-selected-hover: transparent;
+  --toggle-button-bg-selected-pressed: transparent;
+  --toggle-button-fg: var(--ag-text-secondary);
+  --toggle-button-fg-selected: var(--ag-text-primary);
+
+  border-radius: var(--ag-radius-full);
+  transition:
+    transform 250ms var(--ease-smooth),
+    color var(--ag-duration-fast) var(--ag-ease-standard);
+
+  &[data-pressed="true"] {
+    transform: scale(0.97);
+  }
+}
+
+.ag-segmented__indicator {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: var(--ag-radius-full);
+  background-color: var(--segment);
+  box-shadow: var(--ag-shadow-s);
+  transition-property: translate, width;
+  transition-duration: var(--ag-duration-base);
+  transition-timing-function: var(--ag-ease-standard);
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
 }
 
 .button--sm {

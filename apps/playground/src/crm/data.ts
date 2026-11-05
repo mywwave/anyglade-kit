@@ -143,6 +143,7 @@ export interface Customer {
   owner: string;
   revenue: number;
   lastContact: string;
+  contactDaysAgo: number;
   status: CustomerStatus;
 }
 
@@ -155,6 +156,7 @@ export const customers: Customer[] = [
     owner: "Анна",
     revenue: 1840000,
     lastContact: "Сегодня",
+    contactDaysAgo: 0,
     status: "active",
   },
   {
@@ -165,6 +167,7 @@ export const customers: Customer[] = [
     owner: "Мария",
     revenue: 3120000,
     lastContact: "Вчера",
+    contactDaysAgo: 1,
     status: "active",
   },
   {
@@ -175,6 +178,7 @@ export const customers: Customer[] = [
     owner: "Павел",
     revenue: 618000,
     lastContact: "3 нояб.",
+    contactDaysAgo: 2,
     status: "active",
   },
   {
@@ -185,6 +189,7 @@ export const customers: Customer[] = [
     owner: "Анна",
     revenue: 412000,
     lastContact: "28 окт.",
+    contactDaysAgo: 8,
     status: "trial",
   },
   {
@@ -195,6 +200,7 @@ export const customers: Customer[] = [
     owner: "Илья",
     revenue: 186000,
     lastContact: "Вчера",
+    contactDaysAgo: 1,
     status: "active",
   },
   {
@@ -205,6 +211,7 @@ export const customers: Customer[] = [
     owner: "Мария",
     revenue: 96000,
     lastContact: "2 нояб.",
+    contactDaysAgo: 3,
     status: "trial",
   },
   {
@@ -215,6 +222,7 @@ export const customers: Customer[] = [
     owner: "Павел",
     revenue: 58000,
     lastContact: "15 окт.",
+    contactDaysAgo: 21,
     status: "churned",
   },
   {
@@ -225,6 +233,7 @@ export const customers: Customer[] = [
     owner: "Илья",
     revenue: 1264000,
     lastContact: "4 нояб.",
+    contactDaysAgo: 1,
     status: "active",
   },
   {
@@ -235,6 +244,7 @@ export const customers: Customer[] = [
     owner: "Анна",
     revenue: 132000,
     lastContact: "30 окт.",
+    contactDaysAgo: 6,
     status: "trial",
   },
 ];

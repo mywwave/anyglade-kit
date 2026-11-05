@@ -1,5 +1,6 @@
-import { Box, Button, Radio, RadioGroup, Text, tokens } from "@anyglade/kit";
+import { Box, Button, Radio, RadioGroup, Text, toast, tokens } from "@anyglade/kit";
 import { useState } from "react";
+import { simulateRequest } from "../../simulate.ts";
 import { formatRubles } from "../format.ts";
 
 const MONTHS = 12;
@@ -13,6 +14,7 @@ const [monthPlan] = plans;
 
 export function PlanPickerBlock() {
   const [selected, setSelected] = useState("year");
+  const [connected, setConnected] = useState<string | null>(null);
   const plan = plans.find((item) => item.id === selected) ?? monthPlan;
 
   if (!plan || !monthPlan) {
@@ -20,6 +22,13 @@ export function PlanPickerBlock() {
   }
 
   const saving = (monthPlan.monthly - plan.monthly) * MONTHS;
+  const planName = plan.name;
+
+  async function connect() {
+    await simulateRequest();
+    setConnected(selected);
+    toast(`Подключено: ${planName.toLowerCase()}`);
+  }
 
   return (
     <Box
@@ -62,7 +71,9 @@ export function PlanPickerBlock() {
             </Radio>
           ))}
         </RadioGroup>
-        <Button fullWidth>Продолжить</Button>
+        <Button fullWidth isDisabled={connected === selected} onPress={connect}>
+          {connected === selected ? "Подключено" : "Продолжить"}
+        </Button>
       </Box>
     </Box>
   );

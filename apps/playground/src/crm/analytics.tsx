@@ -1,7 +1,31 @@
-import { Avatar, Box, Table, Text } from "@anyglade/kit";
+import {
+  Avatar,
+  Box,
+  SegmentedControl,
+  SortableColumn,
+  Table,
+  Text,
+  useTableSort,
+  type SortAccessors,
+} from "@anyglade/kit";
 import { AreaChart, BarChart } from "@anyglade/kit/charts";
+import { useState } from "react";
 import { formatRubles } from "../blocks/format.ts";
 import { activityByWeekday, dealsByMonth, managers, pipelineByWeek, weekdays } from "./data.ts";
+
+type Manager = (typeof managers)[number];
+type Period = "quarter" | "half";
+
+const periods: { id: Period; label: string }[] = [
+  { id: "quarter", label: "3 месяца" },
+  { id: "half", label: "6 месяцев" },
+];
+
+const managerAccessors: SortAccessors<Manager> = {
+  name: (manager) => manager.name,
+  won: (manager) => manager.won,
+  conversion: (manager) => manager.conversion,
+};
 
 const twoColumns = { base: "minmax(0, 1fr)", lg: "repeat(2, minmax(0, 1fr))" };
 
@@ -12,11 +36,21 @@ function activityColor(level: number) {
 }
 
 export function Analytics() {
+  const [period, setPeriod] = useState<Period>("half");
+  const span = period === "quarter" ? -3 : 0;
+  const { sorted, tableProps } = useTableSort(managers, managerAccessors, {
+    column: "won",
+    direction: "descending",
+  });
+
   return (
     <Box flexDirection="column" gap="3xl">
-      <Text as="h1" variant="heading-xs" weight="medium">
-        Аналитика
-      </Text>
+      <Box alignItems="center" justifyContent="between" flexWrap="wrap" gap="m">
+        <Text as="h1" variant="heading-xs" weight="medium">
+          Аналитика
+        </Text>
+        <SegmentedControl label="Период" options={periods} value={period} onChange={setPeriod} />
+      </Box>
       <Box display="grid" gridTemplateColumns={twoColumns} gap="2xl">
         <Box flexDirection="column" gap="l" minWidth={0}>
           <Text as="h2" variant="heading-xxs">
@@ -24,7 +58,7 @@ export function Analytics() {
           </Text>
           <BarChart
             stacked
-            data={dealsByMonth}
+            data={dealsByMonth.slice(span)}
             label="Выигранные и проигранные сделки по месяцам"
             series={[
               { dataKey: "won", label: "Выиграно" },
@@ -38,7 +72,7 @@ export function Analytics() {
             Входящие заявки
           </Text>
           <AreaChart
-            data={pipelineByWeek}
+            data={pipelineByWeek.slice(span)}
             label="Входящие и квалифицированные заявки по неделям"
             series={[
               { dataKey: "qualified", label: "Квалифицировано" },
@@ -55,15 +89,25 @@ export function Analytics() {
           </Text>
           <Table>
             <Table.ScrollContainer>
-              <Table.Content aria-label="Результаты менеджеров" className="min-w-100">
+              <Table.Content
+                aria-label="Результаты менеджеров"
+                className="min-w-100"
+                {...tableProps}
+              >
                 <Table.Header>
-                  <Table.Column isRowHeader>Менеджер</Table.Column>
-                  <Table.Column>Выиграно</Table.Column>
-                  <Table.Column>Конверсия</Table.Column>
+                  <SortableColumn isRowHeader id="name">
+                    Менеджер
+                  </SortableColumn>
+                  <SortableColumn id="won">Выиграно</SortableColumn>
+                  <SortableColumn id="conversion">Конверсия</SortableColumn>
                 </Table.Header>
                 <Table.Body>
-                  {managers.map((manager) => (
-                    <Table.Row key={manager.name}>
+                  {sorted.map((manager) => (
+                    <Table.Row
+                      key={manager.name}
+                      id={manager.name}
+                      style={{ viewTransitionName: `manager-${manager.name}` }}
+                    >
                       <Table.Cell>
                         <Box alignItems="center" gap="s">
                           <Avatar size="sm">

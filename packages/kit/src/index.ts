@@ -1,11 +1,26 @@
 export * from "@heroui/react";
 
 export { Box, type BoxProps } from "./box/box.tsx";
+export { Button, type ButtonProps } from "./button/button.tsx";
 export type { BoxStyleProps, Condition, Responsive } from "./box/props.ts";
+export { CopyButton, type CopyButtonProps } from "./copy-button/copy-button.tsx";
 export { DetailRow, type DetailRowProps } from "./detail-row/detail-row.tsx";
 export { EmptyPanel, type EmptyPanelProps } from "./empty-panel/empty-panel.tsx";
 export { Frame, FrameTile, type FrameProps, type FrameTileProps } from "./frame/frame.tsx";
+export { Loadable, type LoadableProps } from "./loadable/loadable.tsx";
+export { useLoadingIndicator } from "./motion/use-loading-indicator.ts";
+export { withTransition } from "./motion/with-transition.ts";
 export { PageHeader, type PageHeaderProps } from "./page-header/page-header.tsx";
+export {
+  SegmentedControl,
+  type SegmentedControlProps,
+} from "./segmented-control/segmented-control.tsx";
+export {
+  SortableColumn,
+  useTableSort,
+  type SortAccessors,
+  type SortableColumnProps,
+} from "./sortable-table/sortable-table.tsx";
 export { Stat, type StatProps } from "./stat/stat.tsx";
 export {
   Text,
@@ -18,3 +33,4 @@ export {
   type TextWrap,
 } from "./text/text.tsx";
 export * as tokens from "./tokens.ts";
+export type { Selection, SortDescriptor } from "react-aria-components";

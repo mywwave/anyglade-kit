@@ -3,20 +3,28 @@ import {
   Box,
   Button,
   Checkbox,
+  CopyButton,
   DetailRow,
   Drawer,
   Input,
   Pagination,
+  SegmentedControl,
+  SortableColumn,
   Stat,
   Table,
   Text,
   toast,
+  useTableSort,
+  withTransition,
+  type Selection,
+  type SortAccessors,
 } from "@anyglade/kit";
 import { ChevronRight } from "@anyglade/kit/icons";
 import { useMemo, useState } from "react";
 import { formatRubles } from "../blocks/format.ts";
+import { simulateRequest } from "../simulate.ts";
 import { customers, type Customer, type CustomerStatus } from "./data.ts";
-import { pluralize } from "./format.ts";
+import { downloadCsv, pluralize } from "./format.ts";
 
 const statuses: Record<CustomerStatus, { label: string; color: "default" | "warning" | "muted" }> =
   {
@@ -25,10 +33,23 @@ const statuses: Record<CustomerStatus, { label: string; color: "default" | "warn
     churned: { label: "Ушёл", color: "muted" },
   };
 
-const PAGE_SIZE = 6;
+type StatusFilter = CustomerStatus | "all";
 
-type SortDescriptor = NonNullable<Parameters<typeof Table.Content>[0]["sortDescriptor"]>;
-type Selection = NonNullable<Parameters<typeof Table.Content>[0]["selectedKeys"]>;
+const statusFilters: { id: StatusFilter; label: string }[] = [
+  { id: "all", label: "Все" },
+  { id: "active", label: "Активные" },
+  { id: "trial", label: "Пробные" },
+  { id: "churned", label: "Ушли" },
+];
+
+const sortAccessors: SortAccessors<Customer> = {
+  name: (customer) => customer.name,
+  status: (customer) => statuses[customer.status].label,
+  revenue: (customer) => customer.revenue,
+  contact: (customer) => customer.contactDaysAgo,
+};
+
+const PAGE_SIZE = 6;
 
 const initials = (name: string) =>
   name
@@ -73,7 +94,17 @@ function CustomerDrawer({ customer, onClose }: { customer: Customer | null; onCl
                   <Box flexDirection="column" gap="m">
                     <DetailRow label="Статус" value={statuses[customer.status].label} />
                     <DetailRow label="Менеджер" value={customer.owner} />
-                    <DetailRow label="Почта" value={customer.email} />
+                    <DetailRow
+                      label="Почта"
+                      value={customer.email}
+                      action={
+                        <CopyButton
+                          copiedLabel="Почта скопирована"
+                          label="Скопировать почту"
+                          value={customer.email}
+                        />
+                      }
+                    />
                     <DetailRow label="Последний контакт" value={customer.lastContact} />
                     <DetailRow label="Телефон" />
                   </Box>
@@ -94,38 +125,58 @@ function CustomerDrawer({ customer, onClose }: { customer: Customer | null; onCl
 
 export function Customers() {
   const [query, setQuery] = useState("");
+  const [status, setStatus] = useState<StatusFilter>("all");
   const [page, setPage] = useState(1);
   const [selected, setSelected] = useState<Selection>(new Set());
   const [opened, setOpened] = useState<Customer | null>(null);
-  const [sort, setSort] = useState<SortDescriptor>({ column: "revenue", direction: "descending" });
 
-  const found = useMemo(() => {
+  const filtered = useMemo(() => {
     const normalized = query.trim().toLowerCase();
-    const column = sort.column as keyof Customer;
-    const direction = sort.direction === "descending" ? -1 : 1;
-    return customers
-      .filter((customer) =>
+    return customers.filter(
+      (customer) =>
+        (status === "all" || customer.status === status) &&
         `${customer.name} ${customer.company} ${customer.email}`.toLowerCase().includes(normalized),
-      )
-      .toSorted((a, b) => {
-        const left = a[column];
-        const right = b[column];
-        const order =
-          typeof left === "number" && typeof right === "number"
-            ? left - right
-            : String(left).localeCompare(String(right));
-        return order * direction;
-      });
-  }, [query, sort]);
+    );
+  }, [query, status]);
+
+  const { sorted: found, tableProps } = useTableSort(filtered, sortAccessors, {
+    column: "revenue",
+    direction: "descending",
+  });
 
   const pageCount = Math.max(1, Math.ceil(found.length / PAGE_SIZE));
   const currentPage = Math.min(page, pageCount);
   const visible = found.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
   const pages = Array.from({ length: pageCount }, (_, index) => index + 1);
-  const selectedCount = selected === "all" ? found.length : new Set(selected).size;
+  const chosen = selected === "all" ? found : found.filter((customer) => selected.has(customer.id));
 
-  function exportSelected() {
-    toast(`${selectedCount} ${pluralize(selectedCount, "клиент", "клиента", "клиентов")} в файле`);
+  function filterByStatus(next: StatusFilter) {
+    withTransition(() => {
+      setStatus(next);
+      setPage(1);
+    });
+  }
+
+  function reset() {
+    setQuery("");
+    filterByStatus("all");
+  }
+
+  async function exportChosen() {
+    await simulateRequest();
+    downloadCsv("klienty.csv", [
+      ["Клиент", "Компания", "Почта", "Статус", "Выручка"],
+      ...chosen.map((customer) => [
+        customer.name,
+        customer.company,
+        customer.email,
+        statuses[customer.status].label,
+        String(customer.revenue),
+      ]),
+    ]);
+    toast(
+      `${chosen.length} ${pluralize(chosen.length, "клиент выгружен", "клиента выгружено", "клиентов выгружено")}`,
+    );
     setSelected(new Set());
   }
 
@@ -141,9 +192,9 @@ export function Customers() {
           Клиенты
         </Text>
         <Box alignItems="center" gap="s">
-          {selectedCount > 0 ? (
-            <Button size="sm" variant="secondary" onPress={exportSelected}>
-              Выгрузить {selectedCount}
+          {chosen.length > 0 ? (
+            <Button size="sm" variant="secondary" onPress={exportChosen}>
+              Выгрузить {chosen.length}
             </Button>
           ) : null}
           <Input
@@ -158,11 +209,19 @@ export function Customers() {
           />
         </Box>
       </Box>
+      <Box display="block" overflowX="auto">
+        <SegmentedControl
+          label="Статус клиента"
+          options={statusFilters}
+          value={status}
+          onChange={filterByStatus}
+        />
+      </Box>
       {found.length === 0 ? (
         <Box flexDirection="column" alignItems="center" gap="m" padding="3xl" textAlign="center">
           <Text color="muted">Таких клиентов нет</Text>
-          <Button size="sm" variant="secondary" onPress={() => setQuery("")}>
-            Сбросить поиск
+          <Button size="sm" variant="secondary" onPress={reset}>
+            Сбросить фильтры
           </Button>
         </Box>
       ) : (
@@ -173,35 +232,28 @@ export function Customers() {
               className="min-w-180"
               selectedKeys={selected}
               selectionMode="multiple"
-              sortDescriptor={sort}
               onSelectionChange={setSelected}
-              onSortChange={setSort}
+              {...tableProps}
             >
               <Table.Header>
                 <Table.Column className="w-12">
                   <SelectionCheckbox label="Выбрать всех" />
                 </Table.Column>
-                <Table.Column allowsSorting isRowHeader id="name">
-                  {({ sortDirection }) => (
-                    <Table.SortableColumnHeader sortDirection={sortDirection}>
-                      Клиент
-                    </Table.SortableColumnHeader>
-                  )}
-                </Table.Column>
-                <Table.Column>Статус</Table.Column>
-                <Table.Column allowsSorting id="revenue">
-                  {({ sortDirection }) => (
-                    <Table.SortableColumnHeader sortDirection={sortDirection}>
-                      Выручка
-                    </Table.SortableColumnHeader>
-                  )}
-                </Table.Column>
-                <Table.Column>Контакт</Table.Column>
+                <SortableColumn isRowHeader id="name">
+                  Клиент
+                </SortableColumn>
+                <SortableColumn id="status">Статус</SortableColumn>
+                <SortableColumn id="revenue">Выручка</SortableColumn>
+                <SortableColumn id="contact">Контакт</SortableColumn>
                 <Table.Column aria-label="Действия">{""}</Table.Column>
               </Table.Header>
               <Table.Body>
                 {visible.map((customer) => (
-                  <Table.Row key={customer.id} id={customer.id}>
+                  <Table.Row
+                    key={customer.id}
+                    id={customer.id}
+                    style={{ viewTransitionName: `customer-${customer.id}` }}
+                  >
                     <Table.Cell>
                       <SelectionCheckbox label={`Выбрать ${customer.name}`} />
                     </Table.Cell>
