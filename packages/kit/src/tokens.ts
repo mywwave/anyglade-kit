@@ -26,6 +26,15 @@ export const palette = {
   "blue-600": "oklch(0.546 0.245 262.881)",
   "blue-950": "oklch(0.282 0.091 267.935)",
 
+  "violet-400": "oklch(0.702 0.183 293.541)",
+  "violet-600": "oklch(0.541 0.281 293.009)",
+
+  "teal-400": "oklch(0.777 0.152 181.912)",
+  "teal-600": "oklch(0.6 0.118 184.704)",
+
+  "pink-400": "oklch(0.718 0.202 349.761)",
+  "pink-600": "oklch(0.592 0.249 0.584)",
+
   "emerald-50": "oklch(0.979 0.021 166.113)",
   "emerald-500": "oklch(0.696 0.17 162.48)",
   "emerald-950": "oklch(0.262 0.051 172.552)",
@@ -65,6 +74,11 @@ export const colors = {
   "text-success": ["emerald-500", "emerald-500"],
   "text-danger": ["red-500", "red-500"],
   "text-warning": ["amber-500", "amber-500"],
+
+  "text-label-blue": ["blue-600", "blue-400"],
+  "text-label-violet": ["violet-600", "violet-400"],
+  "text-label-teal": ["teal-600", "teal-400"],
+  "text-label-pink": ["pink-600", "pink-400"],
 
   "border-primary": ["gray-200", "ink-700"],
   "border-secondary": ["gray-100", "ink-800"],

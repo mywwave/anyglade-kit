@@ -1,10 +1,16 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { expect, test } from "vite-plus/test";
-import { clampToViewport, placeAtAnchor } from "../src/floating-panel/placement.ts";
+import {
+  cascadePoint,
+  clampSize,
+  clampToViewport,
+  placeAtAnchor,
+} from "../src/floating-panel/placement.ts";
 import {
   DetailRow,
   EmptyPanel,
   Frame,
+  CountBadge,
   FloatingPanel,
   FrameTile,
   ItemList,
@@ -91,6 +97,48 @@ test("FloatingPanel stays on screen wherever it is dragged", () => {
 
 test("FloatingPanel taller than the screen keeps its header reachable", () => {
   expect(clampToViewport({ x: 0, y: 300 }, { width: 320, height: 900 }, viewport).y).toBe(8);
+});
+
+test("ItemList renders no menu until one is asked for", () => {
+  const html = renderToStaticMarkup(
+    <ItemList
+      getText={(item) => item.name}
+      items={[{ id: "a", name: "Анна" }]}
+      label="Чаты"
+      menu={{ label: "Действия", renderItems: () => null }}
+      renderItem={(item) => item.name}
+      onOpen={() => undefined}
+    />,
+  );
+
+  expect(html).not.toContain('role="menu"');
+  expect(html).not.toContain("ag-item-list__anchor");
+});
+
+test("FloatingPanel windows cascade so that each title stays in sight", () => {
+  const first = cascadePoint(0, panel, viewport);
+  const second = cascadePoint(1, panel, viewport);
+
+  expect(second.y).toBe(first.y + 32);
+  expect(second.x).toBe(first.x - 32);
+  expect(cascadePoint(6, panel, viewport)).toEqual(first);
+});
+
+test("FloatingPanel keeps its size between the smallest and what fits on screen", () => {
+  const min = { width: 320, height: 320 };
+
+  expect(clampSize({ width: 100, height: 100 }, min, { x: 0, y: 0 }, viewport)).toEqual(min);
+  expect(clampSize({ width: 2000, height: 2000 }, min, { x: 100, y: 100 }, viewport)).toEqual({
+    width: viewport.width - 108,
+    height: viewport.height - 108,
+  });
+});
+
+test("CountBadge caps the number and stays still on first render", () => {
+  expect(renderToStaticMarkup(<CountBadge count={7} />)).toContain(">7<");
+  const html = renderToStaticMarkup(<CountBadge count={128} />);
+  expect(html).toContain("99+");
+  expect(html).not.toContain("ag-motion-pop");
 });
 
 test("FloatingPanel renders nothing while closed", () => {

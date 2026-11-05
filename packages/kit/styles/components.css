@@ -229,10 +229,70 @@
   }
 }
 
+/* A single line sits level with the icon and the action. With a description the icon keeps to the first line. */
+.toast:not(:has([data-slot="toast-description"])) {
+  align-items: center;
+}
+
+.ag-conversation {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  width: 100%;
+  min-height: 0;
+}
+
+.ag-conversation__view {
+  position: relative;
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+/* Both reserve the same gutter, so bubbles and the field keep one right edge. */
+.ag-conversation__scroller,
+.ag-conversation__footer {
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+}
+
+.ag-conversation__scroller {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  padding-inline: var(--ag-space-l);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.ag-conversation__footer {
+  flex-shrink: 0;
+  padding: var(--ag-space-l);
+  overflow-y: hidden;
+}
+
+.ag-conversation__jump {
+  position: relative;
+  display: inline-flex;
+  transform: translateX(-50%);
+}
+
+.ag-conversation__count {
+  position: absolute;
+  top: calc(-1 * var(--ag-space-s));
+  right: calc(-1 * var(--ag-space-s));
+  pointer-events: none;
+}
+
+.ag-floating-layer {
+  position: relative;
+  z-index: 40;
+}
+
 .ag-floating {
   position: fixed;
   inset: 0 auto auto 0;
-  z-index: 40;
   max-width: none;
   max-height: none;
   margin: 0;
@@ -303,6 +363,74 @@
   min-height: 0;
   padding: var(--ag-space-xs) var(--ag-space-l) var(--ag-space-l);
   overflow-y: auto;
+
+  &[data-flush] {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    overflow: hidden;
+  }
+}
+
+.ag-floating__resize {
+  position: absolute;
+  padding: 0;
+  border: 0;
+  outline: none;
+  background: none;
+  touch-action: none;
+}
+
+.ag-floating__surface[data-exiting] ~ .ag-floating__resize {
+  visibility: hidden;
+}
+
+.ag-floating__resize--east {
+  top: var(--ag-space-l);
+  right: calc(-1 * var(--ag-space-xs));
+  bottom: var(--ag-space-l);
+  width: var(--ag-space-s);
+  cursor: ew-resize;
+}
+
+.ag-floating__resize--south {
+  right: var(--ag-space-l);
+  bottom: calc(-1 * var(--ag-space-xs));
+  left: var(--ag-space-l);
+  height: var(--ag-space-s);
+  cursor: ns-resize;
+}
+
+.ag-floating__resize--corner {
+  right: calc(-1 * var(--ag-space-xs));
+  bottom: calc(-1 * var(--ag-space-xs));
+  width: var(--ag-space-xl);
+  height: var(--ag-space-xl);
+  cursor: nwse-resize;
+
+  &::after {
+    content: "";
+    position: absolute;
+    right: var(--ag-space-s);
+    bottom: var(--ag-space-s);
+    width: var(--ag-space-m);
+    height: var(--ag-space-m);
+    border-right: 2px solid var(--ag-text-tertiary);
+    border-bottom: 2px solid var(--ag-text-tertiary);
+    border-bottom-right-radius: var(--ag-radius-s);
+    opacity: 0;
+    transition: opacity var(--ag-duration-fast) var(--ag-ease-standard);
+  }
+
+  &:focus-visible::after {
+    border-color: var(--focus);
+    opacity: 1;
+  }
+}
+
+.ag-floating:hover .ag-floating__resize--corner::after,
+.ag-floating[data-resizing] .ag-floating__resize--corner::after {
+  opacity: 1;
 }
 
 .ag-item-list {
@@ -312,11 +440,19 @@
   outline: none;
 }
 
+.ag-item-list__anchor {
+  position: fixed;
+  visibility: hidden;
+  pointer-events: none;
+}
+
 .ag-item-list__row {
   padding: var(--ag-space-s);
   border-radius: var(--ag-radius-m);
   outline: none;
   cursor: var(--cursor-interactive);
+  user-select: none;
+  -webkit-touch-callout: none;
   transition: background-color var(--ag-duration-fast) var(--ag-ease-standard);
 }
 

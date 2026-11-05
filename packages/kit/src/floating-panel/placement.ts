@@ -16,6 +16,9 @@ export interface Anchor {
 
 const EDGE_GAP = 8;
 const ANCHOR_GAP = 8;
+const CASCADE_INSET = 64;
+const CASCADE_STEP = 32;
+const CASCADE_SLOTS = 6;
 
 /** Keeps the whole panel on screen, or its top left corner when it does not fit. */
 export function clampToViewport(point: Point, size: Size, viewport: Size): Point {
@@ -39,4 +42,26 @@ export function placeAtAnchor(anchor: Anchor, size: Size, viewport: Size): Point
     size,
     viewport,
   );
+}
+
+/** From the top right corner down and to the left, so every title stays in sight. */
+export function cascadePoint(slot: number, size: Size, viewport: Size): Point {
+  const step = (slot % CASCADE_SLOTS) * CASCADE_STEP;
+
+  return clampToViewport(
+    { x: viewport.width - size.width - CASCADE_INSET - step, y: CASCADE_INSET + step },
+    size,
+    viewport,
+  );
+}
+
+/** Between the smallest usable size and what fits from the panel's corner to the screen edge. */
+export function clampSize(size: Size, min: Size, point: Point, viewport: Size): Size {
+  const fit = (value: number, smallest: number, room: number) =>
+    Math.max(smallest, Math.min(value, room));
+
+  return {
+    width: fit(size.width, min.width, viewport.width - point.x - EDGE_GAP),
+    height: fit(size.height, min.height, viewport.height - point.y - EDGE_GAP),
+  };
 }

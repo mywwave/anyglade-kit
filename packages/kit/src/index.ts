@@ -5,6 +5,7 @@ export { Button, type ButtonProps } from "./button/button.tsx";
 export type { BoxStyleProps, Condition, Responsive } from "./box/props.ts";
 export { CopyButton, type CopyButtonProps } from "./copy-button/copy-button.tsx";
 export { DetailRow, type DetailRowProps } from "./detail-row/detail-row.tsx";
+export { CountBadge, type CountBadgeProps } from "./count-badge/count-badge.tsx";
 export { EmptyPanel, type EmptyPanelProps } from "./empty-panel/empty-panel.tsx";
 export { Frame, FrameTile, type FrameProps, type FrameTileProps } from "./frame/frame.tsx";
 export { FloatingPanel, type FloatingPanelProps } from "./floating-panel/floating-panel.tsx";

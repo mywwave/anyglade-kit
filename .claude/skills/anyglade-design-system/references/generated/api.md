@@ -4,11 +4,11 @@
 
 ## @anyglade/kit
 
-`Box`, `Button`, `CopyButton`, `DetailRow`, `EmptyPanel`, `FloatingPanel`, `Frame`, `FrameTile`, `ItemList`, `Loadable`, `PageHeader`, `SegmentedControl`, `Shimmer`, `SortableColumn`, `Stat`, `Text`, `TextSwap`, `TreeNav`, `useLoadingIndicator`, `useTableSort`, `withTransition`
+`Box`, `Button`, `CopyButton`, `CountBadge`, `DetailRow`, `EmptyPanel`, `FloatingPanel`, `Frame`, `FrameTile`, `ItemList`, `Loadable`, `PageHeader`, `SegmentedControl`, `Shimmer`, `SortableColumn`, `Stat`, `Text`, `TextSwap`, `TreeNav`, `useLoadingIndicator`, `useTableSort`, `withTransition`
 
 ## @anyglade/kit/ai
 
-`Checkpoint`, `Citation`, `CodeOutput`, `ContextMeter`, `Conversation`, `ConversationTurn`, `FileTree`, `Message`, `ModelPicker`, `Plan`, `PromptComposer`, `Reasoning`, `Run`, `Sources`, `StreamingText`, `Suggestions`, `ToolCall`
+`Checkpoint`, `Citation`, `CodeOutput`, `ContextMeter`, `Conversation`, `ConversationNewMark`, `ConversationTurn`, `DeliveryStatus`, `FileTree`, `Message`, `ModelPicker`, `Plan`, `PromptComposer`, `Reasoning`, `Run`, `Sources`, `StreamingText`, `Suggestions`, `ToolCall`
 
 ## @anyglade/kit/charts
 
@@ -51,7 +51,7 @@ type StatusLabels = Record<AgentStatus, string>;
 | `rowGap` | none, 2xs, xs, s, m, l, xl, 2xl, 3xl, 4xl, 5xl |
 | `columnGap` | none, 2xs, xs, s, m, l, xl, 2xl, 3xl, 4xl, 5xl |
 | `backgroundColor` | background-canvas, background-panel, background-primary, background-secondary, background-card, background-emphasis, background-inverse, background-warning, background-success, background-danger |
-| `color` | text-primary, text-secondary, text-tertiary, text-disabled, text-inverse, text-accent, text-success, text-danger, text-warning |
+| `color` | text-primary, text-secondary, text-tertiary, text-disabled, text-inverse, text-accent, text-success, text-danger, text-warning, text-label-blue, text-label-violet, text-label-teal, text-label-pink |
 | `borderColor` | border-primary, border-secondary, border-control, border-warning |
 | `borderRadius` | none, s, m, l, frame, xl, full |
 | `boxShadow` | none, s, m, l, xl |
@@ -191,6 +191,16 @@ export interface ConversationProps {
   followKey?: string;
   /** Height of whatever is stuck to the top of the page, in pixels. */
   topInset?: number;
+  /**
+   * For a pane or a window with a height of its own: the messages scroll in their own box
+   * and the footer stands under it, outside the scrolling, so new content cannot move it.
+   * Only `followKey` scrolls here. What others write stays below, behind the scroll button.
+   */
+  isContained?: boolean;
+  /** Called every time the end is in view: whatever is there has now been seen. */
+  onReachEnd?: () => void;
+  /** Messages waiting below. The scroll button shows the number. */
+  newCount?: number;
 }
 ```
 
@@ -200,6 +210,20 @@ export interface CopyButtonProps extends Pick<ButtonProps, "fullWidth" | "size" 
   label: string;
   copiedLabel: string;
   isLabelVisible?: boolean;
+}
+```
+
+```ts
+export interface CountBadgeProps {
+  count: number;
+}
+```
+
+```ts
+export interface DeliveryStatusProps {
+  status: Delivery;
+  /** Shown on hover and read out by screen readers. */
+  labels: Record<Delivery, string>;
 }
 ```
 
@@ -248,23 +272,6 @@ export interface FileTreeProps {
 ```
 
 ```ts
-export interface FloatingPanelProps {
-  /** Heading and drag handle. A change flows in place, so a pinned panel can follow the page. */
-  title: string;
-  isOpen: boolean;
-  onOpenChange: (isOpen: boolean) => void;
-  /** The button that opens the panel. An unpinned panel stands next to it. */
-  triggerRef: RefObject<HTMLElement | null>;
-  pinLabel: string;
-  unpinLabel: string;
-  /** Spoken on the handle. Arrow keys move the panel as well. */
-  moveLabel: string;
-  closeLabel: string;
-  children: ReactNode;
-}
-```
-
-```ts
 export interface FrameProps {
   title?: ReactNode;
   meta?: ReactNode;
@@ -285,10 +292,14 @@ export interface ItemListProps<T extends { id: string }> {
   /** The open item. It stays marked while focus moves elsewhere. */
   currentId?: string | null;
   onOpen: (id: string) => void;
+  /** Alt + click or Alt + Enter: the second way to open, usually in its own window. */
+  onAltOpen?: (id: string) => void;
   /** What a screen reader and type-ahead get for the row. */
   getText: (item: T) => string;
   /** The row may hold its own buttons, which a plain list box does not allow. */
   renderItem: (item: T) => ReactNode;
+  /** Opens on right click, long press and the menu key. `renderItems` returns `Dropdown.Item`s. */
+  menu?: { label: string; renderItems: (item: T) => ReactNode };
 }
 ```
 
@@ -308,6 +319,8 @@ export interface MessageProps {
   children: ReactNode;
   /** Copy, retry and so on, under the reply. */
   actions?: ReactNode;
+  /** A bubble's corner: `DeliveryStatus` and the like. It keeps to the last line. */
+  meta?: ReactNode;
   /** Already there when the chat opened, so it does not animate. */
   isHistory?: boolean;
 }
@@ -370,6 +383,8 @@ export interface PromptComposerProps {
   onRemoveAttachment: (id: string) => void;
   /** Model picker and context meter. */
   toolbar?: ReactNode;
+  /** The text field, for a window that opens ready to type. */
+  inputRef?: Ref<HTMLTextAreaElement>;
 }
 ```
 

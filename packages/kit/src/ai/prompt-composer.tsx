@@ -2,7 +2,7 @@
 
 import { ArrowUp, Paperclip, StopFill, Xmark } from "@gravity-ui/icons";
 import { TextArea } from "@heroui/react";
-import type { FormEvent, KeyboardEvent, MouseEvent, ReactNode } from "react";
+import type { FormEvent, KeyboardEvent, MouseEvent, ReactNode, Ref } from "react";
 import { FileTrigger } from "react-aria-components";
 import { Box } from "../box/box.tsx";
 import { Button } from "../button/button.tsx";
@@ -31,6 +31,8 @@ export interface PromptComposerProps {
   onRemoveAttachment: (id: string) => void;
   /** Model picker and context meter. */
   toolbar?: ReactNode;
+  /** The text field, for a window that opens ready to type. */
+  inputRef?: Ref<HTMLTextAreaElement>;
 }
 
 export function PromptComposer({
@@ -49,6 +51,7 @@ export function PromptComposer({
   onAttach,
   onRemoveAttachment,
   toolbar,
+  inputRef,
 }: PromptComposerProps) {
   const canSubmit = value.trim().length > 0 && !isRunning;
 
@@ -107,6 +110,7 @@ export function PromptComposer({
         </Box>
       ) : null}
       <TextArea
+        ref={inputRef}
         aria-label={label}
         className="ag-composer__input"
         fullWidth

@@ -1,13 +1,16 @@
+import type { Delivery } from "@anyglade/kit/ai";
+import { Briefcase, HandOk, Heart, Persons } from "@anyglade/kit/icons";
+
 const AVATARS = "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars";
 const MINUTE = 60 * 1000;
 const HOUR = 60 * MINUTE;
 const DAY = 24 * HOUR;
 
 export const labels = [
-  { id: "work", label: "Работа" },
-  { id: "team", label: "Команда" },
-  { id: "clients", label: "Клиенты" },
-  { id: "personal", label: "Личное" },
+  { id: "work", label: "Работа", icon: Briefcase, color: "text-label-blue" },
+  { id: "team", label: "Команда", icon: Persons, color: "text-label-violet" },
+  { id: "clients", label: "Клиенты", icon: HandOk, color: "text-label-teal" },
+  { id: "personal", label: "Личное", icon: Heart, color: "text-label-pink" },
 ] as const;
 
 export type LabelId = (typeof labels)[number]["id"];
@@ -26,13 +29,14 @@ export interface Contact {
   replies: string[];
 }
 
-export interface Note {
+interface NoteBase {
   id: string;
-  mine: boolean;
   text: string;
   at: number;
   attachments?: string[];
 }
+
+export type Note = NoteBase & ({ mine: false } | { mine: true; delivery: Delivery });
 
 export interface Chat {
   id: string;
@@ -163,15 +167,24 @@ export const initialChats: Chat[] = [
   chat("roman", "work", { place: "trash" }),
 ];
 
-const note = (
+const theirs = (id: string, text: string, ago: number, attachments?: string[]): Note => ({
+  id,
+  mine: false,
+  text,
+  at: Date.now() - ago,
+  attachments,
+});
+
+const ours = (
   id: string,
-  mine: boolean,
+  delivery: Delivery,
   text: string,
   ago: number,
   attachments?: string[],
 ): Note => ({
   id,
-  mine,
+  mine: true,
+  delivery,
   text,
   at: Date.now() - ago,
   attachments,
@@ -179,28 +192,30 @@ const note = (
 
 export const initialNotes: Record<string, Note[]> = {
   maria: [
-    note("m1", false, "Посмотрела экран оплаты. Кнопка теряется на мобильном", DAY + 3 * HOUR),
-    note("m2", true, "Согласен, подниму её над итогом", DAY + 2 * HOUR),
-    note("m3", true, "И уберу дублирующую сумму", DAY + 2 * HOUR - MINUTE),
-    note("m4", false, "Отлично. Собрала новый вариант, посмотри", 12 * MINUTE, ["oplata-v3.fig"]),
-    note("m5", false, "Если ок, сегодня отдаю в разработку", 11 * MINUTE),
+    theirs("m1", "Посмотрела экран оплаты. Кнопка теряется на мобильном", DAY + 3 * HOUR),
+    ours("m2", "read", "Согласен, подниму её над итогом", DAY + 2 * HOUR),
+    ours("m3", "read", "И уберу дублирующую сумму", DAY + 2 * HOUR - MINUTE),
+    theirs("m4", "Отлично. Собрала новый вариант, посмотри", 12 * MINUTE, ["oplata-v3.fig"]),
+    theirs("m5", "Если ок, сегодня отдаю в разработку", 11 * MINUTE),
   ],
   anna: [
-    note("a1", true, "Как прошла встреча с «Вектором»?", 5 * HOUR),
-    note("a2", false, "Хорошо. Просят скидку 10 % за годовой договор", 4 * HOUR),
-    note("a3", false, "Можем согласовать сегодня?", 40 * MINUTE),
+    ours("a1", "read", "Как прошла встреча с «Вектором»?", 5 * HOUR),
+    theirs("a2", "Хорошо. Просят скидку 10 % за годовой договор", 4 * HOUR),
+    theirs("a3", "Можем согласовать сегодня?", 40 * MINUTE),
   ],
   ilya: [
-    note("i1", false, "Починил экспорт, можно проверять", 3 * DAY),
-    note("i2", true, "Проверил, всё работает. Спасибо!", 3 * DAY - HOUR),
-    note("i3", false, "Выкатываю в пятницу", 2 * DAY),
+    theirs("i1", "Починил экспорт, можно проверять", 3 * DAY),
+    ours("i2", "read", "Проверил, всё работает. Спасибо!", 3 * DAY - HOUR),
+    theirs("i3", "Выкатываю в пятницу", 2 * DAY),
+    ours("i4", "sent", "Хорошо, предупрежу клиентов", 2 * DAY - HOUR),
   ],
   olga: [
-    note("o1", false, "Нужен акт за октябрь от «Лента»", 6 * DAY),
-    note("o2", true, "Отправил на почту", 6 * DAY - 2 * HOUR, ["akt-oktyabr.pdf"]),
-    note("o3", false, "Получила, спасибо", 5 * DAY),
+    theirs("o1", "Нужен акт за октябрь от «Лента»", 6 * DAY),
+    ours("o2", "read", "Отправил на почту", 6 * DAY - 2 * HOUR, ["akt-oktyabr.pdf"]),
+    theirs("o3", "Получила, спасибо", 5 * DAY),
+    ours("o4", "delivered", "Акт за ноябрь пришлю в начале месяца", 5 * DAY - HOUR),
   ],
-  pavel: [note("p1", false, "Можем перенести созвон на четверг?", 3 * HOUR)],
-  elena: [note("e1", false, "Спасибо за демонстрацию, обсудим внутри", 14 * DAY)],
-  roman: [note("r1", false, "Ваш груз отправлен", 20 * DAY)],
+  pavel: [theirs("p1", "Можем перенести созвон на четверг?", 3 * HOUR)],
+  elena: [theirs("e1", "Спасибо за демонстрацию, обсудим внутри", 14 * DAY)],
+  roman: [theirs("r1", "Ваш груз отправлен", 20 * DAY)],
 };

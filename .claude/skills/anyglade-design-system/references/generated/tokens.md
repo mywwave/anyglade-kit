@@ -142,6 +142,10 @@
 | text-success | oklch(0.696 0.17 162.48) | oklch(0.696 0.17 162.48) |
 | text-danger | oklch(0.637 0.237 25.331) | oklch(0.637 0.237 25.331) |
 | text-warning | oklch(0.769 0.188 70.08) | oklch(0.769 0.188 70.08) |
+| text-label-blue | oklch(0.546 0.245 262.881) | oklch(0.707 0.165 254.624) |
+| text-label-violet | oklch(0.541 0.281 293.009) | oklch(0.702 0.183 293.541) |
+| text-label-teal | oklch(0.6 0.118 184.704) | oklch(0.777 0.152 181.912) |
+| text-label-pink | oklch(0.592 0.249 0.584) | oklch(0.718 0.202 349.761) |
 | border-primary | oklch(0.928 0.006 264.531) | hsl(0 0% 13%) |
 | border-secondary | oklch(0.967 0.003 264.542) | hsl(0 0% 9.5%) |
 | border-control | oklch(0.872 0.01 258.338) | hsl(0 0% 16%) |

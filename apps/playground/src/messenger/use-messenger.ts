@@ -1,4 +1,5 @@
-import { toast, withTransition } from "@anyglade/kit";
+import { toast } from "@anyglade/kit";
+import type { Delivery } from "@anyglade/kit/ai";
 import { useState, type Dispatch, type SetStateAction } from "react";
 import {
   contactById,
@@ -10,17 +11,21 @@ import {
   type Place,
 } from "./data.ts";
 
-const TYPING_DELAY_MS = 900;
+const SENT_MS = 400;
+const DELIVERED_MS = 1000;
+const READ_MS = 2000;
+const TYPING_DELAY_MS = 2400;
 const TYPING_MS = 1800;
+/** Someone offline gets to the phone later, so their ticks and reply lag behind. */
+const OFFLINE_PACE = 4;
 
 interface Setters {
   setChats: Dispatch<SetStateAction<Chat[]>>;
   setNotes: Dispatch<SetStateAction<Record<string, Note[]>>>;
 }
 
-const newNote = (mine: boolean, text: string, attachments?: string[]): Note => ({
+const newNote = (text: string, attachments?: string[]) => ({
   id: crypto.randomUUID(),
-  mine,
   text,
   at: Date.now(),
   attachments,
@@ -28,7 +33,6 @@ const newNote = (mine: boolean, text: string, attachments?: string[]): Note => (
 
 /** Stable actions: a new message must not re-render every row of the list. */
 function createActions({ setChats, setNotes }: Setters) {
-  let openChatId: string | null = null;
   const replyCounts = new Map<string, number>();
 
   const patch = (id: string, change: Partial<Chat>) =>
@@ -37,20 +41,28 @@ function createActions({ setChats, setNotes }: Setters) {
   const addNote = (chatId: string, note: Note) =>
     setNotes((notes) => ({ ...notes, [chatId]: [...(notes[chatId] ?? []), note] }));
 
+  const setDelivery = (chatId: string, noteId: string, delivery: Delivery) =>
+    setNotes((notes) => ({
+      ...notes,
+      [chatId]: (notes[chatId] ?? []).map((note) =>
+        note.id === noteId && note.mine ? { ...note, delivery } : note,
+      ),
+    }));
+
   function moveTo(id: string, place: Place, message: string, from: Place) {
-    withTransition(() => patch(id, { place }));
+    patch(id, { place });
     const toastId = toast(message, {
       actionProps: {
         children: "Отменить",
         onPress: () => {
-          withTransition(() => patch(id, { place: from }));
+          patch(id, { place: from });
           toast.close(toastId);
         },
       },
     });
   }
 
-  function scheduleReply(chatId: string) {
+  function scheduleReply(chatId: string, pace: number) {
     const contact = contactById(chatId);
     const count = replyCounts.get(chatId) ?? 0;
     const text = contact?.replies[count % (contact.replies.length || 1)];
@@ -58,51 +70,62 @@ function createActions({ setChats, setNotes }: Setters) {
       return;
     }
     replyCounts.set(chatId, count + 1);
-    setTimeout(() => patch(chatId, { isTyping: true }), TYPING_DELAY_MS);
-    setTimeout(() => {
-      withTransition(() => {
-        addNote(chatId, newNote(false, text));
+    setTimeout(() => patch(chatId, { isTyping: true }), TYPING_DELAY_MS * pace);
+    setTimeout(
+      () => {
+        addNote(chatId, { ...newNote(text), mine: false });
         setChats((list) =>
           list.map((chat) =>
             chat.id === chatId
               ? {
                   ...chat,
                   isTyping: false,
-                  unread: chatId === openChatId ? 0 : chat.unread + 1,
+                  unread: chat.unread + 1,
                 }
               : chat,
           ),
         );
-      });
-    }, TYPING_DELAY_MS + TYPING_MS);
+      },
+      TYPING_DELAY_MS * pace + TYPING_MS,
+    );
+  }
+
+  function post(chatId: string, text: string, attachments?: string[]) {
+    const note = { ...newNote(text, attachments), mine: true as const };
+    const pace = contactById(chatId)?.isOnline ? 1 : OFFLINE_PACE;
+
+    addNote(chatId, { ...note, delivery: "sending" });
+    setTimeout(() => setDelivery(chatId, note.id, "sent"), SENT_MS);
+    setTimeout(() => setDelivery(chatId, note.id, "delivered"), DELIVERED_MS * pace);
+    setTimeout(() => setDelivery(chatId, note.id, "read"), READ_MS * pace);
+    scheduleReply(chatId, pace);
   }
 
   return {
-    setOpenChat: (id: string | null) => {
-      openChatId = id;
-    },
-    markRead: (id: string) => patch(id, { unread: 0 }),
+    markRead: (id: string) =>
+      setChats((list) =>
+        list.some((chat) => chat.id === id && chat.unread > 0)
+          ? list.map((chat) => (chat.id === id ? { ...chat, unread: 0 } : chat))
+          : list,
+      ),
     markUnread: (id: string) => patch(id, { unread: 1 }),
     setDraft: (id: string, draft: string) => patch(id, { draft }),
     setComment: (id: string, comment: string) => patch(id, { comment }),
-    setLabel: (id: string, label: LabelId) => withTransition(() => patch(id, { label })),
+    setLabel: (id: string, label: LabelId) => patch(id, { label }),
     toggleStar: (chat: Chat) => patch(chat.id, { isStarred: !chat.isStarred }),
     archive: (chat: Chat) => moveTo(chat.id, "archive", "Чат в архиве", chat.place),
     restore: (chat: Chat) => moveTo(chat.id, "inbox", "Чат возвращён", chat.place),
     trash: (chat: Chat) => moveTo(chat.id, "trash", "Чат в корзине", chat.place),
 
     removeForever: (id: string) => {
-      withTransition(() => setChats((list) => list.filter((chat) => chat.id !== id)));
+      setChats((list) => list.filter((chat) => chat.id !== id));
       setNotes(({ [id]: _removed, ...rest }) => rest);
       toast("Чат удалён");
     },
 
     send: (chatId: string, text: string, attachments: string[]) => {
-      withTransition(() => {
-        addNote(chatId, newNote(true, text, attachments.length > 0 ? attachments : undefined));
-        patch(chatId, { place: "inbox", draft: "" });
-      });
-      scheduleReply(chatId);
+      post(chatId, text, attachments.length > 0 ? attachments : undefined);
+      patch(chatId, { place: "inbox", draft: "" });
     },
 
     startChat: (contactId: string, text: string) => {
@@ -124,8 +147,7 @@ function createActions({ setChats, setNotes }: Setters) {
               },
             ],
       );
-      addNote(contactId, newNote(true, text));
-      scheduleReply(contactId);
+      post(contactId, text);
     },
   };
 }

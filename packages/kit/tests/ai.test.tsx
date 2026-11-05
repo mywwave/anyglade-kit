@@ -1,6 +1,6 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { expect, test } from "vite-plus/test";
-import { Message, Plan, Run, StreamingText } from "../src/ai.ts";
+import { DeliveryStatus, Message, Plan, Run, StreamingText } from "../src/ai.ts";
 import { overallStatus } from "../src/ai/status.tsx";
 import { Shimmer, TextSwap } from "../src/index.ts";
 
@@ -77,6 +77,25 @@ test("Message leaves out empty actions and gives the user a bubble", () => {
   expect(renderToStaticMarkup(<Message author="contact">Привет</Message>)).toContain(
     "ag-items-start",
   );
+});
+
+test("DeliveryStatus names the state and stays still when it first renders", () => {
+  const labels = {
+    sending: "Отправляется",
+    sent: "Отправлено",
+    delivered: "Доставлено",
+    read: "Прочитано",
+  };
+  const html = renderToStaticMarkup(
+    <Message author="user" meta={<DeliveryStatus labels={labels} status="read" />}>
+      Вопрос
+    </Message>,
+  );
+
+  expect(html).toContain("Прочитано");
+  expect(html).toContain("ag-visually-hidden");
+  expect(html).toContain("ag-text-text-success");
+  expect(html).not.toContain("ag-motion-pop");
 });
 
 test("Plan reports progress in the words it was given and keeps its title while it runs", () => {

@@ -102,6 +102,7 @@ test("withTransition handles being skipped by a newer transition", () => {
   const update = vi.fn();
   vi.stubGlobal("matchMedia", () => ({ matches: false }));
   vi.stubGlobal("document", {
+    querySelector: () => null,
     startViewTransition: (callback: () => void) => {
       callback();
       return { ready };
@@ -113,4 +114,17 @@ test("withTransition handles being skipped by a newer transition", () => {
 
   expect(update).toHaveBeenCalledOnce();
   expect(ready.catch).toHaveBeenCalledOnce();
+});
+
+test("withTransition takes no snapshot of the page under a floating panel", () => {
+  const startViewTransition = vi.fn();
+  const update = vi.fn();
+  vi.stubGlobal("matchMedia", () => ({ matches: false }));
+  vi.stubGlobal("document", { querySelector: () => ({}), startViewTransition });
+
+  withTransition(update);
+  vi.unstubAllGlobals();
+
+  expect(update).toHaveBeenCalledOnce();
+  expect(startViewTransition).not.toHaveBeenCalled();
 });

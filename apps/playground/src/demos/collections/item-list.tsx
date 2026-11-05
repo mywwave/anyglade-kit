@@ -1,4 +1,4 @@
-import { Box, Button, ItemList, Text } from "@anyglade/kit";
+import { Box, Button, Dropdown, ItemList, Label, Text } from "@anyglade/kit";
 import { Star, StarFill } from "@anyglade/kit/icons";
 import { useState } from "react";
 
@@ -18,6 +18,14 @@ export function ItemListDemo() {
         getText={(item) => item.title}
         items={items}
         label="Письма"
+        menu={{
+          label: "Действия с письмом",
+          renderItems: (item) => (
+            <Dropdown.Item textValue="Открыть" onAction={() => setCurrentId(item.id)}>
+              <Label>Открыть</Label>
+            </Dropdown.Item>
+          ),
+        }}
         renderItem={(item) => (
           <Box alignItems="center" justifyContent="between" gap="s">
             <Box flexDirection="column" minWidth={0}>

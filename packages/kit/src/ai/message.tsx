@@ -11,11 +11,13 @@ export interface MessageProps {
   children: ReactNode;
   /** Copy, retry and so on, under the reply. */
   actions?: ReactNode;
+  /** A bubble's corner: `DeliveryStatus` and the like. It keeps to the last line. */
+  meta?: ReactNode;
   /** Already there when the chat opened, so it does not animate. */
   isHistory?: boolean;
 }
 
-export function Message({ author, children, actions, isHistory = false }: MessageProps) {
+export function Message({ author, children, actions, meta, isHistory = false }: MessageProps) {
   if (author !== "assistant") {
     return (
       <Box
@@ -24,15 +26,20 @@ export function Message({ author, children, actions, isHistory = false }: Messag
         motion={isHistory ? undefined : "enter"}
       >
         <Box
-          flexDirection="column"
-          gap="s"
+          flexWrap="wrap"
+          alignItems="end"
+          justifyContent="end"
+          columnGap="s"
           maxWidth="80%"
           paddingHorizontal="l"
           paddingVertical="m"
           backgroundColor="background-card"
           borderRadius="l"
         >
-          {children}
+          <Box flexDirection="column" gap="s" minWidth={0}>
+            {children}
+          </Box>
+          {meta}
         </Box>
       </Box>
     );

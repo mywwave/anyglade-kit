@@ -7,7 +7,13 @@ export {
   type ModelPickerProps,
 } from "./ai/agent-settings.tsx";
 export { CodeOutput, type CodeOutputProps } from "./ai/code-output.tsx";
-export { Conversation, ConversationTurn, type ConversationProps } from "./ai/conversation.tsx";
+export {
+  Conversation,
+  ConversationNewMark,
+  ConversationTurn,
+  type ConversationProps,
+} from "./ai/conversation.tsx";
+export { DeliveryStatus, type Delivery, type DeliveryStatusProps } from "./ai/delivery-status.tsx";
 export { FileTree, type ChangedFile, type FileTreeProps } from "./ai/file-tree.tsx";
 export {
   Message,
