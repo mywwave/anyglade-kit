@@ -1,3 +1,5 @@
+<img src="https://unpkg.com/@anyglade/kit/assets/logo.svg" alt="" width="96" />
+
 # @anyglade/kit
 
 React UI kit на HeroUI v3: все компоненты HeroUI, своя тема и собственные компоненты из одного пакета.

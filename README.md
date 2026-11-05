@@ -1,3 +1,5 @@
+<img src="packages/kit/assets/logo.svg" alt="" width="96" />
+
 # anyglade-kit
 
 Монорепозиторий UI kit `@anyglade/kit` на HeroUI v3, Tailwind CSS v4 и Vite+.

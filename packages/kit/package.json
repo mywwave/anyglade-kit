@@ -4,6 +4,7 @@
   "description": "Personal React UI kit built on HeroUI v3 and Tailwind CSS v4.",
   "license": "MIT",
   "files": [
+    "assets",
     "dist",
     "styles"
   ],

@@ -20,7 +20,12 @@ export function App() {
   return (
     <main className="mx-auto flex min-h-screen max-w-3xl flex-col gap-8 p-6">
       <PageHeader
-        title="@anyglade/kit"
+        title={
+          <span className="flex items-center gap-3">
+            <img src="/logo.svg" alt="" width={51} height={28} />
+            @anyglade/kit
+          </span>
+        }
         description="Components and theme rendered from the package source."
         actions={
           <Button variant="secondary" onPress={toggleTheme}>
