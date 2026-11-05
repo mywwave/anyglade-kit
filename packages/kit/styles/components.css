@@ -232,12 +232,15 @@
 .ag-tree {
   display: flex;
   flex-direction: column;
+  gap: var(--ag-space-2xs);
   outline: none;
 }
 
+/* The indent is a margin: a highlight starts where the item starts, not at the panel edge. */
 .ag-tree__item {
-  padding-block: var(--ag-space-xs);
-  padding-inline: calc((var(--tree-item-level) - 1) * var(--ag-space-l)) var(--ag-space-s);
+  margin-inline-start: calc((var(--tree-item-level) - 1) * var(--ag-space-l));
+  padding: var(--ag-space-xs);
+  cursor: var(--cursor-interactive);
   border-radius: var(--ag-radius-s);
   outline: none;
 
@@ -249,6 +252,14 @@
     outline: 2px solid var(--focus);
     outline-offset: -2px;
   }
+}
+
+.ag-tree__item[data-selected] {
+  background-color: var(--ag-background-card);
+}
+
+.ag-tree__item:not([data-has-child-items]) {
+  margin-inline-start: calc((var(--tree-item-level) - 1) * var(--ag-space-l) + var(--ag-space-xl));
 }
 
 .ag-tree__chevron {

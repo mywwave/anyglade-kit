@@ -4,7 +4,7 @@
 
 ## @anyglade/kit
 
-`Box`, `Button`, `CopyButton`, `DetailRow`, `EmptyPanel`, `Frame`, `FrameTile`, `Loadable`, `PageHeader`, `SegmentedControl`, `Shimmer`, `SortableColumn`, `Stat`, `Text`, `TextSwap`, `useLoadingIndicator`, `useTableSort`, `withTransition`
+`Box`, `Button`, `CopyButton`, `DetailRow`, `EmptyPanel`, `Frame`, `FrameTile`, `Loadable`, `PageHeader`, `SegmentedControl`, `Shimmer`, `SortableColumn`, `Stat`, `Text`, `TextSwap`, `TreeNav`, `useLoadingIndicator`, `useTableSort`, `withTransition`
 
 ## @anyglade/kit/ai
 
@@ -476,5 +476,29 @@ export interface ToolCallProps {
   children?: ReactNode;
   /** Shown only while `status` is `waiting`: the agent cannot go on without an answer. */
   approval?: ToolApproval;
+}
+```
+
+```ts
+export interface TreeNavNode {
+  id: string;
+  label: string;
+  /** An icon or an avatar. */
+  leading?: ReactNode;
+  /** A short status or count, next to the right edge. */
+  trailing?: ReactNode;
+  /** A group only opens and closes: it is never the current item. */
+  isGroup?: boolean;
+  children?: readonly TreeNavNode[];
+}
+```
+
+```ts
+export interface TreeNavProps {
+  label: string;
+  nodes: readonly TreeNavNode[];
+  /** Pass it to show the current item. Without it rows act as plain actions. */
+  selectedId?: string | null;
+  onSelect?: (id: string) => void;
 }
 ```

@@ -34,5 +34,6 @@ export {
   type TextWrap,
 } from "./text/text.tsx";
 export { TextSwap, type TextSwapProps } from "./text-swap/text-swap.tsx";
+export { TreeNav, type TreeNavNode, type TreeNavProps } from "./tree-nav/tree-nav.tsx";
 export * as tokens from "./tokens.ts";
 export type { Selection, SortDescriptor } from "react-aria-components";
