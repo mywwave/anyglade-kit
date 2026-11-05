@@ -18,7 +18,8 @@ type BoxElement =
   | "ul"
   | "ol"
   | "li"
-  | "a";
+  | "a"
+  | "figure";
 
 const NON_FLEX_ELEMENTS: ReadonlySet<BoxElement> = new Set(["span", "label", "li", "a"]);
 

@@ -195,3 +195,8 @@
   gap: var(--ag-space-xs);
   padding-inline: var(--ag-space-m);
 }
+
+.checkbox__control,
+.radio__control {
+  border: 1px solid var(--ag-border-control);
+}

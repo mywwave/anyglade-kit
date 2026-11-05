@@ -49,6 +49,7 @@ export const colors = {
   "background-primary": ["white", "ink-950"],
   "background-secondary": ["gray-50", "ink-900"],
   "background-card": ["gray-100", "ink-800"],
+  "background-emphasis": ["gray-400", "ink-500"],
   "background-inverse": ["gray-900", "white"],
   "background-accent": ["blue-50", "blue-950"],
   "background-warning": ["amber-50", "amber-950"],
@@ -67,7 +68,12 @@ export const colors = {
 
   "border-primary": ["gray-200", "ink-700"],
   "border-secondary": ["gray-100", "ink-800"],
+  "border-control": ["gray-300", "ink-600"],
   "border-warning": ["amber-300", "amber-700"],
+
+  "chart-primary": ["gray-900", "white"],
+  "chart-secondary": ["gray-400", "ink-400"],
+  "chart-tertiary": ["gray-200", "ink-600"],
 } as const satisfies Record<string, ColorPair>;
 
 export const spacing = {

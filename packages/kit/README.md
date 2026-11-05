@@ -94,6 +94,27 @@ lint: {
 
 Типографика и отступы задаются только через `Text` и `Box`. Утилиты Tailwind вроде `text-sm` или `font-semibold` и компоненты HeroUI берут значения из той же шкалы, поэтому система остаётся единой и без линта.
 
+## Графики
+
+Графики подключаются отдельным входом, поэтому проекты без них не получают Recharts в бандл:
+
+```tsx
+import { LineChart } from "@anyglade/kit/charts";
+
+export function Revenue() {
+  return (
+    <LineChart
+      label="Выручка по месяцам"
+      data={[{ month: "Окт", revenue: 120 }]}
+      xKey="month"
+      series={[{ dataKey: "revenue", label: "Выручка" }]}
+    />
+  );
+}
+```
+
+Доступны `LineChart`, `AreaChart`, `BarChart`, `DonutChart` и `Sparkline`. Цвета берутся из токенов, серий не больше трёх.
+
 ## Иконки
 
 Набор [Gravity UI Icons](https://gravity-ui.com/icons) подключается отдельным входом, потому что часть имён совпадает с компонентами (`Link`, `Calendar`, `Tag`):

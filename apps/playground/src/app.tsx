@@ -1,10 +1,12 @@
 import { Box, Button, PageHeader, Text, Toast, useTheme } from "@anyglade/kit";
 import { useState } from "react";
+import { CrmApp } from "./crm/crm-app.tsx";
 import { blockCategories, componentCategories } from "./demos.ts";
 import { Showcase } from "./showcase.tsx";
 
 const views = {
   showcase: { label: "Витрина", categories: [] },
+  crm: { label: "CRM", categories: [] },
   components: { label: "Компоненты", categories: componentCategories },
   blocks: { label: "Блоки", categories: blockCategories },
 };
@@ -13,6 +15,7 @@ type View = keyof typeof views;
 
 const descriptions: Record<View, string> = {
   showcase: "Компоненты kit в работе.",
+  crm: "",
   components: "Компоненты и токены из исходников пакета.",
   blocks: "Готовые секции из компонентов kit.",
 };
@@ -25,6 +28,10 @@ export function App() {
   const [view, setView] = useState<View>("showcase");
   const { categories } = views[view];
   const isBlocks = view === "blocks";
+
+  if (view === "crm") {
+    return <CrmApp onExit={() => setView("showcase")} />;
+  }
 
   return (
     <Box

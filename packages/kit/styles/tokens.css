@@ -39,6 +39,7 @@
   --ag-background-primary: light-dark(var(--ag-white), var(--ag-ink-950));
   --ag-background-secondary: light-dark(var(--ag-gray-50), var(--ag-ink-900));
   --ag-background-card: light-dark(var(--ag-gray-100), var(--ag-ink-800));
+  --ag-background-emphasis: light-dark(var(--ag-gray-400), var(--ag-ink-500));
   --ag-background-inverse: light-dark(var(--ag-gray-900), var(--ag-white));
   --ag-background-accent: light-dark(var(--ag-blue-50), var(--ag-blue-950));
   --ag-background-warning: light-dark(var(--ag-amber-50), var(--ag-amber-950));
@@ -55,7 +56,11 @@
   --ag-text-warning: light-dark(var(--ag-amber-500), var(--ag-amber-500));
   --ag-border-primary: light-dark(var(--ag-gray-200), var(--ag-ink-700));
   --ag-border-secondary: light-dark(var(--ag-gray-100), var(--ag-ink-800));
+  --ag-border-control: light-dark(var(--ag-gray-300), var(--ag-ink-600));
   --ag-border-warning: light-dark(var(--ag-amber-300), var(--ag-amber-700));
+  --ag-chart-primary: light-dark(var(--ag-gray-900), var(--ag-white));
+  --ag-chart-secondary: light-dark(var(--ag-gray-400), var(--ag-ink-400));
+  --ag-chart-tertiary: light-dark(var(--ag-gray-200), var(--ag-ink-600));
   --ag-space-none: 0;
   --ag-space-2xs: 2px;
   --ag-space-xs: 4px;

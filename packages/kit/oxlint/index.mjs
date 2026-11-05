@@ -10,6 +10,7 @@ const LAYOUT_ELEMENTS = new Set([
   "footer",
   "form",
   "fieldset",
+  "figure",
   "label",
   "ul",
   "ol",

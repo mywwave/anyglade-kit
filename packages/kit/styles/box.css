@@ -268,6 +268,7 @@
 .ag-bg-background-primary { background-color: var(--ag-background-primary); }
 .ag-bg-background-secondary { background-color: var(--ag-background-secondary); }
 .ag-bg-background-card { background-color: var(--ag-background-card); }
+.ag-bg-background-emphasis { background-color: var(--ag-background-emphasis); }
 .ag-bg-background-inverse { background-color: var(--ag-background-inverse); }
 .ag-bg-background-accent { background-color: var(--ag-background-accent); }
 .ag-bg-background-warning { background-color: var(--ag-background-warning); }
@@ -284,6 +285,7 @@
 .ag-text-text-warning { color: var(--ag-text-warning); }
 .ag-border-border-primary { border-color: var(--ag-border-primary); }
 .ag-border-border-secondary { border-color: var(--ag-border-secondary); }
+.ag-border-border-control { border-color: var(--ag-border-control); }
 .ag-border-border-warning { border-color: var(--ag-border-warning); }
 .ag-rounded-none { border-radius: var(--ag-radius-none); }
 .ag-rounded-s { border-radius: var(--ag-radius-s); }
@@ -741,6 +743,7 @@
   .sm\:ag-bg-background-primary { background-color: var(--ag-background-primary); }
   .sm\:ag-bg-background-secondary { background-color: var(--ag-background-secondary); }
   .sm\:ag-bg-background-card { background-color: var(--ag-background-card); }
+  .sm\:ag-bg-background-emphasis { background-color: var(--ag-background-emphasis); }
   .sm\:ag-bg-background-inverse { background-color: var(--ag-background-inverse); }
   .sm\:ag-bg-background-accent { background-color: var(--ag-background-accent); }
   .sm\:ag-bg-background-warning { background-color: var(--ag-background-warning); }
@@ -757,6 +760,7 @@
   .sm\:ag-text-text-warning { color: var(--ag-text-warning); }
   .sm\:ag-border-border-primary { border-color: var(--ag-border-primary); }
   .sm\:ag-border-border-secondary { border-color: var(--ag-border-secondary); }
+  .sm\:ag-border-border-control { border-color: var(--ag-border-control); }
   .sm\:ag-border-border-warning { border-color: var(--ag-border-warning); }
   .sm\:ag-rounded-none { border-radius: var(--ag-radius-none); }
   .sm\:ag-rounded-s { border-radius: var(--ag-radius-s); }
@@ -1168,6 +1172,7 @@
   .md\:ag-bg-background-primary { background-color: var(--ag-background-primary); }
   .md\:ag-bg-background-secondary { background-color: var(--ag-background-secondary); }
   .md\:ag-bg-background-card { background-color: var(--ag-background-card); }
+  .md\:ag-bg-background-emphasis { background-color: var(--ag-background-emphasis); }
   .md\:ag-bg-background-inverse { background-color: var(--ag-background-inverse); }
   .md\:ag-bg-background-accent { background-color: var(--ag-background-accent); }
   .md\:ag-bg-background-warning { background-color: var(--ag-background-warning); }
@@ -1184,6 +1189,7 @@
   .md\:ag-text-text-warning { color: var(--ag-text-warning); }
   .md\:ag-border-border-primary { border-color: var(--ag-border-primary); }
   .md\:ag-border-border-secondary { border-color: var(--ag-border-secondary); }
+  .md\:ag-border-border-control { border-color: var(--ag-border-control); }
   .md\:ag-border-border-warning { border-color: var(--ag-border-warning); }
   .md\:ag-rounded-none { border-radius: var(--ag-radius-none); }
   .md\:ag-rounded-s { border-radius: var(--ag-radius-s); }
@@ -1595,6 +1601,7 @@
   .lg\:ag-bg-background-primary { background-color: var(--ag-background-primary); }
   .lg\:ag-bg-background-secondary { background-color: var(--ag-background-secondary); }
   .lg\:ag-bg-background-card { background-color: var(--ag-background-card); }
+  .lg\:ag-bg-background-emphasis { background-color: var(--ag-background-emphasis); }
   .lg\:ag-bg-background-inverse { background-color: var(--ag-background-inverse); }
   .lg\:ag-bg-background-accent { background-color: var(--ag-background-accent); }
   .lg\:ag-bg-background-warning { background-color: var(--ag-background-warning); }
@@ -1611,6 +1618,7 @@
   .lg\:ag-text-text-warning { color: var(--ag-text-warning); }
   .lg\:ag-border-border-primary { border-color: var(--ag-border-primary); }
   .lg\:ag-border-border-secondary { border-color: var(--ag-border-secondary); }
+  .lg\:ag-border-border-control { border-color: var(--ag-border-control); }
   .lg\:ag-border-border-warning { border-color: var(--ag-border-warning); }
   .lg\:ag-rounded-none { border-radius: var(--ag-radius-none); }
   .lg\:ag-rounded-s { border-radius: var(--ag-radius-s); }
@@ -2022,6 +2030,7 @@
   .xl\:ag-bg-background-primary { background-color: var(--ag-background-primary); }
   .xl\:ag-bg-background-secondary { background-color: var(--ag-background-secondary); }
   .xl\:ag-bg-background-card { background-color: var(--ag-background-card); }
+  .xl\:ag-bg-background-emphasis { background-color: var(--ag-background-emphasis); }
   .xl\:ag-bg-background-inverse { background-color: var(--ag-background-inverse); }
   .xl\:ag-bg-background-accent { background-color: var(--ag-background-accent); }
   .xl\:ag-bg-background-warning { background-color: var(--ag-background-warning); }
@@ -2038,6 +2047,7 @@
   .xl\:ag-text-text-warning { color: var(--ag-text-warning); }
   .xl\:ag-border-border-primary { border-color: var(--ag-border-primary); }
   .xl\:ag-border-border-secondary { border-color: var(--ag-border-secondary); }
+  .xl\:ag-border-border-control { border-color: var(--ag-border-control); }
   .xl\:ag-border-border-warning { border-color: var(--ag-border-warning); }
   .xl\:ag-rounded-none { border-radius: var(--ag-radius-none); }
   .xl\:ag-rounded-s { border-radius: var(--ag-radius-s); }
@@ -2185,6 +2195,7 @@
   .hover\:ag-bg-background-primary:hover { background-color: var(--ag-background-primary); }
   .hover\:ag-bg-background-secondary:hover { background-color: var(--ag-background-secondary); }
   .hover\:ag-bg-background-card:hover { background-color: var(--ag-background-card); }
+  .hover\:ag-bg-background-emphasis:hover { background-color: var(--ag-background-emphasis); }
   .hover\:ag-bg-background-inverse:hover { background-color: var(--ag-background-inverse); }
   .hover\:ag-bg-background-accent:hover { background-color: var(--ag-background-accent); }
   .hover\:ag-bg-background-warning:hover { background-color: var(--ag-background-warning); }
@@ -2201,6 +2212,7 @@
   .hover\:ag-text-text-warning:hover { color: var(--ag-text-warning); }
   .hover\:ag-border-border-primary:hover { border-color: var(--ag-border-primary); }
   .hover\:ag-border-border-secondary:hover { border-color: var(--ag-border-secondary); }
+  .hover\:ag-border-border-control:hover { border-color: var(--ag-border-control); }
   .hover\:ag-border-border-warning:hover { border-color: var(--ag-border-warning); }
   .hover\:ag-shadow-none:hover { box-shadow: var(--ag-shadow-none); }
   .hover\:ag-shadow-s:hover { box-shadow: var(--ag-shadow-s); }
@@ -2215,6 +2227,7 @@
 .focus\:ag-bg-background-primary:focus { background-color: var(--ag-background-primary); }
 .focus\:ag-bg-background-secondary:focus { background-color: var(--ag-background-secondary); }
 .focus\:ag-bg-background-card:focus { background-color: var(--ag-background-card); }
+.focus\:ag-bg-background-emphasis:focus { background-color: var(--ag-background-emphasis); }
 .focus\:ag-bg-background-inverse:focus { background-color: var(--ag-background-inverse); }
 .focus\:ag-bg-background-accent:focus { background-color: var(--ag-background-accent); }
 .focus\:ag-bg-background-warning:focus { background-color: var(--ag-background-warning); }
@@ -2231,6 +2244,7 @@
 .focus\:ag-text-text-warning:focus { color: var(--ag-text-warning); }
 .focus\:ag-border-border-primary:focus { border-color: var(--ag-border-primary); }
 .focus\:ag-border-border-secondary:focus { border-color: var(--ag-border-secondary); }
+.focus\:ag-border-border-control:focus { border-color: var(--ag-border-control); }
 .focus\:ag-border-border-warning:focus { border-color: var(--ag-border-warning); }
 .focus\:ag-shadow-none:focus { box-shadow: var(--ag-shadow-none); }
 .focus\:ag-shadow-s:focus { box-shadow: var(--ag-shadow-s); }
@@ -2244,6 +2258,7 @@
 .focusVisible\:ag-bg-background-primary:focus-visible { background-color: var(--ag-background-primary); }
 .focusVisible\:ag-bg-background-secondary:focus-visible { background-color: var(--ag-background-secondary); }
 .focusVisible\:ag-bg-background-card:focus-visible { background-color: var(--ag-background-card); }
+.focusVisible\:ag-bg-background-emphasis:focus-visible { background-color: var(--ag-background-emphasis); }
 .focusVisible\:ag-bg-background-inverse:focus-visible { background-color: var(--ag-background-inverse); }
 .focusVisible\:ag-bg-background-accent:focus-visible { background-color: var(--ag-background-accent); }
 .focusVisible\:ag-bg-background-warning:focus-visible { background-color: var(--ag-background-warning); }
@@ -2260,6 +2275,7 @@
 .focusVisible\:ag-text-text-warning:focus-visible { color: var(--ag-text-warning); }
 .focusVisible\:ag-border-border-primary:focus-visible { border-color: var(--ag-border-primary); }
 .focusVisible\:ag-border-border-secondary:focus-visible { border-color: var(--ag-border-secondary); }
+.focusVisible\:ag-border-border-control:focus-visible { border-color: var(--ag-border-control); }
 .focusVisible\:ag-border-border-warning:focus-visible { border-color: var(--ag-border-warning); }
 .focusVisible\:ag-shadow-none:focus-visible { box-shadow: var(--ag-shadow-none); }
 .focusVisible\:ag-shadow-s:focus-visible { box-shadow: var(--ag-shadow-s); }
@@ -2273,6 +2289,7 @@
 .focusWithin\:ag-bg-background-primary:focus-within { background-color: var(--ag-background-primary); }
 .focusWithin\:ag-bg-background-secondary:focus-within { background-color: var(--ag-background-secondary); }
 .focusWithin\:ag-bg-background-card:focus-within { background-color: var(--ag-background-card); }
+.focusWithin\:ag-bg-background-emphasis:focus-within { background-color: var(--ag-background-emphasis); }
 .focusWithin\:ag-bg-background-inverse:focus-within { background-color: var(--ag-background-inverse); }
 .focusWithin\:ag-bg-background-accent:focus-within { background-color: var(--ag-background-accent); }
 .focusWithin\:ag-bg-background-warning:focus-within { background-color: var(--ag-background-warning); }
@@ -2289,6 +2306,7 @@
 .focusWithin\:ag-text-text-warning:focus-within { color: var(--ag-text-warning); }
 .focusWithin\:ag-border-border-primary:focus-within { border-color: var(--ag-border-primary); }
 .focusWithin\:ag-border-border-secondary:focus-within { border-color: var(--ag-border-secondary); }
+.focusWithin\:ag-border-border-control:focus-within { border-color: var(--ag-border-control); }
 .focusWithin\:ag-border-border-warning:focus-within { border-color: var(--ag-border-warning); }
 .focusWithin\:ag-shadow-none:focus-within { box-shadow: var(--ag-shadow-none); }
 .focusWithin\:ag-shadow-s:focus-within { box-shadow: var(--ag-shadow-s); }
@@ -2302,6 +2320,7 @@
 .active\:ag-bg-background-primary:active { background-color: var(--ag-background-primary); }
 .active\:ag-bg-background-secondary:active { background-color: var(--ag-background-secondary); }
 .active\:ag-bg-background-card:active { background-color: var(--ag-background-card); }
+.active\:ag-bg-background-emphasis:active { background-color: var(--ag-background-emphasis); }
 .active\:ag-bg-background-inverse:active { background-color: var(--ag-background-inverse); }
 .active\:ag-bg-background-accent:active { background-color: var(--ag-background-accent); }
 .active\:ag-bg-background-warning:active { background-color: var(--ag-background-warning); }
@@ -2318,6 +2337,7 @@
 .active\:ag-text-text-warning:active { color: var(--ag-text-warning); }
 .active\:ag-border-border-primary:active { border-color: var(--ag-border-primary); }
 .active\:ag-border-border-secondary:active { border-color: var(--ag-border-secondary); }
+.active\:ag-border-border-control:active { border-color: var(--ag-border-control); }
 .active\:ag-border-border-warning:active { border-color: var(--ag-border-warning); }
 .active\:ag-shadow-none:active { box-shadow: var(--ag-shadow-none); }
 .active\:ag-shadow-s:active { box-shadow: var(--ag-shadow-s); }
