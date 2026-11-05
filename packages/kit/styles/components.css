@@ -89,9 +89,31 @@
   line-height: var(--ag-leading-snug);
 }
 
+.badge {
+  --badge-border: light-dark(var(--ag-white), var(--ag-ink-600));
+
+  min-height: 0;
+  background-clip: border-box;
+  border-radius: var(--ag-radius-full);
+  line-height: 1;
+}
+
 .badge--sm {
+  height: var(--ag-space-l);
+  min-width: var(--ag-space-l);
   font-size: var(--ag-font-size-1);
-  line-height: var(--ag-leading-snug);
+  line-height: 1;
+}
+
+.badge--md {
+  height: var(--ag-space-xl);
+  min-width: var(--ag-space-xl);
+}
+
+.badge--lg {
+  height: var(--ag-space-2xl);
+  min-width: var(--ag-space-2xl);
+  line-height: 1;
 }
 
 .tag-group__list {
@@ -137,4 +159,9 @@
 
 .typography--code {
   padding-inline: var(--ag-space-xs);
+}
+
+.badge--soft {
+  background-color: var(--background);
+  background-image: linear-gradient(var(--badge-bg), var(--badge-bg));
 }
