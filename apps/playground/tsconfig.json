@@ -15,7 +15,8 @@
     "verbatimModuleSyntax": true,
     "skipLibCheck": true,
     "paths": {
-      "@anyglade/kit": ["../../packages/kit/src/index.ts"]
+      "@anyglade/kit": ["../../packages/kit/src/index.ts"],
+      "@anyglade/kit/icons": ["../../packages/kit/src/icons.ts"]
     }
   },
   "include": ["src"]

@@ -1,0 +1,17 @@
+body {
+  background-color: var(--ag-background-primary);
+  color: var(--ag-text-primary);
+  font-size: var(--ag-font-size-2);
+  line-height: var(--ag-leading-normal);
+  font-weight: var(--ag-weight-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --ag-duration-fast: 0ms;
+    --ag-duration-base: 0ms;
+    --ag-duration-slow: 0ms;
+    --ag-duration-slower: 0ms;
+  }
+}

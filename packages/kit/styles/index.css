@@ -1,4 +1,8 @@
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/geist-mono";
 @import "@heroui/styles";
+@import "./tokens.css" layer(theme);
 @import "./theme.css" layer(theme);
-
-@source "../dist";
+@import "./base.css" layer(base);
+@import "./components.css" layer(components);
+@import "./box.css" layer(utilities);

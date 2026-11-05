@@ -1,13 +1,63 @@
-:root,
-.light,
-[data-theme="light"] {
-  --accent: oklch(0.55 0.15 165);
-  --accent-foreground: oklch(0.99 0 0);
-  --radius: 0.5rem;
+@theme {
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, monospace;
 }
 
+:root:not(.light, .dark, [data-theme]) {
+  color-scheme: light dark;
+}
+
+:root,
+.light,
 .dark,
+[data-theme="light"],
 [data-theme="dark"] {
-  --accent: oklch(0.72 0.14 165);
-  --accent-foreground: oklch(0.2 0.02 165);
+  --radius: 0.5rem;
+  --field-radius: var(--ag-radius-m);
+  --field-border-width: 1px;
+  --field-shadow: none;
+  --surface-shadow: none;
+
+  --background: var(--ag-background-primary);
+  --foreground: var(--ag-text-primary);
+
+  --surface: var(--ag-background-card);
+  --surface-foreground: var(--ag-text-primary);
+  --surface-secondary: var(--ag-background-secondary);
+  --surface-secondary-foreground: var(--ag-text-primary);
+  --surface-tertiary: var(--ag-border-primary);
+  --surface-tertiary-foreground: var(--ag-text-primary);
+
+  --overlay: light-dark(var(--ag-white), var(--ag-ink-900));
+  --overlay-foreground: var(--ag-text-primary);
+
+  --muted: var(--ag-text-secondary);
+
+  --default: light-dark(var(--ag-gray-100), var(--ag-ink-700));
+  --default-foreground: var(--ag-text-primary);
+
+  --field-background: light-dark(var(--ag-white), var(--ag-ink-800));
+  --field-foreground: var(--ag-text-primary);
+  --field-placeholder: var(--ag-text-tertiary);
+  --field-border: var(--ag-border-primary);
+
+  --accent: var(--ag-text-primary);
+  --accent-foreground: light-dark(var(--ag-white), var(--ag-black));
+  --accent-soft-foreground: var(--ag-text-primary);
+
+  --success: var(--ag-text-success);
+  --success-foreground: var(--ag-black);
+  --warning: var(--ag-text-warning);
+  --warning-foreground: var(--ag-black);
+  --danger: var(--ag-text-danger);
+  --danger-foreground: var(--ag-white);
+
+  --segment: light-dark(var(--ag-white), var(--ag-ink-600));
+  --segment-foreground: var(--ag-text-primary);
+
+  --border: var(--ag-border-primary);
+  --separator: var(--ag-border-primary);
+  --focus: var(--ag-blue-500);
+  --link: var(--ag-text-accent);
+  --backdrop: rgb(0 0 0 / 0.7);
 }

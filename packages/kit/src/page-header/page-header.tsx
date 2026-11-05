@@ -1,4 +1,6 @@
 import type { ReactNode } from "react";
+import { Box } from "../box/box.tsx";
+import { Text } from "../text/text.tsx";
 
 export interface PageHeaderProps {
   title: ReactNode;
@@ -8,12 +10,24 @@ export interface PageHeaderProps {
 
 export function PageHeader({ title, description, actions }: PageHeaderProps) {
   return (
-    <header className="flex flex-wrap items-start justify-between gap-4">
-      <div className="min-w-0">
-        <h1 className="text-2xl font-semibold text-foreground">{title}</h1>
-        {description ? <p className="mt-1 text-muted">{description}</p> : null}
-      </div>
-      {actions ? <div className="flex shrink-0 items-center gap-2">{actions}</div> : null}
-    </header>
+    <Box
+      as="header"
+      flexDirection={{ base: "column", md: "row" }}
+      alignItems={{ base: "start", md: "center" }}
+      justifyContent="between"
+      gap="l"
+    >
+      <Box flexDirection="column" gap="xs" minWidth={0}>
+        <Text as="h1" variant="heading-xs" weight="medium">
+          {title}
+        </Text>
+        {description ? <Text color="muted">{description}</Text> : null}
+      </Box>
+      {actions ? (
+        <Box flexShrink={0} alignItems="center" gap="s">
+          {actions}
+        </Box>
+      ) : null}
+    </Box>
   );
 }

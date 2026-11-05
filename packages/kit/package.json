@@ -6,7 +6,9 @@
   "files": [
     "assets",
     "dist",
-    "styles"
+    "oxlint",
+    "styles",
+    "NOTICE"
   ],
   "type": "module",
   "sideEffects": false,
@@ -15,6 +17,11 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
+    "./icons": {
+      "types": "./dist/icons.d.ts",
+      "default": "./dist/icons.js"
+    },
+    "./oxlint": "./oxlint/index.mjs",
     "./styles.css": "./styles/index.css",
     "./package.json": "./package.json"
   },
@@ -22,6 +29,7 @@
     "access": "public"
   },
   "scripts": {
+    "generate": "bun scripts/generate.ts",
     "build": "vp pack",
     "dev": "vp pack --watch",
     "test": "vp test",
@@ -29,6 +37,9 @@
     "prepublishOnly": "vp run build"
   },
   "dependencies": {
+    "@fontsource-variable/geist-mono": "^5.3.0",
+    "@fontsource-variable/inter": "^5.3.0",
+    "@gravity-ui/icons": "^2.23.1",
     "@heroui/react": "^3.2.7",
     "@heroui/styles": "^3.2.7",
     "@internationalized/date": "^3.12.4",
@@ -38,6 +49,7 @@
     "react-aria-components": "^1.22.1"
   },
   "devDependencies": {
+    "@types/node": "^26.6.6",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "publint": "^0.3.25",
