@@ -1,7 +1,7 @@
 {
-  "packages/kit/README.md": "5f025502c9fc8083",
-  "docs/design-system/decisions.md": "5a8d2100312fa3d1",
-  "packages/kit/oxlint/index.mjs": "9b1a072d7116a034",
+  "packages/kit/README.md": "6a5fbfaf33b99118",
+  "docs/design-system/decisions.md": "cc0c6c887f66fa06",
+  "packages/kit/oxlint/index.mjs": "9660fa729577dd46",
   "packages/kit/src/box/props.ts": "4de443ed88c71df4",
   "packages/kit/src/text/text.tsx": "9e35a6bf74450c9b"
 }

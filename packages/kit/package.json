@@ -17,13 +17,18 @@
     "url": "git+https://github.com/mywwave/anyglade-kit.git",
     "directory": "packages/kit"
   },
+  "bin": {
+    "anyglade-kit": "./bin/anyglade-kit.mjs"
+  },
   "files": [
     "assets",
     "dist",
     "oxlint",
     "styles",
     "NOTICE",
-    "LICENSE"
+    "LICENSE",
+    "bin",
+    "skills"
   ],
   "type": "module",
   "sideEffects": false,
@@ -53,11 +58,12 @@
   },
   "scripts": {
     "generate": "bun scripts/generate.ts",
-    "build": "vp pack",
+    "build": "vp pack && bun scripts/copy-skill.ts",
     "dev": "vp pack --watch",
     "test": "vp test",
     "check": "vp check",
-    "prepublishOnly": "vp run build"
+    "prepublishOnly": "vp run build",
+    "postinstall": "node bin/anyglade-kit.mjs postinstall"
   },
   "dependencies": {
     "@fontsource-variable/geist-mono": "^5.3.0",

@@ -1,3 +1,6 @@
+/** Sends an agent that hit a rule to the reasons behind all of them. */
+const RULES = "Rules: node_modules/@anyglade/kit/skills/anyglade-design-system/SKILL.md";
+
 const LAYOUT_ELEMENTS = new Set([
   "div",
   "span",
@@ -63,7 +66,7 @@ const noRawLayout = {
     type: "problem",
     docs: { description: "Disallow raw layout elements in favor of <Box />" },
     schema: [],
-    messages: { invalid: 'Use <Box as="{{ element }}" /> from @anyglade/kit.' },
+    messages: { invalid: `Use <Box as="{{ element }}" /> from @anyglade/kit. ${RULES}` },
   },
   create(context) {
     return {
@@ -82,7 +85,7 @@ const noRawText = {
     type: "problem",
     docs: { description: "Disallow raw text elements in favor of <Text />" },
     schema: [],
-    messages: { invalid: 'Use <Text as="{{ element }}" /> from @anyglade/kit.' },
+    messages: { invalid: `Use <Text as="{{ element }}" /> from @anyglade/kit. ${RULES}` },
   },
   create(context) {
     return {
