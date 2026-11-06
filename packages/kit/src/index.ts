@@ -33,6 +33,7 @@ export {
   type MediaTileProps,
   type StreamVideoProps,
 } from "./media-stage/media-tile.tsx";
+export { PageLoader, type PageLoaderProps } from "./page-loader/page-loader.tsx";
 export { Stat, type StatProps } from "./stat/stat.tsx";
 export {
   Text,

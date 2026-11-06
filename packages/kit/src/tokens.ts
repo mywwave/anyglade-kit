@@ -129,6 +129,7 @@ export const durations = {
   slow: "320ms",
   slower: "480ms",
   shimmer: "2000ms",
+  drift: "3200ms",
   stagger: "60ms",
 } as const;
 
@@ -141,6 +142,8 @@ export const easings = {
 /** Pacing of feedback, in milliseconds: fast work never flashes a loader. */
 export const timings = {
   loaderDelay: 150,
+  /** A whole screen is louder than a spinner, so it waits longer before it takes the page. */
+  pageLoaderDelay: 400,
   loaderMinimum: 400,
   confirmation: 1500,
 } as const;

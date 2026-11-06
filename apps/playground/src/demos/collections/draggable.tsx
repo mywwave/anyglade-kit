@@ -19,6 +19,7 @@ export function DraggableDemo() {
         drop={{
           canDrop: (room, name) => placed[name] !== room.id,
           onDrop: (room, name) => setPlaced((all) => ({ ...all, [name]: room.id })),
+          slot: () => ({ top: 4, left: 0 }),
         }}
         getText={(room) => room.name}
         items={rooms}

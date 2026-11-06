@@ -446,6 +446,7 @@ function DeleteDialog({ onDelete }: { onDelete: () => void }) {
   drop={{
     canDrop: (room, value) => !room.isLocked && value !== room.id,
     onDrop: (room, value) => move(value, room.id),
+    slot: (room) => ({ top: room.people.length > 0 ? 4 : 8, left: 8 }),
   }}
   renderItem={(room) => (
     <Draggable preview={<PersonChip />} value={person.id}>
@@ -455,7 +456,7 @@ function DeleteDialog({ onDelete }: { onDelete: () => void }) {
 />
 ```
 
-Строка, которая не примет значение, не подсвечивается. Предпросмотр короткий: имя, а не вся строка.
+Строка, которая не примет значение, не подсвечивается. Предпросмотр короткий: имя, а не вся строка. `slot` задаёт отступы места, куда встанет значение: они должны совпасть с настоящей вёрсткой строки, иначе при посадке будет рывок.
 
 ## Вкладки
 

@@ -1,5 +1,6 @@
 import { useLayoutEffect, type RefObject } from "react";
 import { durations, easings } from "../tokens.ts";
+import { isDropLanding } from "./drag-session.ts";
 
 /** More changes at once mean a new list, such as another section, and not a move. */
 const MAX_CHANGED_ROWS = 1;
@@ -31,7 +32,7 @@ export function useRowFlip(list: RefObject<HTMLElement | null>) {
       const added = [...tops.keys()].filter((id) => !previous.has(id)).length;
       const removed = [...previous.keys()].filter((id) => !tops.has(id)).length;
       const isReduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (added + removed > MAX_CHANGED_ROWS || isReduced) {
+      if (added + removed > MAX_CHANGED_ROWS || isReduced || isDropLanding()) {
         return;
       }
 

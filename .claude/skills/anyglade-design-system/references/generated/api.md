@@ -4,7 +4,7 @@
 
 ## @anyglade/kit
 
-`Box`, `Button`, `CopyButton`, `CountBadge`, `DetailRow`, `Draggable`, `EmptyPanel`, `FloatingPanel`, `Frame`, `FrameTile`, `ItemList`, `Loadable`, `MediaStage`, `MediaTile`, `PageHeader`, `SegmentedControl`, `Shimmer`, `SortableColumn`, `Stat`, `StreamVideo`, `Text`, `TextSwap`, `TreeNav`, `useLoadingIndicator`, `useTableSort`, `withTransition`
+`Box`, `Button`, `CopyButton`, `CountBadge`, `DetailRow`, `Draggable`, `EmptyPanel`, `FloatingPanel`, `Frame`, `FrameTile`, `ItemList`, `Loadable`, `MediaStage`, `MediaTile`, `PageHeader`, `PageLoader`, `SegmentedControl`, `Shimmer`, `SortableColumn`, `Stat`, `StreamVideo`, `Text`, `TextSwap`, `TreeNav`, `useLoadingIndicator`, `useTableSort`, `withTransition`
 
 ## @anyglade/kit/ai
 
@@ -19,7 +19,7 @@
 ## Функции и хуки
 
 ```ts
-function useLoadingIndicator(isLoading: boolean);
+function useLoadingIndicator(isLoading: boolean, delay: number = timings.loaderDelay);
 function useTableSort<T>( items: readonly T[], accessors: SortAccessors<T>, initial: SortDescriptor, );
 function withTransition(update: () => void);
 type AgentStatus = "pending" | "running" | "waiting" | "done" | "failed";
@@ -81,7 +81,7 @@ type StatusLabels = Record<AgentStatus, string>;
 | `userSelect` | none, text, all |
 | `motion` | fade, enter, pop |
 | `transitionProperty` | none, colors, opacity, shadow, transform, common |
-| `transitionDuration` | instant, fast, base, slow, slower, shimmer, stagger |
+| `transitionDuration` | instant, fast, base, slow, slower, shimmer, drift, stagger |
 | `ease` | standard, decelerate, accelerate |
 
 Свободные значения: `width`, `height`, `minWidth`, `maxWidth`, `minHeight`, `maxHeight`, `flexBasis`, `top`, `right`, `bottom`, `left`, `inset`, `viewTransitionName`, `flex`, `aspectRatio`, `zIndex`, `gridTemplateColumns`, `gridTemplateRows`, `gridTemplateAreas`, `gridColumn`, `gridRow`, `gridArea`, `opacity`, `transform`.
@@ -258,7 +258,7 @@ export interface DonutSlice {
 export interface DraggableProps {
   /** What a target receives. Targets are `ItemList` rows with `drop`. */
   value: string;
-  /** Follows the pointer: a short name, not the whole row. */
+  /** Follows the pointer and shows in the row where it would land. A short name, not the row. */
   preview: ReactNode;
   isDisabled?: boolean;
   children: ReactNode;
@@ -315,6 +315,8 @@ export interface ItemListProps<T extends { id: string }> {
   drop?: {
     canDrop: (item: T, value: string) => boolean;
     onDrop: (item: T, value: string) => void;
+    /** Where the dropped value will stand in the row, in px from the end of its content. */
+    slot: (item: T) => { top: number; left: number };
   };
 }
 ```
@@ -389,6 +391,25 @@ export interface PageHeaderProps {
   title: ReactNode;
   description?: ReactNode;
   actions?: ReactNode;
+}
+```
+
+```ts
+export interface PageLoaderProps {
+  isLoading: boolean;
+  /** One shape on a clear background: it becomes a mask, so the colors follow the theme. */
+  logo: { src: string; width: number; height: number };
+  /** What is happening now. It swaps in place as the work moves on. */
+  status: string;
+  /** Spoken name of the bar. */
+  label: string;
+  /** Percent done. Without it the bar runs until the work ends. */
+  value?: number;
+  /**
+   * How long the work may take before the loader appears, in milliseconds.
+   * Anything faster never sees it, so a static page opens without a flash.
+   */
+  delay?: number;
 }
 ```
 

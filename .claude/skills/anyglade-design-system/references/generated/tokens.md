@@ -166,6 +166,7 @@ CSS-переменные `--ag-duration-*`.
 | slow | 320ms |
 | slower | 480ms |
 | shimmer | 2000ms |
+| drift | 3200ms |
 | stagger | 60ms |
 
 ## Кривые
@@ -185,5 +186,6 @@ CSS-переменные `--ag-ease-*`.
 | Имя | Значение |
 | --- | --- |
 | loaderDelay | 150 |
+| pageLoaderDelay | 400 |
 | loaderMinimum | 400 |
 | confirmation | 1500 |

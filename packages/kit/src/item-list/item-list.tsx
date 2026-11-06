@@ -5,7 +5,7 @@ import { useEffect, useRef, useState, type ComponentProps, type ReactNode } from
 import { useContextMenu } from "react-aria";
 import { GridList, GridListItem, Pressable } from "react-aria-components";
 import { createPortal } from "react-dom";
-import { useDropValue, type DropRules } from "./draggable.tsx";
+import { useDropArea, type DropRules } from "./drag-session.ts";
 import { useRowFlip } from "./use-row-flip.ts";
 
 interface MenuPoint {
@@ -32,6 +32,8 @@ export interface ItemListProps<T extends { id: string }> {
   drop?: {
     canDrop: (item: T, value: string) => boolean;
     onDrop: (item: T, value: string) => void;
+    /** Where the dropped value will stand in the row, in px from the end of its content. */
+    slot: (item: T) => { top: number; left: number };
   };
 }
 
@@ -43,12 +45,22 @@ interface RowProps {
   onOpen: (id: string) => void;
   onMenu?: (point: MenuPoint) => void;
   drop?: DropRules;
+  slot?: { top: number; left: number };
   children: ReactNode;
 }
 
-function Row({ id, text, isCurrent, isMenuTarget, onOpen, onMenu, drop, children }: RowProps) {
-  const dropArea = useRef<HTMLDivElement>(null);
-  const { dropProps, isDropTarget } = useDropValue(dropArea, drop);
+function Row({
+  id,
+  text,
+  isCurrent,
+  isMenuTarget,
+  onOpen,
+  onMenu,
+  drop,
+  slot,
+  children,
+}: RowProps) {
+  const { setArea, isTarget, preview } = useDropArea(drop);
   const { contextMenuProps } = useContextMenu({
     onContextMenu: onMenu
       ? ({ target, x, y }) => {
@@ -67,7 +79,7 @@ function Row({ id, text, isCurrent, isMenuTarget, onOpen, onMenu, drop, children
           isCurrent ? "ag-item-list__row--current" : "",
           isHovered || isMenuTarget ? "ag-item-list__row--hovered" : "",
           isFocusVisible ? "ag-item-list__row--focused" : "",
-          isDropTarget ? "ag-item-list__row--drop" : "",
+          isTarget ? "ag-item-list__row--drop" : "",
         ].join(" ")
       }
       id={id}
@@ -75,9 +87,20 @@ function Row({ id, text, isCurrent, isMenuTarget, onOpen, onMenu, drop, children
       onAction={() => onOpen(id)}
     >
       {drop ? (
-        // A grid row forwards pointer events but not drag events, so an inner layer takes them.
-        <div ref={dropArea} className="ag-item-list__drop" {...dropProps}>
+        <div ref={setArea} className="ag-item-list__drop">
           {children}
+          {preview ? (
+            <div className="ag-item-list__slot" data-open={isTarget ? "" : undefined}>
+              <div className="ag-item-list__slot-clip">
+                <div
+                  className="ag-item-list__ghost"
+                  style={{ paddingTop: slot?.top, paddingLeft: slot?.left }}
+                >
+                  <div className="ag-item-list__ghost-body">{preview}</div>
+                </div>
+              </div>
+            </div>
+          ) : null}
         </div>
       ) : (
         children
@@ -156,6 +179,7 @@ export function ItemList<T extends { id: string }>({
             id={item.id}
             isCurrent={item.id === currentId}
             isMenuTarget={isMenuOpen && item.id === point?.id}
+            slot={drop?.slot(item)}
             drop={
               drop
                 ? {

@@ -11,9 +11,12 @@
   "scripts": {
     "ready": "vp check && vp run -r test && vp run -r build",
     "dev": "vp run playground#dev",
-    "prepare": "vp config"
+    "prepare": "vp config",
+    "changeset": "changeset",
+    "release": "node scripts/publish-kit.mjs && changeset tag"
   },
   "devDependencies": {
+    "@changesets/cli": "^3.0.3",
     "vite": "catalog:",
     "vite-plus": "catalog:"
   },

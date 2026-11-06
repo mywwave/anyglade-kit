@@ -149,6 +149,24 @@
   }
 }
 
+@keyframes ag-page-loader-sheen {
+  from {
+    transform: translateX(-100%);
+  }
+
+  /* Off the logo for the rest of the cycle: the pause is what makes it read as slow. */
+  70%,
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes ag-page-loader-out {
+  to {
+    opacity: 0;
+  }
+}
+
 /* Only elements with a view-transition-name move. The page itself swaps at once. */
 ::view-transition-old(root),
 ::view-transition-new(root) {

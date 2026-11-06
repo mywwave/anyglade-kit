@@ -144,6 +144,7 @@ export interface MemberMoves {
   canDrag: (channel: VoiceChannel, member: Member) => boolean;
   canDrop: (channel: VoiceChannel, value: string) => boolean;
   onDrop: (channel: VoiceChannel, value: string) => void;
+  slot: (channel: VoiceChannel) => { top: number; left: number };
 }
 
 interface ChannelColumnProps {

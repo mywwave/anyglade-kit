@@ -1,0 +1,36 @@
+name: Release
+
+on:
+  push:
+    branches: [master]
+
+concurrency: release
+
+permissions:
+  contents: write
+  pull-requests: write
+  # npm trusted publishing: no token is stored in the repository.
+  id-token: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+      - run: bun install --frozen-lockfile
+      - run: bun run ready
+      - uses: changesets/action@v1
+        with:
+          version: bun run changeset version
+          publish: bun run release
+          commit: "chore: release"
+          title: "chore: release"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

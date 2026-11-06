@@ -1,14 +1,29 @@
 {
   "name": "@anyglade/kit",
-  "version": "0.1.0",
-  "description": "Personal React UI kit built on HeroUI v3 and Tailwind CSS v4.",
+  "version": "0.2.0",
+  "description": "React UI kit on HeroUI v3 and Tailwind CSS v4: tokens, layout, motion, lint rules and ready patterns.",
+  "keywords": [
+    "design-system",
+    "heroui",
+    "react",
+    "tailwindcss",
+    "ui-kit"
+  ],
+  "homepage": "https://github.com/mywwave/anyglade-kit#readme",
+  "bugs": "https://github.com/mywwave/anyglade-kit/issues",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mywwave/anyglade-kit.git",
+    "directory": "packages/kit"
+  },
   "files": [
     "assets",
     "dist",
     "oxlint",
     "styles",
-    "NOTICE"
+    "NOTICE",
+    "LICENSE"
   ],
   "type": "module",
   "sideEffects": false,

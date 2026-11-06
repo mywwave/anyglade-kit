@@ -19,6 +19,7 @@ import {
   ItemList,
   MediaStage,
   MediaTile,
+  PageLoader,
   Stat,
 } from "../src/index.ts";
 
@@ -217,12 +218,37 @@ test("Draggable marks a row that cannot move", () => {
         Анна
       </Draggable>,
     );
-  expect(html(false)).toContain('draggable="true"');
+  expect(html(false)).not.toContain("data-disabled");
   expect(html(true)).toContain("data-disabled");
 });
 
 test("VideoSlash pairs with the microphone icon", () => {
   expect(renderToStaticMarkup(<VideoSlash />)).toContain('viewBox="0 0 16 16"');
+});
+
+test("PageLoader waits before showing: fast work never flashes a screen", () => {
+  const html = renderToStaticMarkup(
+    <PageLoader
+      isLoading
+      label="Загрузка"
+      logo={{ src: "/logo.svg", width: 87, height: 48 }}
+      status="Подключаем каналы"
+    />,
+  );
+  expect(html).toBe("");
+});
+
+test("PageLoader stays hidden through a custom delay on the first render too", () => {
+  const html = renderToStaticMarkup(
+    <PageLoader
+      isLoading
+      delay={0}
+      label="Загрузка"
+      logo={{ src: "/logo.svg", width: 87, height: 48 }}
+      status="Подключаем каналы"
+    />,
+  );
+  expect(html).toBe("");
 });
 
 test("FloatingPanel renders nothing while closed", () => {

@@ -280,6 +280,11 @@ export function MeetApp() {
   };
 
   const memberMoves: MemberMoves = {
+    // Lands in the list of people, or starts one under the channel name.
+    slot: (channel) => ({
+      top: Number.parseInt(tokens.spacing[rosterOf(channel.id).length > 0 ? "xs" : "s"]),
+      left: Number.parseInt(tokens.spacing.s),
+    }),
     canDrag: (channel, member) => member.personId === ME || channel.organizerId === ME,
     canDrop: (channel, value) => !channel.isLocked && parseCarried(value).channelId !== channel.id,
     onDrop: (channel, value) => {
