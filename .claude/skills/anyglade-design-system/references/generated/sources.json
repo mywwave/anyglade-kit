@@ -1,6 +1,6 @@
 {
-  "packages/kit/README.md": "ca8fd92a9f6c1d1a",
-  "docs/design-system/decisions.md": "9326ab3b5a34402f",
+  "packages/kit/README.md": "1375c1443af67988",
+  "docs/design-system/decisions.md": "85d629103de4f341",
   "packages/kit/oxlint/index.mjs": "9b1a072d7116a034",
   "packages/kit/src/box/props.ts": "4de443ed88c71df4",
   "packages/kit/src/text/text.tsx": "9e35a6bf74450c9b"

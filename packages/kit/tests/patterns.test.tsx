@@ -6,14 +6,19 @@ import {
   clampToViewport,
   placeAtAnchor,
 } from "../src/floating-panel/placement.ts";
+import { fitColumns, fitStrip } from "../src/media-stage/fit-stage.ts";
+import { VideoSlash } from "../src/icons.ts";
 import {
   DetailRow,
+  Draggable,
   EmptyPanel,
   Frame,
   CountBadge,
   FloatingPanel,
   FrameTile,
   ItemList,
+  MediaStage,
+  MediaTile,
   Stat,
 } from "../src/index.ts";
 
@@ -139,6 +144,85 @@ test("CountBadge caps the number and stays still on first render", () => {
   const html = renderToStaticMarkup(<CountBadge count={128} />);
   expect(html).toContain("99+");
   expect(html).not.toContain("ag-motion-pop");
+});
+
+test("MediaStage picks the columns that give each tile the largest picture", () => {
+  expect(fitColumns(1, { width: 800, height: 600 }, 8)).toBe(1);
+  expect(fitColumns(2, { width: 800, height: 400 }, 8)).toBe(2);
+  expect(fitColumns(6, { width: 374, height: 650 }, 8)).toBe(2);
+  expect(fitColumns(6, { width: 1200, height: 600 }, 8)).toBe(3);
+});
+
+test("MediaStage keeps the strip beside a wide stage and under a tall one", () => {
+  expect(fitStrip(3, { width: 900, height: 600 }, 8).side).toBe("side");
+  expect(fitStrip(3, { width: 374, height: 650 }, 8).side).toBe("bottom");
+});
+
+test("MediaStage leaves a cell for the rest when not everyone fits", () => {
+  expect(fitStrip(9, { width: 900, height: 400 }, 8)).toMatchObject({ shown: 3, cells: 4 });
+  expect(fitStrip(2, { width: 900, height: 400 }, 8)).toMatchObject({ shown: 2, cells: 2 });
+});
+
+test("MediaStage shows one tile on stage and counts the hidden ones", () => {
+  const items = Array.from({ length: 9 }, (_, index) => ({ id: String(index) }));
+  const stage = (focusId: string | null) =>
+    renderToStaticMarkup(
+      <MediaStage
+        focusId={focusId}
+        items={items}
+        label="Участники"
+        more={{ label: (count) => `Ещё ${count}`, onPress: () => undefined }}
+        renderItem={(item) => item.id}
+      />,
+    );
+
+  expect(stage(null)).toContain('data-layout="grid"');
+  expect(stage(null)).not.toContain("ag-media-stage__more");
+  const focused = stage("4");
+  expect(focused).toContain('data-layout="side"');
+  expect(focused).toContain('data-focused=""');
+  expect(focused).toContain("ag-media-stage__more");
+});
+
+test("MediaStage ignores a focus that is no longer on stage", () => {
+  const html = renderToStaticMarkup(
+    <MediaStage
+      focusId="gone"
+      items={[{ id: "a" }, { id: "b" }]}
+      label="Участники"
+      more={{ label: () => "", onPress: () => undefined }}
+      renderItem={(item) => item.id}
+    />,
+  );
+  expect(html).toContain('data-layout="grid"');
+});
+
+test("MediaTile renders only the slots it was given", () => {
+  const plain = renderToStaticMarkup(<MediaTile name="Анна">x</MediaTile>);
+  expect(plain).not.toContain("ag-media-tile__actions");
+  expect(plain).not.toContain("data-speaking");
+  const live = renderToStaticMarkup(
+    <MediaTile isSpeaking actions={<button type="button">Закрепить</button>} name="Анна">
+      x
+    </MediaTile>,
+  );
+  expect(live).toContain("ag-media-tile__actions");
+  expect(live).toContain("data-speaking");
+});
+
+test("Draggable marks a row that cannot move", () => {
+  const html = (isDisabled: boolean) =>
+    renderToStaticMarkup(
+      <Draggable isDisabled={isDisabled} preview="Анна" value="anna">
+        Анна
+      </Draggable>,
+    );
+  expect(html(false)).toContain('draggable="true"');
+  expect(html(true)).toContain("data-disabled");
+});
+
+test("VideoSlash pairs with the microphone icon", () => {
+  expect(renderToStaticMarkup(<VideoSlash />)).toContain('viewBox="0 0 16 16"');
 });
 
 test("FloatingPanel renders nothing while closed", () => {

@@ -4,7 +4,7 @@
 
 ## @anyglade/kit
 
-`Box`, `Button`, `CopyButton`, `CountBadge`, `DetailRow`, `EmptyPanel`, `FloatingPanel`, `Frame`, `FrameTile`, `ItemList`, `Loadable`, `PageHeader`, `SegmentedControl`, `Shimmer`, `SortableColumn`, `Stat`, `Text`, `TextSwap`, `TreeNav`, `useLoadingIndicator`, `useTableSort`, `withTransition`
+`Box`, `Button`, `CopyButton`, `CountBadge`, `DetailRow`, `Draggable`, `EmptyPanel`, `FloatingPanel`, `Frame`, `FrameTile`, `ItemList`, `Loadable`, `MediaStage`, `MediaTile`, `PageHeader`, `SegmentedControl`, `Shimmer`, `SortableColumn`, `Stat`, `StreamVideo`, `Text`, `TextSwap`, `TreeNav`, `useLoadingIndicator`, `useTableSort`, `withTransition`
 
 ## @anyglade/kit/ai
 
@@ -255,6 +255,17 @@ export interface DonutSlice {
 ```
 
 ```ts
+export interface DraggableProps {
+  /** What a target receives. Targets are `ItemList` rows with `drop`. */
+  value: string;
+  /** Follows the pointer: a short name, not the whole row. */
+  preview: ReactNode;
+  isDisabled?: boolean;
+  children: ReactNode;
+}
+```
+
+```ts
 export interface EmptyPanelProps {
   icon?: ReactNode;
   title: ReactNode;
@@ -300,6 +311,11 @@ export interface ItemListProps<T extends { id: string }> {
   renderItem: (item: T) => ReactNode;
   /** Opens on right click, long press and the menu key. `renderItems` returns `Dropdown.Item`s. */
   menu?: { label: string; renderItems: (item: T) => ReactNode };
+  /** Rows take what a `Draggable` carries. A row that refuses it does not light up. */
+  drop?: {
+    canDrop: (item: T, value: string) => boolean;
+    onDrop: (item: T, value: string) => void;
+  };
 }
 ```
 
@@ -309,6 +325,35 @@ export interface LoadableProps {
   /** Repeats the layout of the content, so nothing jumps when it arrives. */
   skeleton: ReactNode;
   children: ReactNode;
+}
+```
+
+```ts
+export interface MediaStageProps<T extends { id: string }> {
+  label: string;
+  items: readonly T[];
+  /** The tile that takes the stage. The others shrink into a strip beside it. */
+  focusId?: string | null;
+  /** Each item keeps its tile while the layout changes, so a live video never restarts. */
+  renderItem: (item: T) => ReactNode;
+  /** Stands in the strip when not everyone fits. */
+  more: { label: (count: number) => string; onPress: () => void };
+}
+```
+
+```ts
+export interface MediaTileProps {
+  /** Who or what the tile shows. It stays readable over any picture. */
+  name: string;
+  /** The picture: `StreamVideo`, an image, or an avatar that stands in the middle. */
+  children: ReactNode;
+  /** `contain` shows a whole screen, `cover` fills the tile with a face. */
+  fit?: "cover" | "contain";
+  isSpeaking?: boolean;
+  /** Short state icons next to the name. */
+  status?: ReactNode;
+  /** Buttons in the corner. Shown on hover and focus, always on touch. */
+  actions?: ReactNode;
 }
 ```
 
@@ -485,6 +530,16 @@ export interface StreamingTextProps {
   isStreaming: boolean;
   /** `[1]` in the text becomes a citation of the first source. */
   sources?: readonly Source[];
+}
+```
+
+```ts
+export interface StreamVideoProps {
+  stream: MediaStream;
+  /** Spoken name of the picture. */
+  label: string;
+  /** A person expects to see their own camera as a mirror. */
+  isMirrored?: boolean;
 }
 ```
 

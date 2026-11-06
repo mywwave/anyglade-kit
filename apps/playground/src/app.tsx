@@ -1,8 +1,10 @@
 import { Box, Button, PageHeader, Text, Toast } from "@anyglade/kit";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AssistantApp } from "./assistant/assistant-app.tsx";
 import { CrmApp } from "./crm/crm-app.tsx";
 import { blockCategories, componentCategories } from "./demos.ts";
+import { MeetApp } from "./meet/meet-app.tsx";
+import { isInviteHash } from "./meet/use-invites.ts";
 import { MessengerApp } from "./messenger/messenger-app.tsx";
 import { Showcase } from "./showcase.tsx";
 import { ThemePanel } from "./theme/theme-panel.tsx";
@@ -12,6 +14,7 @@ const views = {
   crm: { label: "CRM", categories: [] },
   assistant: { label: "Помощник", categories: [] },
   messenger: { label: "Сообщения", categories: [] },
+  meet: { label: "Миты", categories: [] },
   components: { label: "Компоненты", categories: componentCategories },
   blocks: { label: "Блоки", categories: blockCategories },
 };
@@ -23,6 +26,7 @@ const descriptions: Record<View, string> = {
   crm: "",
   assistant: "",
   messenger: "",
+  meet: "",
   components: "Компоненты и токены из исходников пакета.",
   blocks: "Готовые секции из компонентов kit.",
 };
@@ -30,7 +34,19 @@ const descriptions: Record<View, string> = {
 const viewNames = Object.keys(views) as View[];
 
 export function App() {
-  const [view, setView] = useState<View>("showcase");
+  const [view, setView] = useState<View>(() => (isInviteHash(location.hash) ? "meet" : "showcase"));
+
+  // An invite pasted into an open tab changes only the hash.
+  useEffect(() => {
+    function openInvite() {
+      if (isInviteHash(location.hash)) {
+        setView("meet");
+      }
+    }
+
+    addEventListener("hashchange", openInvite);
+    return () => removeEventListener("hashchange", openInvite);
+  }, []);
 
   return (
     <Box
@@ -73,7 +89,8 @@ export function App() {
         {view === "crm" ? <CrmApp /> : null}
         {view === "assistant" ? <AssistantApp /> : null}
         {view === "messenger" ? <MessengerApp /> : null}
-        {view !== "crm" && view !== "assistant" && view !== "messenger" ? (
+        {view === "meet" ? <MeetApp /> : null}
+        {view !== "crm" && view !== "assistant" && view !== "messenger" && view !== "meet" ? (
           <Documentation view={view} />
         ) : null}
       </Box>
@@ -82,7 +99,11 @@ export function App() {
   );
 }
 
-function Documentation({ view }: { view: Exclude<View, "crm" | "assistant" | "messenger"> }) {
+function Documentation({
+  view,
+}: {
+  view: Exclude<View, "crm" | "assistant" | "messenger" | "meet">;
+}) {
   const { categories } = views[view];
   const isBlocks = view === "blocks";
 

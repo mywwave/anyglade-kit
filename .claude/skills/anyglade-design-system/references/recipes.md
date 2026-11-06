@@ -419,6 +419,44 @@ function DeleteDialog({ onDelete }: { onDelete: () => void }) {
 }
 ```
 
+## Звонок
+
+`MediaStage` сам подбирает колонки и держит один элемент для плитки, поэтому видео не перезапускается при смене раскладки.
+
+```tsx
+<MediaStage
+  focusId={pinnedId}
+  items={tiles}
+  label="Участники звонка"
+  more={{ label: (count) => `Ещё ${count}, показать всех`, onPress: openPeople }}
+  renderItem={(tile) => (
+    <MediaTile isSpeaking={tile.id === speakerId} name={tile.name} status={<MemberStatus />}>
+      {tile.stream ? <StreamVideo label={tile.name} stream={tile.stream} /> : <Avatar />}
+    </MediaTile>
+  )}
+/>
+```
+
+Весь экран показывают с `fit="contain"`, свою камеру с `isMirrored`.
+
+## Перенос между группами
+
+```tsx
+<ItemList
+  drop={{
+    canDrop: (room, value) => !room.isLocked && value !== room.id,
+    onDrop: (room, value) => move(value, room.id),
+  }}
+  renderItem={(room) => (
+    <Draggable preview={<PersonChip />} value={person.id}>
+      <PersonRow />
+    </Draggable>
+  )}
+/>
+```
+
+Строка, которая не примет значение, не подсвечивается. Предпросмотр короткий: имя, а не вся строка.
+
 ## Вкладки
 
 ```tsx

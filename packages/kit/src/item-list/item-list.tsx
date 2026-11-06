@@ -5,6 +5,7 @@ import { useEffect, useRef, useState, type ComponentProps, type ReactNode } from
 import { useContextMenu } from "react-aria";
 import { GridList, GridListItem, Pressable } from "react-aria-components";
 import { createPortal } from "react-dom";
+import { useDropValue, type DropRules } from "./draggable.tsx";
 import { useRowFlip } from "./use-row-flip.ts";
 
 interface MenuPoint {
@@ -27,6 +28,11 @@ export interface ItemListProps<T extends { id: string }> {
   renderItem: (item: T) => ReactNode;
   /** Opens on right click, long press and the menu key. `renderItems` returns `Dropdown.Item`s. */
   menu?: { label: string; renderItems: (item: T) => ReactNode };
+  /** Rows take what a `Draggable` carries. A row that refuses it does not light up. */
+  drop?: {
+    canDrop: (item: T, value: string) => boolean;
+    onDrop: (item: T, value: string) => void;
+  };
 }
 
 interface RowProps {
@@ -36,10 +42,13 @@ interface RowProps {
   isMenuTarget: boolean;
   onOpen: (id: string) => void;
   onMenu?: (point: MenuPoint) => void;
+  drop?: DropRules;
   children: ReactNode;
 }
 
-function Row({ id, text, isCurrent, isMenuTarget, onOpen, onMenu, children }: RowProps) {
+function Row({ id, text, isCurrent, isMenuTarget, onOpen, onMenu, drop, children }: RowProps) {
+  const dropArea = useRef<HTMLDivElement>(null);
+  const { dropProps, isDropTarget } = useDropValue(dropArea, drop);
   const { contextMenuProps } = useContextMenu({
     onContextMenu: onMenu
       ? ({ target, x, y }) => {
@@ -58,13 +67,21 @@ function Row({ id, text, isCurrent, isMenuTarget, onOpen, onMenu, children }: Ro
           isCurrent ? "ag-item-list__row--current" : "",
           isHovered || isMenuTarget ? "ag-item-list__row--hovered" : "",
           isFocusVisible ? "ag-item-list__row--focused" : "",
+          isDropTarget ? "ag-item-list__row--drop" : "",
         ].join(" ")
       }
       id={id}
       textValue={text}
       onAction={() => onOpen(id)}
     >
-      {children}
+      {drop ? (
+        // A grid row forwards pointer events but not drag events, so an inner layer takes them.
+        <div ref={dropArea} className="ag-item-list__drop" {...dropProps}>
+          {children}
+        </div>
+      ) : (
+        children
+      )}
     </GridListItem>
   );
 }
@@ -79,6 +96,7 @@ export function ItemList<T extends { id: string }>({
   getText,
   renderItem,
   menu,
+  drop,
 }: ItemListProps<T>) {
   const list = useRef<HTMLDivElement>(null);
   const [point, setPoint] = useState<MenuPoint | null>(null);
@@ -138,6 +156,14 @@ export function ItemList<T extends { id: string }>({
             id={item.id}
             isCurrent={item.id === currentId}
             isMenuTarget={isMenuOpen && item.id === point?.id}
+            drop={
+              drop
+                ? {
+                    canDrop: (value) => drop.canDrop(item, value),
+                    onDrop: (value) => drop.onDrop(item, value),
+                  }
+                : undefined
+            }
             text={getText(item)}
             onMenu={menu ? openMenu : undefined}
             onOpen={openItem}

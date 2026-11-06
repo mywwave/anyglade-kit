@@ -234,6 +234,192 @@
   align-items: center;
 }
 
+.ag-media-stage {
+  display: flex;
+  list-style: none;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+  gap: var(--ag-space-s);
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.ag-media-stage__tile {
+  flex: none;
+  width: calc((100% - (var(--ag-stage-columns) - 1) * var(--ag-space-s)) / var(--ag-stage-columns));
+  height: calc((100% - (var(--ag-stage-rows) - 1) * var(--ag-space-s)) / var(--ag-stage-rows));
+  min-width: 0;
+  min-height: 0;
+  transform-origin: top left;
+
+  &[data-new] {
+    animation: ag-fade var(--ag-duration-base) var(--ag-ease-standard) backwards;
+  }
+
+  &[data-hidden] {
+    display: none;
+  }
+}
+
+.ag-media-stage[data-layout="side"],
+.ag-media-stage[data-layout="bottom"] {
+  display: grid;
+
+  .ag-media-stage__tile {
+    width: auto;
+    height: auto;
+  }
+}
+
+.ag-media-stage[data-layout="side"] {
+  grid-template-rows: repeat(var(--ag-stage-cells), minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr) var(--ag-stage-strip);
+
+  .ag-media-stage__tile,
+  .ag-media-stage__more {
+    grid-column: 2;
+  }
+
+  .ag-media-stage__tile[data-focused] {
+    grid-row: 1 / -1;
+    grid-column: 1;
+  }
+}
+
+.ag-media-stage[data-layout="bottom"] {
+  grid-template-rows: minmax(0, 1fr) var(--ag-stage-strip);
+  grid-template-columns: repeat(var(--ag-stage-cells), minmax(0, 1fr));
+
+  .ag-media-stage__tile,
+  .ag-media-stage__more {
+    grid-row: 2;
+  }
+
+  .ag-media-stage__tile[data-focused] {
+    grid-row: 1;
+    grid-column: 1 / -1;
+  }
+}
+
+.ag-media-stage__more {
+  min-width: 0;
+  min-height: 0;
+
+  button {
+    width: 100%;
+    height: 100%;
+    color: var(--ag-text-primary);
+    font-variant-numeric: tabular-nums;
+    background-color: var(--ag-background-card);
+    border-radius: var(--ag-radius-l);
+    cursor: var(--cursor-interactive);
+  }
+
+  button:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: -2px;
+  }
+}
+
+.ag-media-tile {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  background-color: var(--ag-background-card);
+  border-radius: var(--ag-radius-l);
+  container-type: size;
+
+  /* Inside the tile, so a neighbour never shifts when someone starts to talk. */
+  &::after {
+    position: absolute;
+    inset: 0;
+    border: 2px solid var(--ag-text-accent);
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity var(--ag-duration-fast) var(--ag-ease-standard);
+    content: "";
+    pointer-events: none;
+  }
+
+  &[data-speaking]::after {
+    opacity: 1;
+  }
+
+  > img,
+  > video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &[data-fit="contain"] > img,
+  &[data-fit="contain"] > video {
+    object-fit: contain;
+  }
+
+  > video[data-mirrored] {
+    transform: scaleX(-1);
+  }
+
+  /* Stays clear of the name in a tile of the strip. */
+  > .avatar {
+    width: min(48cqh, var(--ag-space-4xl));
+    height: min(48cqh, var(--ag-space-4xl));
+  }
+}
+
+.ag-media-tile__caption {
+  position: absolute;
+  bottom: var(--ag-space-s);
+  left: var(--ag-space-s);
+  display: inline-flex;
+  gap: var(--ag-space-xs);
+  align-items: center;
+  max-width: calc(100% - var(--ag-space-l));
+  padding: var(--ag-space-2xs) var(--ag-space-s);
+  background-color: var(--ag-background-panel);
+  border-radius: var(--ag-radius-full);
+
+  svg {
+    flex: none;
+    width: var(--ag-font-size-2);
+    height: var(--ag-font-size-2);
+  }
+}
+
+.ag-media-tile__actions {
+  position: absolute;
+  top: var(--ag-space-s);
+  right: var(--ag-space-s);
+  z-index: 1;
+  display: flex;
+  gap: var(--ag-space-xs);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ag-media-tile__actions {
+    opacity: 0;
+    transition: opacity var(--ag-duration-fast) var(--ag-ease-standard);
+  }
+
+  .ag-media-tile:hover .ag-media-tile__actions,
+  .ag-media-tile__actions:focus-within,
+  .ag-media-tile__actions:has([aria-expanded="true"]) {
+    opacity: 1;
+  }
+}
+
 .ag-conversation {
   display: flex;
   flex: 1;
@@ -464,9 +650,33 @@
   background-color: var(--default);
 }
 
-.ag-item-list__row--focused {
+.ag-item-list__row--focused,
+.ag-item-list__row--drop {
   outline: 2px solid var(--focus);
   outline-offset: -2px;
+}
+
+.ag-item-list__drop {
+  margin: calc(var(--ag-space-s) * -1);
+  padding: var(--ag-space-s);
+}
+
+.ag-draggable:not([data-disabled]) {
+  cursor: grab;
+}
+
+.ag-draggable[data-dragging] {
+  opacity: 0.4;
+}
+
+.ag-drag-preview {
+  display: inline-flex;
+  gap: var(--ag-space-s);
+  align-items: center;
+  padding: var(--ag-space-xs) var(--ag-space-m) var(--ag-space-xs) var(--ag-space-xs);
+  color: var(--ag-text-primary);
+  background-color: var(--ag-background-panel);
+  border-radius: var(--ag-radius-full);
 }
 
 .ag-tree {
