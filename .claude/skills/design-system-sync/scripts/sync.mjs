@@ -60,23 +60,23 @@ async function tokensDocument() {
   const tokens = await import(pathToFileURL(join(kitSrc, "tokens.ts")).href);
   const pairs = Object.entries;
   const sections = [
-    "# Токены",
-    "Файл создан автоматически. Не правьте его вручную.",
-    "## Отступы\n\nПропсы `Box`: `padding*`, `margin*`, `gap`.\n\n" +
-      table(["Имя", "Значение"], pairs(tokens.spacing)),
-    "## Скругления\n\nПроп `borderRadius`.\n\n" + table(["Имя", "Значение"], pairs(tokens.radii)),
-    "## Тени\n\nПроп `boxShadow`.\n\n" +
+    "# Tokens",
+    "This file is generated. Do not edit it by hand.",
+    "## Spacing\n\n`Box` props: `padding*`, `margin*`, `gap`.\n\n" +
+      table(["Name", "Value"], pairs(tokens.spacing)),
+    "## Radii\n\nThe `borderRadius` prop.\n\n" + table(["Name", "Value"], pairs(tokens.radii)),
+    "## Shadows\n\nThe `boxShadow` prop.\n\n" +
       table(
-        ["Имя"],
+        ["Name"],
         Object.keys(tokens.shadows).map((name) => [name]),
       ),
-    "## Ширины\n\nЗначения `tokens.widths`, пиксели.\n\n" +
-      table(["Имя", "Значение"], pairs(tokens.widths)),
-    "## Точки перелома\n\nУсловия `sm`, `md`, `lg`, `xl` в пропсах `Box`.\n\n" +
-      table(["Имя", "Значение"], pairs(tokens.breakpoints)),
-    "## Роли текста\n\nПроп `variant` у `Text`. Размер указан как базовый и от `md`.\n\n" +
+    "## Widths\n\nValues of `tokens.widths`, in pixels.\n\n" +
+      table(["Name", "Value"], pairs(tokens.widths)),
+    "## Breakpoints\n\nThe `sm`, `md`, `lg`, `xl` conditions in `Box` props.\n\n" +
+      table(["Name", "Value"], pairs(tokens.breakpoints)),
+    "## Text roles\n\nThe `variant` prop of `Text`. Size is given as base and from `md`.\n\n" +
       table(
-        ["Роль", "Размер", "Интерлиньяж", "Вес"],
+        ["Role", "Size", "Line height", "Weight"],
         pairs(tokens.textRoles).map(([name, role]) => [
           name,
           `${tokens.fontSizes[role.size]}${role.mdSize ? ` / ${tokens.fontSizes[role.mdSize]}` : ""}`,
@@ -84,25 +84,25 @@ async function tokensDocument() {
           tokens.fontWeights[role.weight ?? "body"],
         ]),
       ),
-    "## Веса\n\nПроп `weight` у `Text`.\n\n" +
-      table(["Имя", "Значение"], pairs(tokens.fontWeights)),
-    "## Цвета текста\n\nПроп `color` у `Text`.\n\n" +
-      table(["Имя", "Токен"], pairs(tokens.textColors)),
-    "## Семантические цвета\n\nПропсы `backgroundColor`, `color` и `borderColor` у `Box`.\n\n" +
+    "## Weights\n\nThe `weight` prop of `Text`.\n\n" +
+      table(["Name", "Value"], pairs(tokens.fontWeights)),
+    "## Text colors\n\nThe `color` prop of `Text`.\n\n" +
+      table(["Name", "Token"], pairs(tokens.textColors)),
+    "## Semantic colors\n\nThe `backgroundColor`, `color` and `borderColor` props of `Box`.\n\n" +
       table(
-        ["Токен", "Светлая", "Тёмная"],
+        ["Token", "Light", "Dark"],
         pairs(tokens.colors).map(([name, [light, dark]]) => [
           name,
           tokens.palette[light],
           tokens.palette[dark],
         ]),
       ),
-    "## Длительности\n\nCSS-переменные `--ag-duration-*`.\n\n" +
-      table(["Имя", "Значение"], pairs(tokens.durations)),
-    "## Кривые\n\nCSS-переменные `--ag-ease-*`.\n\n" +
-      table(["Имя", "Значение"], pairs(tokens.easings)),
-    "## Темп обратной связи\n\nЗначения `tokens.timings`, миллисекунды.\n\n" +
-      table(["Имя", "Значение"], pairs(tokens.timings)),
+    "## Durations\n\nCSS variables `--ag-duration-*`.\n\n" +
+      table(["Name", "Value"], pairs(tokens.durations)),
+    "## Easings\n\nCSS variables `--ag-ease-*`.\n\n" +
+      table(["Name", "Value"], pairs(tokens.easings)),
+    "## Feedback timing\n\nValues of `tokens.timings`, in milliseconds.\n\n" +
+      table(["Name", "Value"], pairs(tokens.timings)),
   ];
   return `${sections.join("\n\n")}\n`;
 }
@@ -184,10 +184,10 @@ async function boxPropsDocument() {
     return [`\`${name}\``, keys.join(", ")];
   });
   return [
-    "## Пропсы Box",
-    "Значения можно задавать объектом условий. Отрицательные отступы пишутся с минусом: `-s`.",
-    table(["Проп", "Значения"], rows),
-    `Свободные значения: ${Object.keys(freeProps)
+    "## Box props",
+    "Values can be given as an object of conditions. Negative spacing takes a minus sign: `-s`.",
+    table(["Prop", "Values"], rows),
+    `Free values: ${Object.keys(freeProps)
       .map((name) => `\`${name}\``)
       .join(", ")}.`,
   ].join("\n\n");
@@ -196,11 +196,11 @@ async function boxPropsDocument() {
 function textPropsDocument() {
   const source = read(join(kitSrc, "text/text.tsx"));
   const [code] = source.match(/^interface TextStyleProps {\n[\s\S]*?^}$/m) ?? [""];
-  return `## Пропсы Text\n\nЗначения \`variant\`, \`color\` и \`weight\` в tokens.md.\n\n\`\`\`ts\n${code}\n\`\`\``;
+  return `## Text props\n\nValues of \`variant\`, \`color\` and \`weight\` are in tokens.md.\n\n\`\`\`ts\n${code}\n\`\`\``;
 }
 
 function apiDocument(boxProps) {
-  const sections = ["# Публичный API", "Файл создан автоматически. Не правьте его вручную."];
+  const sections = ["# Public API", "This file is generated. Do not edit it by hand."];
   for (const [name, entry] of Object.entries(ENTRIES)) {
     sections.push(
       `## ${name}\n\n${exportedNames(entry)
@@ -209,13 +209,13 @@ function apiDocument(boxProps) {
     );
   }
   sections.push(
-    "Основной вход дополнительно отдаёт все компоненты HeroUI и объект `tokens` со значениями шкал: `tokens.widths.content`, `tokens.timings.confirmation`.",
+    "The main entry also exports every HeroUI component and the `tokens` object with scale values: `tokens.widths.content`, `tokens.timings.confirmation`.",
   );
-  sections.push(`## Функции и хуки\n\n\`\`\`ts\n${functionSignatures().join("\n")}\n\`\`\``);
+  sections.push(`## Functions and hooks\n\n\`\`\`ts\n${functionSignatures().join("\n")}\n\`\`\``);
   sections.push(boxProps);
   sections.push(textPropsDocument());
   sections.push(
-    "## Пропсы и типы\n\n" +
+    "## Props and types\n\n" +
       propInterfaces()
         .map(({ code }) => `\`\`\`ts\n${code}\n\`\`\``)
         .join("\n\n"),
@@ -236,7 +236,7 @@ function issues(expected) {
   for (const [name, content] of Object.entries(generatedFiles)) {
     const path = join(generated, name);
     if (!existsSync(path) || read(path) !== content) {
-      found.push(`Устарел ${name}: запустите sync.mjs без флагов`);
+      found.push(`Outdated ${name}: run sync.mjs without flags`);
     }
   }
 
@@ -244,7 +244,7 @@ function issues(expected) {
   const state = existsSync(statePath) ? JSON.parse(read(statePath)) : {};
   for (const [file, value] of Object.entries(fingerprint())) {
     if (state[file] !== value) {
-      found.push(`Не сверено с правилами: ${file}`);
+      found.push(`Not reconciled with the rules: ${file}`);
     }
   }
 
@@ -252,7 +252,7 @@ function issues(expected) {
   for (const entry of Object.values(ENTRIES)) {
     for (const name of exportedNames(entry)) {
       if (name !== "tokens" && !curated.includes(name)) {
-        found.push(`Нет в правилах скилла: ${name}`);
+        found.push(`Missing from the skill rules: ${name}`);
       }
     }
   }
@@ -261,7 +261,7 @@ function issues(expected) {
     for (const pattern of FORBIDDEN) {
       if (pattern.test(read(file))) {
         found.push(
-          `Путь этого репозитория в переносимом скилле: ${relative(root, file)} (${pattern})`,
+          `Path of this repository in the portable skill: ${relative(root, file)} (${pattern})`,
         );
       }
     }
@@ -269,7 +269,7 @@ function issues(expected) {
 
   const lines = read(join(skill, "SKILL.md")).split("\n").length;
   if (lines > 500) {
-    found.push(`SKILL.md длиннее 500 строк: ${lines}`);
+    found.push(`SKILL.md is longer than 500 lines: ${lines}`);
   }
   return found;
 }
@@ -291,6 +291,6 @@ for (const issue of found) {
   console.log(issue);
 }
 if (found.length === 0) {
-  console.log("Скилл дизайн-системы актуален");
+  console.log("The design system skill is up to date");
 }
 process.exit(found.length > 0 ? 1 : 0);

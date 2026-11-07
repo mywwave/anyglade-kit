@@ -6,22 +6,22 @@ const DAY = 24 * 60 * 60 * 1000;
 /** The page date: the contract is drawn up on the day it is opened. */
 const today = new Date();
 const yesterday = new Date(today.getTime() - DAY);
-const longDate = new Intl.DateTimeFormat("ru-RU", {
+const longDate = new Intl.DateTimeFormat("en-US", {
   day: "numeric",
   month: "long",
   year: "numeric",
 });
-const shortDate = new Intl.DateTimeFormat("ru-RU", { day: "numeric", month: "long" });
-const stampDate = new Intl.DateTimeFormat("ru-RU", {
+const shortDate = new Intl.DateTimeFormat("en-US", { day: "numeric", month: "long" });
+const stampDate = new Intl.DateTimeFormat("en-US", {
   day: "2-digit",
   month: "2-digit",
   year: "numeric",
 });
 
 const clauses = [
-  "Исполнитель разрабатывает сайт по техническому заданию из приложения № 1.",
-  "Стоимость работ 180 000 ₽: аванс 50 % при подписании, остаток после приёмки.",
-  "Срок 30 рабочих дней с поступления аванса. Правки по акту в течение 5 дней.",
+  "The contractor builds the website to the brief in Appendix 1.",
+  "The fee is $4,800: 50% upfront on signing, the rest on acceptance.",
+  "Delivery in 30 business days after the deposit. Revisions within 5 days.",
 ];
 
 /** Height of `SignaturePad`, so the signed picture takes exactly its place. */
@@ -64,7 +64,7 @@ function Stamp({ date }: { date: string }) {
       <circle cx={56} cy={56} r={53} stroke="currentColor" strokeWidth={2.5} />
       <circle cx={56} cy={56} r={37} stroke="currentColor" strokeWidth={1} />
       <text fill="currentColor" fontSize={7.5} fontWeight={600} letterSpacing={1.2}>
-        <textPath href={`#${ring}`}>ООО «ВЕКТОР» • ЭЛЕКТРОННЫЙ ДОКУМЕНТ •</textPath>
+        <textPath href={`#${ring}`}>VECTOR LLC • ELECTRONIC DOCUMENT •</textPath>
       </text>
       <text
         fill="currentColor"
@@ -75,7 +75,7 @@ function Stamp({ date }: { date: string }) {
         x={56}
         y={55}
       >
-        ПОДПИСАНО
+        SIGNED
       </text>
       <text fill="currentColor" fontSize={7.5} fontWeight={500} textAnchor="middle" x={56} y={66}>
         {date}
@@ -144,10 +144,10 @@ export function SignatureBlock() {
   }
 
   const status = signed
-    ? "Подписан обеими сторонами"
+    ? "Signed by both parties"
     : signature
-      ? "Подпись готова"
-      : "Ждёт вашей подписи";
+      ? "Signature ready"
+      : "Awaiting your signature";
 
   return (
     <Box flexDirection="column" alignItems="center" gap="l" width="100%" maxWidth={300}>
@@ -164,9 +164,9 @@ export function SignatureBlock() {
         boxShadow="l"
       >
         <Box flexDirection="column">
-          <Text variant="title">Договор оказания услуг № 48-У</Text>
+          <Text variant="title">Service agreement No. 48-S</Text>
           <Text variant="caption" color="muted">
-            Москва, {longDate.format(today)}
+            Austin, {longDate.format(today)}
           </Text>
         </Box>
 
@@ -186,11 +186,11 @@ export function SignatureBlock() {
         <Box alignItems="end" justifyContent="between" gap="m">
           <Box flexDirection="column" minWidth={0}>
             <Text variant="caption" color="muted">
-              Исполнитель
+              Contractor
             </Text>
-            <Text variant="caption">ООО «Вектор»</Text>
+            <Text variant="caption">Vector LLC</Text>
             <Text variant="caption" color="muted">
-              А. Н. Соколов
+              Alex Sawyer
             </Text>
           </Box>
           <Box flexDirection="column" alignItems="end" flexShrink={0}>
@@ -212,9 +212,9 @@ export function SignatureBlock() {
           <Box alignItems="end" justifyContent="between" gap="m">
             <Box flexDirection="column" minWidth={0}>
               <Text variant="caption" color="muted">
-                Заказчик
+                Client
               </Text>
-              <Text variant="caption">ИП Миронова О. В.</Text>
+              <Text variant="caption">Olivia Moore</Text>
             </Box>
             {signed ? (
               <Box display="block" motion="fade">
@@ -227,7 +227,7 @@ export function SignatureBlock() {
           <Box display="block" marginHorizontal="-xl">
             {signed ? (
               <Box display="block" position="relative" height={PAD_HEIGHT}>
-                <img alt="Подпись заказчика" height={PAD_HEIGHT} src={signed} width="100%" />
+                <img alt="Client signature" height={PAD_HEIGHT} src={signed} width="100%" />
                 <Box
                   position="absolute"
                   left={24}
@@ -241,9 +241,9 @@ export function SignatureBlock() {
             ) : (
               <SignaturePad
                 key={round}
-                clearLabel="Стереть подпись"
-                label="Подпись заказчика"
-                placeholder="Распишитесь здесь"
+                clearLabel="Clear signature"
+                label="Client signature"
+                placeholder="Sign here"
                 onChange={setSignature}
               />
             )}
@@ -273,12 +273,12 @@ export function SignatureBlock() {
         {signed ? (
           <Box display="block" motion="fade">
             <Button variant="ghost" onPress={revoke}>
-              Отменить подпись
+              Revoke signature
             </Button>
           </Box>
         ) : (
           <Button fullWidth isDisabled={!signature} onPress={sign}>
-            Подписать договор
+            Sign the agreement
           </Button>
         )}
       </Box>
@@ -286,4 +286,4 @@ export function SignatureBlock() {
   );
 }
 
-SignatureBlock.displayName = "Подпись";
+SignatureBlock.displayName = "Signature";

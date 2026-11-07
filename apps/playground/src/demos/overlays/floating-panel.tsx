@@ -9,19 +9,19 @@ export function FloatingPanelDemo() {
   return (
     <Box gap="s">
       <Button variant="secondary" onPress={() => setIsWindowOpen(true)}>
-        Открыть окно
+        Open window
       </Button>
       <FloatingPanel
-        closeLabel="Закрыть окно"
+        closeLabel="Close window"
         isOpen={isWindowOpen}
-        moveLabel="Переместить окно"
-        resize={{ label: "Изменить размер окна", defaultSize: { width: 360, height: 320 } }}
-        title="Окно"
+        moveLabel="Move window"
+        resize={{ label: "Resize window", defaultSize: { width: 360, height: 320 } }}
+        title="Window"
         onOpenChange={setIsWindowOpen}
       >
         <Text color="muted">
-          Без кнопки-якоря панель сразу стоит на экране. Таких окон может быть много, размер
-          меняется за край и за угол.
+          Without an anchor button the panel opens right on the screen. You can have many of these
+          windows, resized from any edge or corner.
         </Text>
       </FloatingPanel>
       <Button
@@ -30,21 +30,21 @@ export function FloatingPanelDemo() {
         variant="secondary"
         onPress={() => setIsOpen(!isOpen)}
       >
-        Открыть заметку
+        Open note
       </Button>
       <FloatingPanel
-        closeLabel="Закрыть"
+        closeLabel="Close"
         isOpen={isOpen}
-        moveLabel="Переместить заметку"
-        pinLabel="Закрепить на экране"
-        title="Заметка"
+        moveLabel="Move note"
+        pinLabel="Pin to screen"
+        title="Note"
         triggerRef={trigger}
-        unpinLabel="Вернуть к кнопке"
+        unpinLabel="Return to button"
         onOpenChange={setIsOpen}
       >
         <Text color="muted">
-          Потяните за заголовок или нажмите на булавку: панель останется на экране, пока вы
-          работаете со страницей.
+          Drag the title or press the pin, and the panel stays on screen while you work with the
+          page.
         </Text>
       </FloatingPanel>
     </Box>

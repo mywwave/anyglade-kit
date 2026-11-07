@@ -16,10 +16,10 @@ const HOUR_MS = 3600000;
 const termLengths = { hour: HOUR_MS, day: 24 * HOUR_MS, week: 168 * HOUR_MS };
 
 export const inviteTerms: { id: InviteTerm; label: string }[] = [
-  { id: "hour", label: "1 час" },
-  { id: "day", label: "1 день" },
-  { id: "week", label: "7 дней" },
-  { id: "never", label: "Без срока" },
+  { id: "hour", label: "1 hour" },
+  { id: "day", label: "1 day" },
+  { id: "week", label: "7 days" },
+  { id: "never", label: "Never" },
 ];
 
 const issue = (term: InviteTerm, code = crypto.randomUUID().slice(0, 8)): Invite => ({

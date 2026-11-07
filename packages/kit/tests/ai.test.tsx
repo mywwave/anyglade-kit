@@ -6,25 +6,25 @@ import { overallStatus } from "../src/ai/status.tsx";
 import { Shimmer, TextSwap } from "../src/index.ts";
 
 const statusLabels = {
-  pending: "Ожидает",
-  running: "Идёт",
-  waiting: "Вопрос",
-  done: "Готово",
-  failed: "Ошибка",
+  pending: "Pending",
+  running: "Running",
+  waiting: "Question",
+  done: "Done",
+  failed: "Failed",
 };
 
 test("Shimmer stops with the work", () => {
-  expect(renderToStaticMarkup(<Shimmer>Думаю</Shimmer>)).toContain("data-layer");
-  expect(renderToStaticMarkup(<Shimmer isActive={false}>Думаю</Shimmer>)).not.toContain(
+  expect(renderToStaticMarkup(<Shimmer>Thinking</Shimmer>)).toContain("data-layer");
+  expect(renderToStaticMarkup(<Shimmer isActive={false}>Thinking</Shimmer>)).not.toContain(
     "data-layer",
   );
 });
 
 test("TextSwap shows plain text until it changes and can shimmer", () => {
-  const quiet = renderToStaticMarkup(<TextSwap text="Думаю" />);
-  const active = renderToStaticMarkup(<TextSwap isShimmering text="Думаю" />);
+  const quiet = renderToStaticMarkup(<TextSwap text="Thinking" />);
+  const active = renderToStaticMarkup(<TextSwap isShimmering text="Thinking" />);
 
-  expect(quiet).toContain("Думаю");
+  expect(quiet).toContain("Thinking");
   expect(quiet).not.toContain("ag-swap__line--leaving");
   expect(active).toContain("data-active");
 });
@@ -36,13 +36,13 @@ test("TextSwap moves only the part that changed", () => {
     arriving: "1",
     suffix: "",
   });
-  expect(splitChange("Отправим через 15 с", "Отправим через 14 с")).toEqual({
-    prefix: "Отправим через 1",
+  expect(splitChange("Sending in 15 s", "Sending in 14 s")).toEqual({
+    prefix: "Sending in 1",
     leaving: "5",
     arriving: "4",
-    suffix: " с",
+    suffix: " s",
   });
-  expect(splitChange("Читать", "Вы читаете").prefix).toBe("");
+  expect(splitChange("Reading", "You are reading").prefix).toBe("");
 });
 
 test("TextSwap handles growing, shrinking and repeated letters", () => {
@@ -54,7 +54,7 @@ test("TextSwap handles growing, shrinking and repeated letters", () => {
     arriving: "",
     suffix: "",
   });
-  expect(splitChange("👍🏽 да", "👍🏿 да")).toMatchObject({ leaving: "👍🏽", arriving: "👍🏿" });
+  expect(splitChange("👍🏽 yes", "👍🏿 yes")).toMatchObject({ leaving: "👍🏽", arriving: "👍🏿" });
 });
 
 test("a group reports its most urgent status", () => {
@@ -68,24 +68,24 @@ test("Run names the running step and names statuses for screen readers", () => {
   const html = renderToStaticMarkup(
     <Run
       statusLabels={statusLabels}
-      summary="Готово"
+      summary="Done"
       steps={[
-        { id: "1", title: "Первый", status: "done" },
-        { id: "2", title: "Второй", status: "running" },
+        { id: "1", title: "First", status: "done" },
+        { id: "2", title: "Second", status: "running" },
       ]}
     />,
   );
 
-  expect(html).toContain("Второй");
-  expect(html).toContain("Идёт");
+  expect(html).toContain("Second");
+  expect(html).toContain("Running");
   expect(html).toContain("1/2");
 });
 
 test("StreamingText fades only while it streams and links citations", () => {
-  const source = { title: "Правила", url: "https://example.com" };
-  const streaming = renderToStaticMarkup(<StreamingText isStreaming text="Первый абзац" />);
+  const source = { title: "Rules", url: "https://example.com" };
+  const streaming = renderToStaticMarkup(<StreamingText isStreaming text="First paragraph" />);
   const done = renderToStaticMarkup(
-    <StreamingText isStreaming={false} sources={[source]} text={"Текст [1]\n\nЕщё [9]"} />,
+    <StreamingText isStreaming={false} sources={[source]} text={"Text [1]\n\nMore [9]"} />,
   );
 
   expect(streaming).toContain("ag-motion-fade");
@@ -96,31 +96,31 @@ test("StreamingText fades only while it streams and links citations", () => {
 });
 
 test("Message leaves out empty actions and gives the user a bubble", () => {
-  expect(renderToStaticMarkup(<Message author="assistant">Ответ</Message>)).not.toContain(
+  expect(renderToStaticMarkup(<Message author="assistant">Answer</Message>)).not.toContain(
     "ag-motion-fade",
   );
-  expect(renderToStaticMarkup(<Message author="user">Вопрос</Message>)).toContain(
+  expect(renderToStaticMarkup(<Message author="user">Question</Message>)).toContain(
     "ag-bg-background-card",
   );
-  expect(renderToStaticMarkup(<Message author="contact">Привет</Message>)).toContain(
+  expect(renderToStaticMarkup(<Message author="contact">Hello</Message>)).toContain(
     "ag-items-start",
   );
 });
 
 test("DeliveryStatus names the state and stays still when it first renders", () => {
   const labels = {
-    sending: "Отправляется",
-    sent: "Отправлено",
-    delivered: "Доставлено",
-    read: "Прочитано",
+    sending: "Sending",
+    sent: "Sent",
+    delivered: "Delivered",
+    read: "Read",
   };
   const html = renderToStaticMarkup(
     <Message author="user" meta={<DeliveryStatus labels={labels} status="read" />}>
-      Вопрос
+      Question
     </Message>,
   );
 
-  expect(html).toContain("Прочитано");
+  expect(html).toContain("Read");
   expect(html).toContain("ag-visually-hidden");
   expect(html).toContain("ag-text-text-success");
   expect(html).not.toContain("ag-motion-pop");
@@ -129,17 +129,17 @@ test("DeliveryStatus names the state and stays still when it first renders", () 
 test("Plan reports progress in the words it was given and keeps its title while it runs", () => {
   const html = renderToStaticMarkup(
     <Plan
-      formatProgress={(done, total) => `${done} из ${total}`}
+      formatProgress={(done, total) => `${done} of ${total}`}
       statusLabels={statusLabels}
-      title="План работ"
+      title="Work plan"
       steps={[
-        { id: "1", title: "Первый", status: "done" },
-        { id: "2", title: "Второй", status: "running" },
+        { id: "1", title: "First", status: "done" },
+        { id: "2", title: "Second", status: "running" },
       ]}
     />,
   );
 
-  expect(html).toContain("План работ");
-  expect(html).toContain("1 из 2");
+  expect(html).toContain("Work plan");
+  expect(html).toContain("1 of 2");
   expect(html).toContain("ag-plan__steps");
 });

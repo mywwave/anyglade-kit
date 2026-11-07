@@ -1,139 +1,139 @@
 ---
 name: anyglade-design-system
-description: Дизайн-система @anyglade/kit. Использовать ВСЕГДА, когда в проекте создаётся или меняется любой интерфейс: страница, экран, форма, таблица, дашборд, лендинг, чекаут, чат, AI-интерфейс, компонент, вёрстка, отступы, типографика, цвет, контраст, тёмная тема, анимация, лоадер, скелетон, пустое состояние, сценарий пользователя. Также по запросам «сделай красиво», «поправь дизайн», «почему выглядит криво», «добавь анимацию», «сверстай», «redesign», «UI», «UX», даже если kit не упомянут. Содержит законы, готовые решения и уроки из реальных правок: как строить интерфейсы только через kit.
+description: The @anyglade/kit design system. Use it ALWAYS when a project creates or changes any interface: a page, screen, form, table, dashboard, landing page, checkout, chat, AI interface, component, layout, spacing, typography, color, contrast, dark theme, animation, loader, skeleton, empty state or user flow. Also on requests like "make it look good", "fix the design", "why does it look off", "add an animation", "build the layout", "redesign", "UI", "UX", even when the kit is not mentioned, and on the Russian phrasings «сделай красиво», «поправь дизайн», «почему выглядит криво», «добавь анимацию», «сверстай». Contains the laws, ready-made solutions and lessons from real fixes: how to build interfaces only through the kit.
 ---
 
-# Дизайн-система @anyglade/kit
+# The @anyglade/kit design system
 
-Интерфейсы в этом проекте строятся только из `@anyglade/kit`. Kit собран на HeroUI v3 и задаёт токены, вёрстку, тему, движение и линт. Эстетика: монохром, точность, плотность, спокойствие. Ориентир Polar: дизайн вычитанием, каждый элемент выведен из смысла, точность как уважение к человеку.
+Interfaces in this project are built only from `@anyglade/kit`. The kit is built on HeroUI v3 and defines the tokens, layout, theme, motion and lint. The aesthetic: monochrome, precision, density, calm. The reference point is Polar: design by subtraction, every element derived from meaning, precision as respect for the person.
 
-Если пакета ещё нет в зависимостях, начните с [references/setup.md](references/setup.md).
+If the package is not yet a dependency, start with [references/setup.md](references/setup.md).
 
-## Законы
+## Laws
 
-Нарушение любого из них почти всегда видно на глаз. Причины и детали в справочниках.
+Breaking any of them is almost always visible at a glance. Reasons and details are in the references.
 
-1. **Только kit.** Вёрстка через `Box`, текст через `Text`, импорт только из `@anyglade/kit`, `/icons`, `/charts`, `/ai`. Сырые `div` и `p`, утилиты отступов и типографики Tailwind, `dark:` и произвольные значения запрещены линтом: они ломают единую шкалу и тему. Единственное исключение: компонентам HeroUI размер задаётся через `className`, например `h-10 w-full` у `Skeleton`.
-2. **Только токены.** Нужного значения нет на шкале, значит, решение неверное. Шкалы в [references/generated/tokens.md](references/generated/tokens.md).
-3. **Каждый пиксель оплачивает своё место.** Убрали элемент, а человек ничего не потерял: это был мусор. Структуру создают отступы, размер и вес, а не рамки, линии и плашки.
-4. **Содержимое имеет свою ширину.** Формы, текст и настройки не растягиваются на весь экран: `tokens.widths`.
-5. **Один уровень поверхности.** Никаких карточек в карточках. Рамка только у полей и объектов коллекции.
-6. **Статус это текст, а не тег.** Статус передаётся словом с цветом роли. Бейдж только для редкого состояния, требующего действия.
-7. **Акцент значит «главное действие» или «включено».** Одна основная кнопка на экран. Больше акцент ничего не значит.
-8. **Движение объясняет изменение.** Чем чаще действие, тем меньше движения. Только `opacity` и `transform`.
-9. **Ничто не прыгает.** Лоадер не меняет ширину, строки держат высоту, новый контент не дёргает страницу.
-10. **Всё работает.** Каждая кнопка, фильтр и сортировка делают настоящее дело. Нет кнопок-заглушек и тупиков: из каждого состояния есть путь дальше.
+1. **Kit only.** Layout through `Box`, text through `Text`, imports only from `@anyglade/kit`, `/icons`, `/charts`, `/ai`. Raw `div` and `p`, Tailwind spacing and typography utilities, `dark:` and arbitrary values are banned by the lint: they break the single scale and the theme. The only exception: HeroUI components get their size through `className`, for example `h-10 w-full` on `Skeleton`.
+2. **Tokens only.** If the value you need is not on the scale, the decision is wrong. Scales are in [references/generated/tokens.md](references/generated/tokens.md).
+3. **Every pixel pays for its place.** If you remove an element and the person loses nothing, it was clutter. Structure comes from spacing, size and weight, not from borders, lines and plates.
+4. **Content has its own width.** Forms, text and settings do not stretch across the screen: `tokens.widths`.
+5. **One surface level.** No cards inside cards. Borders only on fields and collection items.
+6. **Status is text, not a tag.** A status is a word in its role color. A badge is only for a rare state that requires action.
+7. **Accent means "the main action" or "on".** One primary button per screen. Accent means nothing else.
+8. **Motion explains change.** The more frequent the action, the less motion. Only `opacity` and `transform`.
+9. **Nothing jumps.** A loader does not change width, rows keep their height, new content does not jerk the page.
+10. **Everything works.** Every button, filter and sort does real work. No placeholder buttons and no dead ends: every state has a way forward.
 
-## Как строить экран
+## How to build a screen
 
-### 1. Поймите задачу
+### 1. Understand the task
 
-Одной фразой: кто смотрит, какое решение принимает, что сделает дальше. Из этого следует главное действие. Если его нельзя назвать, основной кнопки на экране не будет.
+In one sentence: who is looking, what decision they make, what they do next. The main action follows from this. If you cannot name it, the screen has no primary button.
 
-Определите характер поверхности:
+Decide the character of the surface:
 
-- **Работа** (дашборд, настройки, таблица, чекаут, чат): смелость выражается точностью, плотностью и скоростью чтения. Эффектность мешает.
-- **Убеждение** (маркетинг, вход, тарифы, витрина): нужна одна сильная идея и смелый масштаб. Композиционные ходы в [references/layout.md](references/layout.md), уровень проработки, объект и жест в [references/craft.md](references/craft.md).
+- **Work surface** (dashboard, settings, table, checkout, chat): boldness is expressed through precision, density and reading speed. Showiness gets in the way.
+- **Persuasion surface** (marketing, sign-in, pricing, showcase): it needs one strong idea and bold scale. Composition moves are in [references/layout.md](references/layout.md); the craft level, object and gesture are in [references/craft.md](references/craft.md).
 
-### 2. Определите архетип и компоненты
+### 2. Pick the archetype and components
 
-Почти любой рабочий экран это один из семи типов со своей структурой: [references/archetypes.md](references/archetypes.md).
+Almost any work screen is one of seven types with its own structure: [references/archetypes.md](references/archetypes.md).
 
-Откройте [references/components.md](references/components.md). Сначала ищите готовое решение в kit, потом собирайте из `Box`, `Text` и HeroUI, и только потом создавайте своё по правилам оттуда же. Точные пропсы в [references/generated/api.md](references/generated/api.md). Для интерфейса с агентом читайте [references/ai.md](references/ai.md).
+Open [references/components.md](references/components.md). First look for a ready-made solution in the kit, then assemble from `Box`, `Text` and HeroUI, and only then create your own by the rules in the same file. Exact props are in [references/generated/api.md](references/generated/api.md). For an interface with an agent, read [references/ai.md](references/ai.md).
 
-### 3. Разложите состояния
+### 3. Lay out the states
 
-Прежде чем верстать основное состояние, перечислите остальные: загрузка, пусто, ошибка, ничего не найдено, успех, длинные значения, нет прав. Запишите сценарий цепочкой: до, действие, ожидание, результат, путь дальше. Добавьте жизнь: повтор, прерывание, событие поверх события, опасное действие в два шага. Сценарии в [references/ux-flows.md](references/ux-flows.md) и [references/craft.md](references/craft.md).
+Before building the main state, list the others: loading, empty, error, nothing found, success, long values, no permission. Write the flow as a chain: before, action, waiting, result, way forward. Add life: retry, interruption, an event on top of an event, a dangerous action in two steps. Flows are in [references/ux-flows.md](references/ux-flows.md) and [references/craft.md](references/craft.md).
 
-### 4. Соберите
+### 4. Assemble
 
-- Вёрстка, ширины и композиция: [references/layout.md](references/layout.md).
-- Шрифт, числа и тексты: [references/typography.md](references/typography.md).
-- Цвет, акцент и контраст: [references/color.md](references/color.md).
+- Layout, widths and composition: [references/layout.md](references/layout.md).
+- Type, numbers and copy: [references/typography.md](references/typography.md).
+- Color, accent and contrast: [references/color.md](references/color.md).
 
-### 5. Добавьте движение
+### 5. Add motion
 
-Пройдите по каждому действию и ответьте, что происходит между «нажали» и «готово». Таблица решений и запреты в [references/motion.md](references/motion.md).
+Go through every action and answer what happens between "pressed" and "done". The decision table and bans are in [references/motion.md](references/motion.md).
 
-### 6. Проверьте уровень проработки
+### 6. Check the craft level
 
-Опишите результат одной фразой. «Нажми кнопку, появится X» означает шаблон: такой результат не сдаётся. Вопросы проверки в [references/craft.md](references/craft.md).
+Describe the result in one sentence. "Press the button and X appears" means Template: such a result is not handed in. The check questions are in [references/craft.md](references/craft.md).
 
-### 7. Сверьтесь с уроками
+### 7. Check against the lessons
 
-[references/lessons.md](references/lessons.md) содержит реальные правки. Просмотрите его перед сдачей: эти ошибки уже совершались и выглядят естественно, пока их не покажут.
+[references/lessons.md](references/lessons.md) holds real fixes. Skim it before handing in: these mistakes have already been made and look natural until someone points them out.
 
-## Режимы правки
+## Edit modes
 
-Когда просят улучшить готовый экран, сначала определите режим. Он задаёт границы работы.
+When asked to improve an existing screen, first determine the mode. It sets the boundaries of the work.
 
-| Запрос                   | Что делать                                                                                                                    |
-| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
-| «Упрости», «перегружено» | Убрать повторы, лишние варианты, декор. Остальное за действием                                                                |
-| «Слишком громко»         | Меньше цвета, плоские поверхности, меньше движения. Точность важнее смягчения                                                 |
-| «Скучно», «смелее»       | Усилить одну названную часть по [craft.md](references/craft.md): объект, детали из данных, жест. Соседей и систему не трогать |
-| «Проверь края»           | Длинные значения, пусто, ошибка, сеть, права. См. [ux-flows.md](references/ux-flows.md)                                       |
-| «Отполируй»              | Только расхождения с системой. Если неверна идея, скажите об этом, а не прячьте редизайн в правках                            |
-| «Непонятно»              | Переписать тексты по пути человека целиком, а не отдельные строки                                                             |
-| «Проверь проект»         | Аудит по [audit.md](references/audit.md)                                                                                      |
+| Request                     | What to do                                                                                                                                      |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| "Simplify", "too cluttered" | Remove repetition, extra options, decoration. Everything else goes behind an action                                                             |
+| "Too loud"                  | Less color, flat surfaces, less motion. Precision matters more than softening                                                                   |
+| "Boring", "bolder"          | Strengthen one named part per [craft.md](references/craft.md): the object, details from data, the gesture. Leave neighbors and the system alone |
+| "Check the edges"           | Long values, empty, error, network, permissions. See [ux-flows.md](references/ux-flows.md)                                                      |
+| "Polish"                    | Only deviations from the system. If the idea is wrong, say so instead of hiding a redesign in the edits                                         |
+| "Confusing"                 | Rewrite the copy along the person's whole path, not individual lines                                                                            |
+| "Check the project"         | Audit per [audit.md](references/audit.md)                                                                                                       |
 
-## Красные флаги
+## Red flags
 
-Остановитесь и переделайте, если видите:
+Stop and redo it if you see:
 
-- две основные кнопки или текст цвета акцента «для красоты»;
-- значение не из токенов, цвет с прозрачностью, `dark:`;
-- бейдж у нормального состояния, тег, по которому нельзя кликнуть;
-- непонятный термин без пояснения или подсказку у понятного слова;
-- подзаголовок, который повторяет заголовок;
-- «Нет данных», «Ошибка», «ОК» в интерфейсе;
-- список, который растёт без предела;
-- две катящиеся строки от одного действия, катящийся таймер, таблица или предложение;
-- экран, проверенный в одной теме или без телефона.
+- two primary buttons, or text in the accent color "for looks";
+- a value outside the tokens, a color with opacity, `dark:`;
+- a badge on a normal state, a tag you cannot click;
+- an unclear term without explanation, or a hint on an obvious word;
+- a subtitle that repeats the title;
+- "No data", "Error", "OK" in the interface;
+- a list that grows without limit;
+- two rolling lines from one action, a rolling timer, table or sentence;
+- a screen checked in only one theme or without a phone.
 
-## Отговорки и ответы
+## Excuses and answers
 
-| Отговорка                            | Ответ                                                                         |
-| ------------------------------------ | ----------------------------------------------------------------------------- |
-| Тут рамка нужна для разделения       | Разделите поверхностью или отступом                                           |
-| Это внутренний экран, сойдёт         | Правила одни для всех экранов                                                 |
-| Нужного токена нет, поставлю похожее | Значит, неверное решение. Новое значение добавляется в систему, а не на месте |
-| Быстрее сделать свой компонент       | Соберите из существующих, см. [components.md](references/components.md)       |
-| Без подзаголовка пусто               | Перепишите заголовок так, чтобы он говорил, что внутри                        |
-| Анимация тут красиво смотрится       | Назовите, что она объясняет. Не можете, значит, не нужна                      |
-| Поправлю потом, сейчас важнее логика | Пустые состояния и ошибки это и есть логика                                   |
-| Тест прошёл, значит, работает        | Тест не видит, как это выглядит. Откройте экран                               |
+| Excuse                                            | Answer                                                                          |
+| ------------------------------------------------- | ------------------------------------------------------------------------------- |
+| A border is needed here to separate things        | Separate with a surface or spacing                                              |
+| It's an internal screen, it'll do                 | The rules are the same for every screen                                         |
+| The token I need is missing, I'll use a close one | Then the decision is wrong. A new value is added to the system, not on the spot |
+| It's faster to make my own component              | Assemble from existing ones, see [components.md](references/components.md)      |
+| It looks empty without a subtitle                 | Rewrite the title so it says what is inside                                     |
+| The animation looks nice here                     | Name what it explains. If you can't, it isn't needed                            |
+| I'll fix it later, the logic matters more now     | Empty states and errors are the logic                                           |
+| The test passed, so it works                      | The test does not see how it looks. Open the screen                             |
 
-## Проверка
+## Verification
 
-Интерфейс не готов, пока не пройдены все пункты. Типы и линт не видят того, что видит человек.
+The interface is not done until every item passes. Types and lint do not see what a person sees.
 
-1. Линт и типы проходят.
-2. Посмотрите результат глазами: светлая тема, тёмная тема, ширина 390 px и узкое окно с мышью. Нет обрезок, налезаний и горизонтальной прокрутки.
-3. Пройдите все действия руками: каждая кнопка, фильтр, сортировка, пустое состояние, ошибка, сброс. Пройдите сценарий с нуля, без данных.
-4. Проверьте `prefers-reduced-motion` и управление с клавиатуры: фокус виден, иконки-кнопки подписаны.
-5. Если что-то дёргается или лагает, измеряйте, а не гадайте: положение и время кадра покадрово, с замедлением процессора в 4 раза. Гипотеза без замера обычно неверна.
+1. Lint and types pass.
+2. Look at the result with your own eyes: light theme, dark theme, 390 px width and a narrow window with a mouse. No clipping, overlap or horizontal scrolling.
+3. Go through every action by hand: each button, filter, sort, empty state, error, reset. Walk the flow from scratch, with no data.
+4. Check `prefers-reduced-motion` and keyboard control: focus is visible, icon buttons are labeled.
+5. If something jerks or lags, measure instead of guessing: position and frame time frame by frame, with 4x CPU throttling. A hypothesis without a measurement is usually wrong.
 
-Если чувствуете, что правило мешает, сначала спросите, что оно защищает. Исключение допустимо, если элемент реально передаёт смысл, который иначе потеряется. Причину назовите в ответе.
+If a rule feels like it is in the way, first ask what it protects. An exception is acceptable if the element really carries meaning that would otherwise be lost. Name the reason in your answer.
 
-## Карта справочников
+## Reference map
 
-| Файл                                                  | Когда читать                                                      |
-| ----------------------------------------------------- | ----------------------------------------------------------------- |
-| [setup.md](references/setup.md)                       | Подключение kit, тема, линт, бренд                                |
-| [components.md](references/components.md)             | Какой компонент выбрать, как создать свой                         |
-| [recipes.md](references/recipes.md)                   | Готовый код: таблица, поиск, Select, панель, окно, вкладки        |
-| [layout.md](references/layout.md)                     | Каркас, ширины, отступы, сетка, адаптив, композиция               |
-| [archetypes.md](references/archetypes.md)             | Структура типовых экранов: сводка, список, настройки и другие     |
-| [mobile.md](references/mobile.md)                     | Телефон: прокрутка, шторки, касание, проверка                     |
-| [writing.md](references/writing.md)                   | Тексты, шаблоны, признаки слопа, скрипт проверки                  |
-| [audit.md](references/audit.md)                       | Аудит проекта на соответствие системе                             |
-| [typography.md](references/typography.md)             | Иерархия, числа, русская типографика, тексты                      |
-| [color.md](references/color.md)                       | Поверхности, акцент, статусы, контраст, тёмная тема               |
-| [motion.md](references/motion.md)                     | Микроанимации, лоадеры, перетекание, производительность           |
-| [craft.md](references/craft.md)                       | Уровень креативности, детали объекта, жесты, продуманный сценарий |
-| [ux-flows.md](references/ux-flows.md)                 | Состояния, формы, таблицы, фильтры, опасные действия              |
-| [ai.md](references/ai.md)                             | Чат, стрим, шаги агента, подтверждения                            |
-| [lessons.md](references/lessons.md)                   | Реальные правки и их причины                                      |
-| [generated/tokens.md](references/generated/tokens.md) | Точные значения токенов                                           |
-| [generated/api.md](references/generated/api.md)       | Экспорты и пропсы                                                 |
+| File                                                  | When to read                                                       |
+| ----------------------------------------------------- | ------------------------------------------------------------------ |
+| [setup.md](references/setup.md)                       | Installing the kit, theme, lint, brand                             |
+| [components.md](references/components.md)             | Which component to choose, how to create your own                  |
+| [recipes.md](references/recipes.md)                   | Ready code: table, search, Select, panel, modal, tabs              |
+| [layout.md](references/layout.md)                     | Shell, widths, spacing, grid, responsiveness, composition          |
+| [archetypes.md](references/archetypes.md)             | Structure of typical screens: overview, list, settings and others  |
+| [mobile.md](references/mobile.md)                     | Phone: scrolling, sheets, touch, verification                      |
+| [writing.md](references/writing.md)                   | Copy, templates, slop signs, the check script                      |
+| [audit.md](references/audit.md)                       | Auditing a project against the system                              |
+| [typography.md](references/typography.md)             | Hierarchy, numbers, typographic conventions, copy                  |
+| [color.md](references/color.md)                       | Surfaces, accent, statuses, contrast, dark theme                   |
+| [motion.md](references/motion.md)                     | Micro-animations, loaders, morphing, performance                   |
+| [craft.md](references/craft.md)                       | Creativity level, object details, gestures, a thought-through flow |
+| [ux-flows.md](references/ux-flows.md)                 | States, forms, tables, filters, dangerous actions                  |
+| [ai.md](references/ai.md)                             | Chat, streaming, agent steps, confirmations                        |
+| [lessons.md](references/lessons.md)                   | Real fixes and their reasons                                       |
+| [generated/tokens.md](references/generated/tokens.md) | Exact token values                                                 |
+| [generated/api.md](references/generated/api.md)       | Exports and props                                                  |

@@ -1,7 +1,7 @@
 # @anyglade/kit
 
-Монорепо UI kit. Пакет лежит в `packages/kit`, витрина и эталоны в `apps/playground`.
+UI kit monorepo. The package lives in `packages/kit`, the showcase and reference blocks in `apps/playground`.
 
-- Любой интерфейс строится по скиллу `anyglade-design-system`.
-- Блоки и эталоны витрины создаются скиллом `block-reference`.
-- После изменения kit и после каждой правки пользователя по виду, анимации или UX выполняйте скилл `design-system-sync`. Без этого не проходят тест `design-skill` и pre-commit.
+- Every interface is built with the `anyglade-design-system` skill.
+- Showcase blocks and references are created with the `block-reference` skill.
+- After any change to the kit, and after every user correction of look, animation or UX, run the `design-system-sync` skill. Without it the `design-skill` test and the pre-commit hook fail.

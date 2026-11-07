@@ -1,201 +1,201 @@
-# UX-сценарии
+# UX flows
 
-Хороший экран это не только основной вид. Интерфейс оценивают по краям: по загрузке, ошибке, пустоте.
+A good screen is more than its main view. An interface is judged by its edges: loading, error, emptiness.
 
-Контекстное меню ускоряет, но не заменяет интерфейс: каждое его действие доступно и без него, в шапке объекта или в меню «Ещё». Открывается правой кнопкой, долгим нажатием и клавишей меню, действует на строку под курсором, а не на открытую. Эта строка подсвечена, пока меню открыто. Опасное действие стоит последним, отделено линией и подтверждается тем же диалогом, что и в шапке.
+A context menu speeds things up but does not replace the interface: each of its actions is also available without it, in the object header or in the "More" menu. It opens with a right click, a long press and the menu key, and it acts on the row under the cursor, not on the open one. That row stays highlighted while the menu is open. A dangerous action comes last, is separated by a line and is confirmed by the same dialog as in the header.
 
-## Состояния экрана
+## Screen states
 
-Для каждого экрана и списка продумайте все:
+For every screen and list, think through all of them:
 
-| Состояние         | Как решать                                                               |
-| ----------------- | ------------------------------------------------------------------------ |
-| Загрузка          | `Loadable` со скелетоном той же формы                                    |
-| Пусто, первый раз | `EmptyPanel`: что здесь будет и одно действие, чтобы начать              |
-| Ничего не найдено | Текст и кнопка «Сбросить фильтры»                                        |
-| Ошибка            | Что случилось, что делать, кнопка «Повторить». Данные и ввод сохраняются |
-| Частичные данные  | Показать, что есть, недоступное отметить на месте                        |
-| Успех             | Новое состояние с `motion="enter"` и путь дальше                         |
-| Нет прав          | Объяснить, у кого их получить                                            |
-| Длинные значения  | Проверить с длинным именем и суммой, `truncate` или перенос              |
+| State             | How to handle                                                        |
+| ----------------- | -------------------------------------------------------------------- |
+| Loading           | `Loadable` with a skeleton of the same shape                         |
+| Empty, first time | `EmptyPanel`: what will be here and one action to start              |
+| Nothing found     | Text and a "Reset filters" button                                    |
+| Error             | What happened, what to do, a "Retry" button. Data and input are kept |
+| Partial data      | Show what is there, mark what is unavailable in place                |
+| Success           | The new state with `motion="enter"` and a way forward                |
+| No permission     | Explain whom to get it from                                          |
+| Long values       | Test with a long name and amount, `truncate` or wrap                 |
 
-Без тупиков: из каждого состояния есть путь дальше. После отправки формы есть «Новая оплата» или «Указать другую почту», а не только текст.
+No dead ends: every state has a way forward. After a form is sent there is "New payment" or "Use another email", not just text.
 
-## Пустые состояния
+## Empty states
 
-Тип отвечает, почему пусто. Размер отвечает, где пусто. Один заголовок до пяти слов, одно предложение, одна кнопка или ни одной.
+The type answers why it is empty. The size answers where it is empty. One heading of up to five words, one sentence, one button or none.
 
-| Тип              | Пример                        | Действие                                                    |
-| ---------------- | ----------------------------- | ----------------------------------------------------------- |
-| Ещё ничего нет   | Пока нет рассылок             | Создаёт первое                                              |
-| Нужно подключить | Подключите кассу              | Подключает                                                  |
-| Ничего не нашли  | Фильтр, поиск, период         | «Сбросить фильтры». Для поиска текст с запросом, без кнопки |
-| Ещё не пришло    | Синхронизация, первая продажа | Нет, текст называет срок цифрой                             |
-| Всё сделано      | Задачи закрыты                | Нет или тихая «Показать выполненные»                        |
+| Type             | Example                | Action                                                         |
+| ---------------- | ---------------------- | -------------------------------------------------------------- |
+| Nothing yet      | No campaigns yet       | Creates the first one                                          |
+| Needs connecting | Connect your register  | Connects                                                       |
+| Nothing found    | Filter, search, period | "Reset filters". For search, text with the query and no button |
+| Not arrived yet  | Sync, first sale       | None, the text names the time as a number                      |
+| All done         | Tasks closed           | None, or a quiet "Show completed"                              |
 
-| Где                       | Как                                                                                                                                |
-| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| Вместо всего раздела      | `EmptyPanel`, шапка страницы остаётся, фильтры прячутся, кнопка «Создать» из шапки уходит в пустое состояние: основная кнопка одна |
-| В блоке, панели, таблице  | `EmptyPanel` компактно, кнопка `secondary`. У таблицы шапка колонок и фильтры остаются                                             |
-| В поповере, списке выбора | Одна строка текста, без иконки                                                                                                     |
-| В графике                 | Та же высота, без данных                                                                                                           |
+| Where                        | How                                                                                                                                            |
+| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| Instead of the whole section | `EmptyPanel`, the page header stays, filters hide, the "Create" button moves from the header into the empty state: there is one primary button |
+| In a block, panel, table     | Compact `EmptyPanel`, `secondary` button. A table keeps its column header and filters                                                          |
+| In a popover, picker list    | One line of text, no icon                                                                                                                      |
+| In a chart                   | The same height, no data                                                                                                                       |
 
-Показатель без данных это не пустое состояние: «0», а «—» только если посчитать нельзя. График из нулей это линия по нулю.
+A metric without data is not an empty state: "0", and "—" only if it cannot be computed. A chart of zeros is a line at zero.
 
-## Без тупиков
+## No dead ends
 
-Пустой раздел и первый запуск не прячут то, что нужно подготовить заранее.
+An empty section and the first launch do not hide what has to be prepared in advance.
 
-- Входы в подготовку видны и на пустой странице: шаблоны, списки, настройки, подключение.
-- Если для действия чего-то не хватает, способ создать это есть прямо на месте.
-- Мастер не требует того, что можно сделать позже.
-- Проверка: пройдите сценарий с нуля, без единой сущности, и убедитесь, что до главного действия можно дойти.
+- Entry points to preparation are visible even on an empty page: templates, lists, settings, connections.
+- If an action is missing something, a way to create it is right there.
+- A wizard does not demand what can be done later.
+- Check: walk the flow from scratch, without a single entity, and make sure the main action can be reached.
 
-## Каждая кнопка работает
+## Every button works
 
-Кнопка без действия это дефект, а не черновик. Если настоящего действия пока нет, покажите правдоподобный результат: состояние, тост, файл. Выгрузка создаёт настоящий файл. Кнопка, которая выглядит активной и ничего не делает, разрушает доверие ко всему интерфейсу.
+A button without an action is a defect, not a draft. If there is no real action yet, show a plausible result: a state, a toast, a file. An export creates a real file. A button that looks active and does nothing destroys trust in the whole interface.
 
-## Загрузка и ошибки
+## Loading and errors
 
-- Первая загрузка: скелетон той же формы.
-- Обновление поверх показанных данных без скелетона: данные остаются, индикатор тихий.
-- Подгрузка: скелетон-строки в конце списка.
-- Ошибка блока внутри блока: что не загрузилось и «Повторить». Один блок не роняет весь экран.
-- Проблема, мешающая работать, это баннер над контентом с действием.
+- First load: a skeleton of the same shape.
+- Refresh over data already shown without a skeleton: data stays, the indicator is quiet.
+- Loading more: skeleton rows at the end of the list.
+- A block error stays inside the block: what failed to load and "Retry". One block does not bring down the whole screen.
+- A problem that blocks work is a banner above the content with an action.
 
-## Обратная связь
+## Feedback
 
-Каждое действие получает ответ, на месте действия, если можно:
+Every action gets a response, at the place of the action if possible:
 
-| Время                     | Ответ                                              |
-| ------------------------- | -------------------------------------------------- |
-| Нажатие                   | Тактильный отклик кнопки                           |
-| Быстрое действие          | Сразу виден результат                              |
-| Ожидание                  | Лоадер в кнопке                                    |
-| Результат виден на экране | Больше ничего не нужно                             |
-| Результата не видно       | `toast` с конкретным итогом: «3 клиента выгружено» |
+| Time                     | Response                                                  |
+| ------------------------ | --------------------------------------------------------- |
+| Press                    | The button's tactile response                             |
+| Fast action              | The result is visible at once                             |
+| Waiting                  | A loader in the button                                    |
+| Result visible on screen | Nothing more is needed                                    |
+| Result not visible       | A `toast` with a concrete outcome: "3 customers exported" |
 
-Обратимые мелкие действия применяйте оптимистично, а при ошибке откатывайте с тостом. Ждать сервер ради галочки незачем.
+Apply small reversible actions optimistically, and on error roll back with a toast. There is no reason to wait for the server for a check mark.
 
-## Формы
+## Forms
 
-- Подпись всегда видна. Placeholder не заменяет подпись: он исчезает при вводе.
-- Поля в логичном порядке, связанные рядом, одна колонка по умолчанию.
-- Ширина поля подсказывает длину ответа.
-- Правильный `type`, `autoComplete`, `inputMode`: это мобильная клавиатура и автозаполнение.
-- Ошибка показывается при уходе из поля или при отправке, а не во время ввода. Рядом с полем, с ответом, как исправить.
-- При ошибке фокус идёт к первому неверному полю, введённое не теряется.
-- Кнопка отправки активна, пока нечего блокировать. Отключать её до заполнения плохо: человек не понимает, чего не хватает. Исключение: форма редактирования без изменений.
-- Несохранённые изменения видны, есть «Отменить».
-- Многошаговая форма: один вопрос на шаг, путь назад, контекст предыдущего шага виден.
-- Enter отправляет, в многострочном поле Shift+Enter переносит строку.
+- The label is always visible. A placeholder does not replace a label: it disappears on input.
+- Fields in a logical order, related ones together, one column by default.
+- The width of a field hints at the length of the answer.
+- The right `type`, `autoComplete`, `inputMode`: these are the mobile keyboard and autofill.
+- An error shows when leaving the field or on submit, not while typing. Next to the field, with how to fix it.
+- On error focus goes to the first invalid field, and what was entered is not lost.
+- The submit button stays active while there is nothing to block. Disabling it until the form is filled is bad: the person does not understand what is missing. Exception: an edit form with no changes.
+- Unsaved changes are visible, and there is "Cancel".
+- A multi-step form: one question per step, a way back, the context of the previous step visible.
+- Enter submits; in a multiline field Shift+Enter inserts a line break.
 
-## Таблицы и списки
+## Tables and lists
 
-- Сортируются все колонки, где порядок имеет смысл, и по значению, а не по подписи.
-- Фильтры сочетаются с поиском. Смена фильтра сбрасывает страницу на первую.
-- Пустой результат предлагает сброс всего: и поиска, и фильтров.
-- Выбранные строки считаются только среди найденных, иначе «Выгрузить 5» выгрузит невидимое.
-- Действие над выбранными появляется при выборе и называет количество.
-- Счётчик результата виден: «12 клиентов».
-- Переход с обзора по ссылке открывает готовый фильтр: «Открыть сделки» показывает застрявшие.
-- Строка ведёт к деталям: `Drawer` сохраняет контекст списка.
+- Every column where order makes sense is sortable, and by value, not by label.
+- Filters combine with search. Changing a filter resets to the first page.
+- An empty result offers to reset everything: both search and filters.
+- Selected rows are counted only among the found ones, otherwise "Export 5" exports the invisible.
+- An action on the selection appears on selection and names the count.
+- The result count is visible: "12 customers".
+- A link from an overview opens a ready filter: "Open deals" shows the stuck ones.
+- A row leads to details: a `Drawer` keeps the list context.
 
-## Длинные списки
+## Long lists
 
-Список не растягивает страницу без предела. Клиент со ста объектами должен видеть тот же аккуратный экран.
+A list does not stretch the page without limit. A customer with a hundred objects must see the same neat screen.
 
-| Что за список                | Как ограничить                                                                                       |
-| ---------------------------- | ---------------------------------------------------------------------------------------------------- |
-| Таблица, история, журнал     | `Pagination`, «N–M из K», когда строк больше одной страницы, обычно от 20. Короче пагинация не нужна |
-| Строки внутри блока или окна | С восьми элементов поиск и внутренняя прокрутка                                                      |
-| Превью в блоке               | Первые пять и «Показать все»                                                                         |
-| Легенда и серии графика      | Топ-7 и серия «Остальные» нейтральным цветом                                                         |
-| Выбор из длинного списка     | `ComboBox` с поиском, а не `Select` на сто пунктов                                                   |
-| Лента на всю страницу        | Автоподгрузка допустима только здесь                                                                 |
+| What kind of list             | How to limit                                                                                                        |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| Table, history, log           | `Pagination`, "N–M of K", when there are more rows than one page, usually from 20. Shorter lists need no pagination |
+| Rows inside a block or dialog | From eight items, search and inner scrolling                                                                        |
+| Preview in a block            | The first five and "Show all"                                                                                       |
+| Chart legend and series       | Top 7 and an "Other" series in a neutral color                                                                      |
+| Choosing from a long list     | `ComboBox` with search, not a `Select` with a hundred options                                                       |
+| Full-page feed                | Infinite loading is acceptable only here                                                                            |
 
-Счётчик в шапке считается по всему списку, а не по найденному. Пока грузится следующая страница, текущая остаётся на экране приглушённой, кнопки пагинации выключены.
+The counter in the header counts the whole list, not the found items. While the next page is loading, the current one stays on screen dimmed, and the pagination buttons are disabled.
 
-## Показатели
+## Metrics
 
-- Обязательная часть: подпись и значение. Остальное только если меняет решение.
-- В ряду показателей состав одинаковый: если спарклайн не нужен соседнему, уберите у всех.
-- Сравнение всегда подписано: «к прошлой неделе».
-- Изменение показывает стрелка и цвет. Там, где рост это плохо, например возвраты и отписки, цвета меняются местами.
-- Спарклайн только там, где важна форма тренда. Для остатков и счётчиков он не нужен.
+- The required part: label and value. Everything else only if it changes a decision.
+- A row of metrics has the same composition: if the neighbor does not need a sparkline, remove it from all.
+- A comparison is always labeled: "vs last week".
+- Change is shown by an arrow and color. Where growth is bad, for example refunds and unsubscribes, the colors swap.
+- A sparkline only where the shape of the trend matters. Balances and counters do not need one.
 
-## Настройки
+## Settings
 
-- Каждая секция отвечает на «зачем»: заголовок, поля в колонку.
-- Настройки сохраняются кнопкой с индикацией, несохранённые изменения видны.
-- Всё, что двигает деньги, подтверждается явно и никогда не применяется молча.
-- Варианты с последствиями это `RadioGroup` с пояснениями, а не `Select`.
-- Опасные настройки отдельным блоком внизу страницы.
-- Загрузка и ошибки на каждой секции отдельно.
+- Each section answers "why": a heading, fields in a column.
+- Settings are saved with a button that shows progress, and unsaved changes are visible.
+- Anything that moves money is confirmed explicitly and never applied silently.
+- Options with consequences are a `RadioGroup` with explanations, not a `Select`.
+- Dangerous settings in a separate block at the bottom of the page.
+- Loading and errors on each section separately.
 
-## Опасные действия
+## Dangerous actions
 
-| Обратимо | Решение                                 |
-| -------- | --------------------------------------- |
-| Да       | Выполнить сразу и дать отмену           |
-| Нет      | `AlertDialog` с последствием и объектом |
+| Reversible | Solution                                          |
+| ---------- | ------------------------------------------------- |
+| Yes        | Do it at once and offer undo                      |
+| No         | `AlertDialog` with the consequence and the object |
 
-Кнопка подтверждения называет действие, `danger` вариант: «Удалить проект», а не «Да». Лучшее подтверждение это возможность отменить.
+The confirm button names the action, `danger` variant: "Delete project", not "Yes". The best confirmation is the ability to undo.
 
-## Гонки и повторы
+## Races and repeats
 
-Интерфейс часто работает правильно только при идеальном порядке событий.
+An interface often works correctly only with a perfect order of events.
 
-| Ситуация                        | Как должно быть                                                     |
-| ------------------------------- | ------------------------------------------------------------------- |
-| Двойной клик                    | Кнопка kit блокируется сразу                                        |
-| Два запроса подряд              | Побеждает последний, ответ на старый игнорируется                   |
-| Повторная отправка              | Не создаёт дубликат                                                 |
-| Форма во время отправки         | Поля заблокированы, при ошибке ввод сохранён и кнопка снова активна |
-| Успех мутации                   | Данные обновлены, окно закрыто, результат виден                     |
-| Истёкшая ссылка или приглашение | Понятное сообщение и путь дальше                                    |
+| Situation                  | How it should be                                                         |
+| -------------------------- | ------------------------------------------------------------------------ |
+| Double click               | A kit button locks immediately                                           |
+| Two requests in a row      | The last one wins, the response to the old one is ignored                |
+| Repeated submit            | Does not create a duplicate                                              |
+| Form while submitting      | Fields are locked; on error input is kept and the button is active again |
+| Mutation success           | Data updated, dialog closed, result visible                              |
+| Expired link or invitation | A clear message and a way forward                                        |
 
-Укрепляйте интерфейс против настоящих данных: очень длинный и очень короткий текст, миллионы в суммах, тысячи строк, отсутствие данных, медленная и оборванная сеть.
+Harden the interface against real data: very long and very short text, millions in amounts, thousands of rows, missing data, a slow and dropped network.
 
-## Права
+## Permissions
 
-Действие, которое человеку недоступно, скрывается, а не отключается без объяснения. Если он открыл раздел по прямой ссылке, покажите, у кого получить доступ.
+An action unavailable to the person is hidden, not disabled without explanation. If they opened a section by a direct link, show whom to get access from.
 
-- Отказ браузера в камере это ошибка с причиной и следующим шагом: разрешить доступ, подключить устройство, закрыть другую программу. Закрытый диалог выбора экрана это решение человека, ошибку не показывайте.
-- Показ экрана может остановиться снаружи, кнопкой браузера. Слушайте `ended` у дорожки, иначе интерфейс покажет показ, которого нет.
-- Организаторские действия не показывайте без прав, а не отключайте: участник видит в меню только своё.
+- A browser refusing camera access is an error with a reason and a next step: allow access, connect a device, close the other program. A closed screen-picker dialog is the person's decision; do not show an error.
+- Screen sharing can stop from outside, with the browser's button. Listen to `ended` on the track, otherwise the interface shows sharing that is not happening.
+- Do not show organizer actions without permission, rather than disabling them: a participant sees only their own actions in the menu.
 
-## Навигация и контекст
+## Navigation and context
 
-- Активный раздел виден, текущая страница отмечена `aria-current`.
-- Фильтры и выбор не теряются при возврате, если это возможно.
-- Модальное окно для короткой задачи, панель для деталей, отдельная страница для долгой работы.
-- Не более одного слоя поверх страницы. Модалка из модалки означает, что сценарий придуман неверно.
-- Состояние, которым делятся, живёт в URL.
+- The active section is visible, the current page is marked with `aria-current`.
+- Filters and selection are not lost on return, if possible.
+- A modal for a short task, a panel for details, a separate page for long work.
+- No more than one layer above the page. A modal from a modal means the flow was designed wrong.
+- State that people share lives in the URL.
 
-## Паттерны с границами
+## Patterns with limits
 
-| Паттерн                        | Когда                                        | Когда нет                                       |
-| ------------------------------ | -------------------------------------------- | ----------------------------------------------- |
-| Палитра команд                 | Продукт больше трёх разделов                 | Лендинг, простая утилита                        |
-| Оптимистичный интерфейс        | Переключатель, отметка, перетаскивание       | Деньги и необратимые действия                   |
-| Скелетон                       | Таблицы, карточки, лента                     | Загрузка быстрее 200 мс, окно с формой          |
-| Проверка полей                 | При уходе из поля                            | При каждом нажатии клавиши, только при отправке |
-| Отмена вместо подтверждения    | Обратимое действие: тост «Удалено. Отменить» | Необратимое                                     |
-| Разумное значение по умолчанию | Предвыбрать самое частое                     | Выбор с последствиями                           |
-| Прогрессивное раскрытие        | Сначала главное, остальное по действию       | То, без чего нельзя решить                      |
-| Состояние в URL                | Фильтры, вкладки, страница                   | Временное состояние окна                        |
-| Редактирование на месте        | Частые мелкие правки                         | Связанные поля                                  |
-| Мастер                         | Больше пяти полей, чекаут                    | Короткая форма                                  |
-| Персонализация                 | Есть данные о поведении                      | Данных нет                                      |
+| Pattern                      | When                                       | When not                                         |
+| ---------------------------- | ------------------------------------------ | ------------------------------------------------ |
+| Command palette              | A product with more than three sections    | A landing page, a simple utility                 |
+| Optimistic UI                | Switch, check, drag                        | Money and irreversible actions                   |
+| Skeleton                     | Tables, cards, feed                        | Loading faster than 200 ms, a dialog with a form |
+| Field validation             | On leaving the field                       | On every keystroke, only on submit               |
+| Undo instead of confirmation | A reversible action: toast "Deleted. Undo" | Irreversible                                     |
+| Sensible default             | Preselect the most common                  | A choice with consequences                       |
+| Progressive disclosure       | The main thing first, the rest on action   | What a decision cannot be made without           |
+| State in the URL             | Filters, tabs, page                        | Temporary dialog state                           |
+| Inline editing               | Frequent small edits                       | Related fields                                   |
+| Wizard                       | More than five fields, checkout            | A short form                                     |
+| Personalization              | There is behavior data                     | There is no data                                 |
 
-Не предлагайте тёмные паттерны: скрытые галочки, запутанную отмену подписки, спиннер на всю страницу, фильтры, теряющиеся при обновлении.
+Do not propose dark patterns: hidden check boxes, a confusing unsubscribe, a full-page spinner, filters lost on refresh.
 
-## Доступность
+## Accessibility
 
-- Всё работает с клавиатуры, порядок фокуса логичен, фокус виден. HeroUI это даёт, не ломайте.
-- Кнопка только с иконкой получает `aria-label`, декоративная картинка `alt=""`.
-- Статус, выраженный значком, имеет текст для скринридера.
-- Изменения, важные для чтения, объявляются через `aria-live`.
-- Наведение не единственный способ что-либо открыть.
-- Масштаб браузера 200 % ничего не ломает.
+- Everything works from the keyboard, focus order is logical, focus is visible. HeroUI provides this; do not break it.
+- An icon-only button gets an `aria-label`, a decorative image `alt=""`.
+- A status expressed by an icon has text for a screen reader.
+- Changes important for reading are announced through `aria-live`.
+- Hover is not the only way to open anything.
+- Browser zoom at 200 % breaks nothing.

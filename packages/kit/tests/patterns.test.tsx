@@ -69,17 +69,17 @@ test("ItemList marks the open row and renders its own actions", () => {
       currentId="b"
       getText={(item) => item.name}
       items={[
-        { id: "a", name: "Анна" },
-        { id: "b", name: "Илья" },
+        { id: "a", name: "Anna" },
+        { id: "b", name: "Ilya" },
       ]}
-      label="Чаты"
+      label="Chats"
       renderItem={(item) => <button type="button">{item.name}</button>}
       onOpen={() => undefined}
     />,
   );
 
   expect(html.match(/ag-item-list__row--current/g)).toHaveLength(1);
-  expect(html).toContain('aria-label="Чаты"');
+  expect(html).toContain('aria-label="Chats"');
   expect(html).toContain("<button");
 });
 
@@ -113,9 +113,9 @@ test("ItemList renders no menu until one is asked for", () => {
   const html = renderToStaticMarkup(
     <ItemList
       getText={(item) => item.name}
-      items={[{ id: "a", name: "Анна" }]}
-      label="Чаты"
-      menu={{ label: "Действия", renderItems: () => null }}
+      items={[{ id: "a", name: "Anna" }]}
+      label="Chats"
+      menu={{ label: "Actions", renderItems: () => null }}
       renderItem={(item) => item.name}
       onOpen={() => undefined}
     />,
@@ -175,8 +175,8 @@ test("MediaStage shows one tile on stage and counts the hidden ones", () => {
       <MediaStage
         focusId={focusId}
         items={items}
-        label="Участники"
-        more={{ label: (count) => `Ещё ${count}`, onPress: () => undefined }}
+        label="Participants"
+        more={{ label: (count) => `${count} more`, onPress: () => undefined }}
         renderItem={(item) => item.id}
       />,
     );
@@ -194,7 +194,7 @@ test("MediaStage ignores a focus that is no longer on stage", () => {
     <MediaStage
       focusId="gone"
       items={[{ id: "a" }, { id: "b" }]}
-      label="Участники"
+      label="Participants"
       more={{ label: () => "", onPress: () => undefined }}
       renderItem={(item) => item.id}
     />,
@@ -203,11 +203,11 @@ test("MediaStage ignores a focus that is no longer on stage", () => {
 });
 
 test("MediaTile renders only the slots it was given", () => {
-  const plain = renderToStaticMarkup(<MediaTile name="Анна">x</MediaTile>);
+  const plain = renderToStaticMarkup(<MediaTile name="Anna">x</MediaTile>);
   expect(plain).not.toContain("ag-media-tile__actions");
   expect(plain).not.toContain("data-speaking");
   const live = renderToStaticMarkup(
-    <MediaTile isSpeaking actions={<button type="button">Закрепить</button>} name="Анна">
+    <MediaTile isSpeaking actions={<button type="button">Pin</button>} name="Anna">
       x
     </MediaTile>,
   );
@@ -218,8 +218,8 @@ test("MediaTile renders only the slots it was given", () => {
 test("Draggable marks a row that cannot move", () => {
   const html = (isDisabled: boolean) =>
     renderToStaticMarkup(
-      <Draggable isDisabled={isDisabled} preview="Анна" value="anna">
-        Анна
+      <Draggable isDisabled={isDisabled} preview="Anna" value="anna">
+        Anna
       </Draggable>,
     );
   expect(html(false)).not.toContain("data-disabled");
@@ -234,9 +234,9 @@ test("PageLoader waits before showing: fast work never flashes a screen", () => 
   const html = renderToStaticMarkup(
     <PageLoader
       isLoading
-      label="Загрузка"
+      label="Loading"
       logo={{ src: "/logo.svg", width: 87, height: 48 }}
-      status="Подключаем каналы"
+      status="Connecting channels"
     />,
   );
   expect(html).toBe("");
@@ -247,9 +247,9 @@ test("PageLoader stays hidden through a custom delay on the first render too", (
     <PageLoader
       isLoading
       delay={0}
-      label="Загрузка"
+      label="Loading"
       logo={{ src: "/logo.svg", width: 87, height: 48 }}
-      status="Подключаем каналы"
+      status="Connecting channels"
     />,
   );
   expect(html).toBe("");
@@ -258,16 +258,16 @@ test("PageLoader stays hidden through a custom delay on the first render too", (
 test("FloatingPanel renders nothing while closed", () => {
   const html = renderToStaticMarkup(
     <FloatingPanel
-      closeLabel="Закрыть"
+      closeLabel="Close"
       isOpen={false}
-      moveLabel="Переместить"
-      pinLabel="Закрепить"
-      title="Заметка"
+      moveLabel="Move"
+      pinLabel="Pin"
+      title="Note"
       triggerRef={{ current: null }}
-      unpinLabel="Открепить"
+      unpinLabel="Unpin"
       onOpenChange={() => undefined}
     >
-      Текст
+      Text
     </FloatingPanel>,
   );
 
@@ -277,44 +277,44 @@ test("FloatingPanel renders nothing while closed", () => {
 test("MasonryTile is an anchored article and omits an empty note", () => {
   const withNote = renderToStaticMarkup(
     <Masonry>
-      <MasonryTile id="Receipt" note="Нажатие" title="Чек">
-        Деталь
+      <MasonryTile id="Receipt" note="Press" title="Receipt">
+        Detail
       </MasonryTile>
     </Masonry>,
   );
-  const withoutNote = renderToStaticMarkup(<MasonryTile title="Чек">Деталь</MasonryTile>);
+  const withoutNote = renderToStaticMarkup(<MasonryTile title="Receipt">Detail</MasonryTile>);
 
   expect(withNote).toContain('<article id="Receipt"');
   expect(withNote).toContain("ag-break-avoid");
-  expect(withNote).toContain("Нажатие");
+  expect(withNote).toContain("Press");
   expect(withoutNote).not.toContain("<p");
 });
 
 test("SlideToConfirm names its thumb by the action and starts idle", () => {
   const html = renderToStaticMarkup(
     <SlideToConfirm
-      doneLabel="Отправлено"
-      label="Перевести 48 000 ₽"
-      pendingLabel="Отправляем"
+      doneLabel="Sent"
+      label="Send $480"
+      pendingLabel="Sending"
       onConfirm={() => undefined}
     />,
   );
 
   expect(html).toContain('data-phase="idle"');
-  expect(html).toContain('aria-label="Перевести 48 000 ₽"');
-  expect(html).not.toContain("Отправлено");
+  expect(html).toContain('aria-label="Send $480"');
+  expect(html).not.toContain("Sent");
 });
 
 test("SignaturePad shows the placeholder until the first stroke", () => {
   const html = renderToStaticMarkup(
     <SignaturePad
-      clearLabel="Очистить"
-      label="Подпись под договором"
-      placeholder="Подпишите здесь"
+      clearLabel="Clear"
+      label="Signature on the contract"
+      placeholder="Sign here"
       onChange={() => undefined}
     />,
   );
 
-  expect(html).toContain("Подпишите здесь");
-  expect(html).not.toContain("Очистить");
+  expect(html).toContain("Sign here");
+  expect(html).not.toContain("Clear");
 });

@@ -7,13 +7,13 @@ export function ShimmerDemo() {
   return (
     <Box flexDirection="column" alignItems="start" gap="m">
       <Text as="p" variant="heading-xxs">
-        <Shimmer isActive={isActive}>Собираю данные по сделкам</Shimmer>
+        <Shimmer isActive={isActive}>Gathering deal data</Shimmer>
       </Text>
       <Text color="muted">
-        <Shimmer isActive={isActive}>Пишу ответ</Shimmer>
+        <Shimmer isActive={isActive}>Writing a reply</Shimmer>
       </Text>
       <Button size="sm" variant="secondary" onPress={() => setIsActive(!isActive)}>
-        {isActive ? "Завершить" : "Запустить"}
+        {isActive ? "Stop" : "Start"}
       </Button>
     </Box>
   );

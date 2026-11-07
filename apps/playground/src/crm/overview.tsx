@@ -1,7 +1,7 @@
 import { Box, Button, Checkbox, SegmentedControl, Stat, Text } from "@anyglade/kit";
 import { DonutChart, LineChart, Sparkline } from "@anyglade/kit/charts";
 import { useState } from "react";
-import { formatRubles } from "../blocks/format.ts";
+import { formatMoney } from "../blocks/format.ts";
 import {
   STALLED_AFTER_DAYS,
   revenueByMonth,
@@ -11,11 +11,11 @@ import {
   type Deal,
   type Task,
 } from "./data.ts";
-import { formatCompactRubles, pluralize } from "./format.ts";
+import { formatCompactMoney, pluralize } from "./format.ts";
 
 const periods = [
-  { id: "half", label: "6 месяцев" },
-  { id: "year", label: "12 месяцев" },
+  { id: "half", label: "6 months" },
+  { id: "year", label: "12 months" },
 ] as const;
 
 type Period = (typeof periods)[number]["id"];
@@ -61,16 +61,14 @@ export function Overview({ deals, tasks, onToggleTask, onOpenDeals }: OverviewPr
         <Box display="block" maxWidth={640}>
           <Text as="h1" variant="heading-m">
             {stalled.length === 0
-              ? "Все сделки движутся"
-              : `${stalled.length} ${pluralize(stalled.length, "сделка застряла", "сделки застряли", "сделок застряло")}`}
+              ? "Every deal is moving"
+              : `${stalled.length} ${pluralize(stalled.length, "deal is stalled", "deals are stalled")}`}
           </Text>
           <Text as="p" variant="heading-m" color="muted">
-            {stalled.length === 0
-              ? "Рисков на сегодня нет"
-              : `${formatCompactRubles(atRisk)} под риском`}
+            {stalled.length === 0 ? "No risks today" : `${formatCompactMoney(atRisk)} at risk`}
           </Text>
         </Box>
-        {stalled.length > 0 ? <Button onPress={onOpenDeals}>Открыть сделки</Button> : null}
+        {stalled.length > 0 ? <Button onPress={onOpenDeals}>Open deals</Button> : null}
       </Box>
 
       <Box
@@ -79,20 +77,20 @@ export function Overview({ deals, tasks, onToggleTask, onOpenDeals }: OverviewPr
         gap="xl"
       >
         <Box flexDirection="column" gap="s" minWidth={0}>
-          <Stat label="Выиграно" value={formatCompactRubles(wonTotal)} />
-          <Sparkline label="Динамика выигранных сделок" values={trends.revenue} />
+          <Stat label="Won" value={formatCompactMoney(wonTotal)} />
+          <Sparkline label="Won deals trend" values={trends.revenue} />
         </Box>
         <Box flexDirection="column" gap="s" minWidth={0}>
-          <Stat label="В работе" value={formatCompactRubles(openTotal)} />
-          <Sparkline label="Динамика сделок в работе" values={trends.deals} />
+          <Stat label="In progress" value={formatCompactMoney(openTotal)} />
+          <Sparkline label="Deals in progress trend" values={trends.deals} />
         </Box>
         <Box flexDirection="column" gap="s" minWidth={0}>
-          <Stat label="Конверсия" value={`${conversion}%`} />
-          <Sparkline label="Динамика конверсии" values={trends.conversion} />
+          <Stat label="Conversion" value={`${conversion}%`} />
+          <Sparkline label="Conversion trend" values={trends.conversion} />
         </Box>
         <Box flexDirection="column" gap="s" minWidth={0}>
-          <Stat label="Цикл сделки" value="26 дней" />
-          <Sparkline label="Динамика цикла сделки" values={trends.cycle} />
+          <Stat label="Sales cycle" value="26 days" />
+          <Sparkline label="Sales cycle trend" values={trends.cycle} />
         </Box>
       </Box>
 
@@ -104,30 +102,30 @@ export function Overview({ deals, tasks, onToggleTask, onOpenDeals }: OverviewPr
         <Box flexDirection="column" gap="l" minWidth={0}>
           <Box alignItems="center" justifyContent="between" gap="m" flexWrap="wrap">
             <Text as="h2" variant="heading-xxs">
-              Выручка и план
+              Revenue vs. target
             </Text>
             <SegmentedControl
-              label="Период"
+              label="Period"
               options={periods}
               value={period}
               onChange={setPeriod}
             />
           </Box>
           <LineChart
-            label="Выручка и план по месяцам"
+            label="Monthly revenue vs. target"
             data={revenueByMonth.slice(-months)}
-            format={formatRubles}
+            format={formatMoney}
             height={260}
             series={[
-              { dataKey: "revenue", label: "Выручка" },
-              { dataKey: "plan", label: "План" },
+              { dataKey: "revenue", label: "Revenue" },
+              { dataKey: "plan", label: "Target" },
             ]}
             xKey="month"
           />
         </Box>
         <Box flexDirection="column" gap="l" minWidth={0}>
           <Text as="h2" variant="heading-xxs">
-            Воронка
+            Pipeline
           </Text>
           <Box as="ul" flexDirection="column" gap="m">
             {funnel.map((stage) => (
@@ -137,7 +135,7 @@ export function Overview({ deals, tasks, onToggleTask, onOpenDeals }: OverviewPr
                     {stage.label}, {stage.count}
                   </Text>
                   <Text as="span" tabularNums>
-                    {formatCompactRubles(stage.total)}
+                    {formatCompactMoney(stage.total)}
                   </Text>
                 </Box>
                 <Box
@@ -159,7 +157,7 @@ export function Overview({ deals, tasks, onToggleTask, onOpenDeals }: OverviewPr
       >
         <Box flexDirection="column" gap="l" minWidth={0}>
           <Text as="h2" variant="heading-xxs">
-            Задачи на сегодня
+            Tasks for today
           </Text>
           <Box flexDirection="column" gap="m">
             {today.map((task) => (
@@ -187,10 +185,10 @@ export function Overview({ deals, tasks, onToggleTask, onOpenDeals }: OverviewPr
         </Box>
         <Box flexDirection="column" gap="l" minWidth={0}>
           <Text as="h2" variant="heading-xxs">
-            Источники
+            Sources
           </Text>
           <DonutChart
-            label="Источники сделок"
+            label="Deal sources"
             center={`${sources[0].value}%`}
             data={sources}
             format={(value) => `${value}%`}

@@ -91,7 +91,7 @@ function saveSettings(settings: ThemeSettings) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
   } catch {
-    // Настройки не критичны: без хранилища они живут до перезагрузки.
+    // Settings are not critical: without storage they last until reload.
   }
 }
 
@@ -104,7 +104,7 @@ export function settingsToCss(settings: ThemeSettings) {
   }
   return declarations.length > 0
     ? `:root {\n${declarations.join("\n")}\n}\n`
-    : "/* Используется тема по умолчанию */\n";
+    : "/* Using the default theme */\n";
 }
 
 export function useThemeSettings() {

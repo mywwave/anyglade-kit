@@ -1,123 +1,123 @@
-# Уроки из реальных правок
+# Lessons from real fixes
 
-Каждая запись это ошибка, которая выглядела разумно, пока её не показали. Формат: что было не так, почему, как делать.
+Each entry is a mistake that looked reasonable until someone pointed it out. Format: what was wrong, why, how to do it.
 
-## Обратная связь
+## Feedback
 
-- **Отключили анимацию нажатия ради строгости.** Кнопки стали мёртвыми. Тактильный отклик важнее сходства с эталоном, анимации HeroUI не отключаются.
-- **Успех появлялся мгновенно, без ожидания.** Выглядело как подделка. Действие с сетью показывает ожидание через кнопку.
-- **Кнопки без действия в макетах.** «Начать», «Продолжить», «Сбросить фильтры» ничего не делали. Каждое действие даёт результат, даже демонстрационный.
-- **«Выгрузить» показывал тост, а файла не было.** Обещанное должно происходить: выгрузка создаёт файл.
+- **The press animation was disabled for the sake of strictness.** Buttons felt dead. Tactile response matters more than matching a reference; HeroUI animations are never disabled.
+- **Success appeared instantly, with no wait.** It looked fake. A network action shows the wait through the button.
+- **Buttons without an action in mockups.** "Start", "Continue", "Reset filters" did nothing. Every action gives a result, even a demo one.
+- **"Export" showed a toast, but there was no file.** What is promised must happen: an export creates a file.
 
-## Размеры и вёрстка
+## Sizes and layout
 
-- **Формы и блоки растягивались на всю ширину.** Содержимое имеет свою ширину, поле шире 480 px почти всегда ошибка.
-- **Бейджи были овальными и вытянутыми.** Круглые бейджи строго круглые, обводка цвета поверхности, а не чёрная, при масштабировании без зазора.
-- **Шаги занимали 60 px при тексте 21 px.** Плотные списки не держатся на отступах ради воздуха: строка одной высоты, шаг `xs`.
-- **Подписи и счётчики уезжали к правому краю.** Глазу приходилось прыгать через экран. Сопутствующая информация стоит рядом с заголовком.
-- **Жирные заголовки групп спорили с содержимым.** Заголовок тихой группы не жирнее её строк.
-- **Вложенный блок со своей шапкой создавал лесенку.** Вложенность показывают отступом, без второй шапки.
-- **Строки дерева вели себя как текст.** Всё нажимаемое показывает указатель: без него пункт не читается как действие.
-- **Вложенные объекты разного рода лежали в одном дереве.** Дерево разрасталось и смешивало сущности. Дерево показывает, где я, а список соседней колонки показывает, что внутри.
-- **Подсветка вложенного пункта начиналась от края панели.** Отступ вложенности был внутренним полем, и фон его закрашивал. Подсветка обнимает сам пункт, поэтому вложенность задаётся внешним отступом.
-- **Значки шагов не стояли в одной колонке.** Отступ тела раскрывашки сдвинул их на 8 px. Значки группы и строк выравниваются по одной оси.
-- **Внутренний скролл чата.** Скроллбар появлялся вместе с текстом и сужал колонку. Скроллится страница, а шапка и поле ввода стоят на месте.
-- **Поле ввода съезжало на 8 px.** Отступ под панелью давал разницу между прилипшим и обычным положением. Под прилипшим футером отступа нет.
+- **Forms and blocks stretched to full width.** Content has its own width; a field wider than 480 px is almost always a mistake.
+- **Badges were oval and stretched.** Round badges are strictly round, with an outline in the surface color rather than black, and no gap when scaled.
+- **Steps took 60 px for 21 px of text.** Dense lists do not rest on spacing for the sake of air: rows of equal height, step `xs`.
+- **Labels and counters drifted to the right edge.** The eye had to jump across the screen. Supporting information sits next to the heading.
+- **Bold group headings competed with the content.** The heading of a quiet group is no bolder than its rows.
+- **A nested block with its own header created a staircase.** Nesting is shown with indentation, without a second header.
+- **Tree rows behaved like text.** Everything pressable shows a pointer cursor: without it an item does not read as an action.
+- **Nested objects of different kinds lay in one tree.** The tree grew and mixed entities. The tree shows where I am, and the list in the next column shows what is inside.
+- **The highlight of a nested item started from the panel edge.** The nesting offset was inner padding, and the background painted it. The highlight hugs the item itself, so nesting is set with an outer margin.
+- **Step icons did not line up in one column.** The disclosure body padding shifted them by 8 px. Group and row icons align on one axis.
+- **Inner scroll in the chat.** The scrollbar appeared along with the text and narrowed the column. The page scrolls, while the header and input stay in place.
+- **The input shifted by 8 px.** The gap under the panel made a difference between the stuck and normal positions. There is no gap under a stuck footer.
 
-## Поле ввода
+## Input
 
-- **Внутри компоузера было видно второе поле.** Текстовое поле имело свой фон при наведении. Составной ввод выглядит как одно поле: состояния принадлежат всему компоузеру, клик по пустому месту ставит курсор.
-- **Форма сбрасывалась после сохранения.** `action` у формы откатывает контролируемые поля. Такие формы пишутся через `onSubmit`.
+- **A second field was visible inside the composer.** The text field had its own hover background. A composite input looks like one field: states belong to the whole composer, and a click on empty space places the cursor.
+- **The form reset after saving.** A form `action` resets controlled fields. Such forms are written with `onSubmit`.
 
-## Люди
+## People
 
-- **У людей в списке стояли значки вместо лиц.** В списке людей ищут глазами лицо, а не тип объекта. Людей показывают аватарками, иконки оставьте папкам и файлам.
-- **Сообщения собеседника шли без пузыря.** В переписке обе стороны равноправны: пузырь у обеих, сторона показывает автора.
-- **«От имени Анна».** Подстановка имени в фразу ломает падеж. Форму храните в данных.
+- **People in a list had icons instead of faces.** In a list of people the eye looks for a face, not an object type. Show people with avatars; leave icons to folders and files.
+- **The other person's messages had no bubble.** In a conversation both sides are equal: both get a bubble, and the side shows the author.
+- **"On behalf of Anna" in the wrong grammatical form.** Substituting a name into a phrase breaks case. Store the form in the data.
 
-## Цвет
+## Color
 
-- **Чистый белый текст на почти чёрном резал глаз.** Контраст 20:1 это слишком. Основной текст тёмной темы приглушён.
-- **Кислотные акценты и четыре оттенка синего в палитре.** Набор строится системно, одна светлота и насыщенность, один цвет на семейство тонов.
-- **Подгонка контраста превратила мяту в грязно-зелёный.** Кнопка держится на контрасте подписи и сохраняет цвет бренда. Подгоняются только контролы без подписи, текст и линии.
-- **Все пресеты проваливали контраст в одной из тем.** Один цвет не работает в обеих темах, проверяйте на худшей поверхности.
-- **Подпись на цветной кнопке была белой там, где чёрная читалась вдвое лучше.** Выбирайте по большему контрасту, а не по порогу.
-- **Спарклайны тратили акцент.** Экран без кнопок стал самым цветным. Мелкие графики нейтральны.
+- **Pure white text on near black hurt the eyes.** A 20:1 contrast is too much. Body text in the dark theme is muted.
+- **Acid accents and four shades of blue in the palette.** The set is built systematically: one lightness and saturation, one color per tone family.
+- **Contrast tuning turned mint into muddy green.** A button relies on the contrast of its label and keeps the brand color. Only unlabeled controls, text and lines are tuned.
+- **Every preset failed contrast in one of the themes.** One color does not work in both themes; check it on the worst surface.
+- **The label on a colored button was white where black read twice as well.** Choose by the higher contrast, not by a threshold.
+- **Sparklines spent the accent.** A screen without buttons became the most colorful. Small charts are neutral.
 
-## Движение
+## Motion
 
-- **Всё было мгновенным и мигало.** Состояния не успевали прочитаться. Нужен темп: пауза между блоками, каскад, анимация смены статуса.
-- **Последний шаг дёргался.** Автопрокрутка прыгала на 180 px за кадр в момент появления следующего блока. Прокрутка догоняет контент по кадрам.
-- **Анимация высоты лагала.** Она пересчитывала раскладку страницы на каждом кадре. Только `opacity` и `transform`.
-- **Лагало всё при появлении нового.** Главной причиной был не CSS: каждое слово стрима перерисовывало весь диалог. Изоляция рендеров сократила кадр с 279 до 12 мс при замедлении в 4 раза.
-- **Текст менялся рывком.** Короткий текст на месте меняется через `TextSwap`, ширина подстраивается плавно. Предел применения в уроке про избыток катания.
-- **Лента ездила за текстом.** Читать было невозможно. Вопрос уходит наверх, ответ растёт в свободное место, следование включается, только когда ответ упёрся в низ.
-- **Текст прыгал при смене лоадера на галочку.** Лишняя инлайновая коробка дала строку 22,5 px и дробные координаты. Строки стоят на целых пикселях.
-- **Шиммер мигал при остановке.** Блик обрывался посреди строки, а буквы меняли сглаживание. Настоящий текст лежит всегда, блик доигрывает проход.
-- **Копия текста для блика раздваивала буквы.** Инлайновый `span` высотой со шрифт дал смещение на 2 px. У текста и копии одна коробка.
+- **Everything was instant and flickered.** States had no time to be read. Pace is needed: a pause between blocks, a cascade, an animated status change.
+- **The last step jerked.** Autoscroll jumped 180 px in one frame when the next block appeared. Scrolling catches up with content frame by frame.
+- **A height animation lagged.** It recomputed the page layout on every frame. Only `opacity` and `transform`.
+- **Everything lagged when something new appeared.** The main cause was not CSS: every word of the stream re-rendered the whole conversation. Isolating renders cut a frame from 279 to 12 ms with a 4x slowdown.
+- **Text changed with a jerk.** Short text in place changes through `TextSwap`, and the width adjusts smoothly. The limit on its use is in the lesson about too much rolling.
+- **The feed moved along with the text.** Reading was impossible. The question moves to the top, the answer grows into free space, and following turns on only when the answer hits the bottom.
+- **Text jumped when the loader changed to a check mark.** An extra inline box produced a 22.5 px line and fractional coordinates. Lines sit on whole pixels.
+- **Shimmer flashed on stop.** The highlight broke off mid-line, and the letters changed antialiasing. The real text is always present, and the highlight finishes its pass.
+- **A copy of the text for the highlight doubled the letters.** An inline `span` as tall as the font gave a 2 px offset. The text and its copy share one box.
 
-- **Выделение исчезло в светлой теме.** `background-card` равен `background-canvas`, и проверка только в тёмной теме этого не показала. Текущий элемент выделяется `--default`.
-- **Переходы падали при наложении.** Ответ собеседника пришёл во время другого перехода, и браузер отклонил промис `ready`. Пропущенная анимация это норма, а не ошибка.
-- **Нет тупиков у меток.** Пустая метка без способа положить в неё чат это тупик. Если есть группировка, у объекта есть действие, которое её меняет.
+- **The selection disappeared in the light theme.** `background-card` equals `background-canvas`, and checking only in the dark theme did not show it. The current item is highlighted with `--default`.
+- **Transitions failed when they overlapped.** The other person's reply arrived during another transition, and the browser rejected the `ready` promise. A skipped animation is normal, not an error.
+- **No dead ends for labels.** An empty label with no way to put a chat into it is a dead end. If there is grouping, the object has an action that changes it.
 
-- **Содержимое чата съехало в центр.** Шапка, сообщения и поле лежали в колонке `widths.content`, и на широком экране по бокам осталось пусто. На 1280 px этого не было видно. Панель заполняется целиком, длину строки ограничивает текст.
+- **The chat content shifted to the center.** The header, messages and input lay in a `widths.content` column, and on a wide screen the sides were empty. At 1280 px this was not visible. The panel fills completely; the text limits the line length.
 
-- **Подпись статуса отвечала за одно сообщение.** Строка под последней репликой молчала про остальные. Статус доставки это значок на каждом своём сообщении, в списке рядом со временем последнего, а слово живёт в подсказке при наведении: постоянный текст в углу каждого пузыря лишний.
+- **The status caption answered for one message.** The line under the last message said nothing about the others. Delivery status is an icon on each of your own messages, next to the time of the last one in the list, and the word lives in the hover tooltip: permanent text in the corner of every bubble is excess.
 
-- **Окна поверх страницы не должны перепрыгивать модальное окно.** Счётчик z-index растёт с каждым кликом и рано или поздно обгоняет диалоги. Все панели живут в одном слое со своим контекстом наложения.
+- **Windows above the page must not jump over a modal.** A z-index counter grows with every click and sooner or later overtakes dialogs. All panels live in one layer with their own stacking context.
 
-- **Окно мигало и теряло фон при отправке, поле ввода улетало вверх.** Причин было две: `startViewTransition` заменял страницу снимком на каждое сообщение, а поле лежало внутри прокрутки и держалось на `sticky`. Частое действие не проходит через снимок страницы, перестановку считает сам список через FLIP. Поле ввода стоит вне прокрутки.
+- **The window flashed and lost its background on send, and the input flew up.** There were two causes: `startViewTransition` replaced the page with a snapshot on every message, and the input lay inside the scroll and held on with `sticky`. A frequent action does not go through a page snapshot; the list computes the reorder itself through FLIP. The input sits outside the scroll.
 
-- **Кнопка «вниз» вспыхивала при отправке.** Новое сообщение увеличивало высоту раньше, чем докрутка успевала за ней, и проверка расстояния на несколько кадров говорила «не у конца». Такая кнопка отвечает на вопрос, ушёл ли человек сам, а не на текущее расстояние. Редкий случай ловите длинной перепиской и подсчётом кадров: на короткой он не воспроизводится.
+- **The scroll-down button flashed on send.** A new message increased the height before the scroll could keep up, and the distance check said "not at the end" for a few frames. Such a button answers whether the person left on their own, not the current distance. Catch the rare case with a long conversation and frame counting: it does not reproduce on a short one.
 
-- **Лента прыгала вниз от чужих сообщений.** Прокрутка срабатывала на любое новое сообщение и на «печатает» и вырывала человека из чтения. Чужая активность не двигает ленту, это делает только своя отправка.
+- **The feed jumped down from other people's messages.** Scrolling fired on any new message and on "typing" and pulled the person out of reading. Other people's activity does not move the feed; only your own send does.
 
-- **В списке было непонятно, прочитано ли.** Чат считался прочитанным, пока он открыт, хотя сообщение могло лежать ниже экрана. Прочитанность это факт просмотра, а не состояние окна.
+- **In the list it was unclear whether a chat was read.** A chat counted as read while it was open, even though a message could lie below the screen. Read status is a fact of viewing, not a state of the window.
 
-- **Иконка и текст тоста стояли на разной высоте.** Сетка HeroUI выравнивает ряд по верху, а кнопка действия выше текста, поэтому короткая строка разъезжалась. Одна строка центрируется с иконкой и кнопкой, при описании иконка остаётся у первой строки. Проверяйте компонент с самым коротким текстом, а не только с длинным.
-- **Эффект по ключу сработал без смены ключа.** В StrictMode эффекты запускаются дважды, и чат сам уезжал к концу, прочитывая всё. Сравнивайте ключ с прошлым значением, а не с фактом запуска.
+- **The toast icon and text sat at different heights.** The HeroUI grid aligns the row to the top, and the action button is taller than the text, so a short line drifted apart. A single line is centered with the icon and button; with a description the icon stays at the first line. Test a component with the shortest text, not only with long text.
+- **A key effect fired without a key change.** In StrictMode effects run twice, and the chat scrolled to the end by itself, marking everything read. Compare the key with its previous value, not with the fact that the effect ran.
 
-- **Счётчик наезжал на соседнюю кнопку.** Бейдж выступал за край, а между кнопками было 4 px. Вынос бейджа входит в отступ ряда: промежуток должен быть больше выноса. Проверяйте ряд, где бейдж стоит на нескольких элементах подряд.
-- **Приглашение было безымянной иконкой копирования.** Человек не понял, что оно есть. Ключевое действие подписывается словом и ведёт туда, где видно, что произойдёт: ссылка, срок, сброс. Ссылку проверяйте открытием, а не копированием.
-- **Перенос «пихался».** Браузерный drag рисовал свой призрак, а при отпускании человек телепортировался и строки дёргались. Перенос ведётся указателем: цель заранее раздвигается, данные меняются после посадки, источник схлопывается вместе со своим отступом. Цель считайте с учётом этого схлопывания, иначе чип садится мимо.
-- **Проверяйте перенос покадрово.** На глаз рывок в 5 px выглядит как «дёргается что-то». Лог `getBoundingClientRect` по кадрам показал и зазор `inline-flex`, и промах на 28 px.
+- **A counter overlapped the neighboring button.** The badge stuck out past the edge, and there were 4 px between buttons. The badge overhang is part of the row gap: the gap must be larger than the overhang. Check a row where badges sit on several items in a row.
+- **The invitation was an unlabeled copy icon.** The person did not realize it was there. A key action is labeled with a word and leads to where you can see what will happen: the link, the expiry, the reset. Check a link by opening it, not by copying it.
+- **Drag and drop "shoved".** Browser drag drew its own ghost, and on release the item teleported and rows jerked. Drag runs on the pointer: the target opens up in advance, data changes after the landing, the source collapses together with its gap. Compute the target with this collapse in mind, otherwise the chip lands in the wrong place.
+- **Check drag and drop frame by frame.** By eye a 5 px jerk looks like "something twitches". A frame-by-frame log of `getBoundingClientRect` revealed both the `inline-flex` gap and a 28 px miss.
 
-- **Страничный лоадер это логотип, а не спиннер.** Блик медленный, `duration-drift`, и большую часть цикла логотип стоит без блика: пауза и даёт спокойный темп. Полоса тонкая, 2 px, чтобы не спорить со знаком. Строка состояния называет шаг словами.
+- **The page loader is a logo, not a spinner.** The highlight is slow, `duration-drift`, and for most of the cycle the logo stands without a highlight: the pause is what gives a calm pace. The bar is thin, 2 px, so it does not compete with the mark. The status line names the step in words.
 
-- **Лоадер мигал на быстрых страницах.** Порог появления настраивается через `delay`: статичная страница откроется раньше него, и экрана загрузки не будет вовсе. Лоадер нужен только там, где реально долго.
+- **The loader flashed on fast pages.** The appearance threshold is set through `delay`: a static page opens before it, and there is no loading screen at all. A loader is needed only where it really takes long.
 
-- **Ссылка была синей при монохромном акценте.** Единственный цвет на экране без причины. У `text-accent` стояло своё значение, не связанное с акцентом. Цвет ссылки выводится из акцента, а ссылку в тексте отличает линия: один только цвет не годится, его не видят люди с нарушением цветовосприятия.
+- **A link was blue with a monochrome accent.** The only color on the screen, for no reason. `text-accent` had its own value unrelated to the accent. The link color derives from the accent, and a link in text is distinguished by an underline: color alone does not do, since people with color vision deficiency cannot see it.
 
-- **Подсветка строки аккордеона была с острыми углами.** HeroUI красит строку при наведении, но радиуса не задаёт. Проверяйте чужие компоненты в состоянии наведения: у всего, что подсвечивается, есть радиус `m`, как у строк `ItemList`. Скруглённая подсветка не касается разделителя: между ними зазор, иначе углы заезжают на линию.
+- **The accordion row highlight had sharp corners.** HeroUI paints the row on hover but sets no radius. Check third-party components in the hover state: everything that highlights has radius `m`, like `ItemList` rows. A rounded highlight does not touch the divider: there is a gap between them, otherwise the corners run onto the line.
 
-- **`TextSwap` дёргался при быстрой смене и даже при редкой.** Анимация начиналась с нуля, ширина бралась с уже бегущей анимации, а уходящая строка в последнем кадре мигала. Прерываемая анимация стартует из текущего состояния и ведёт тот же элемент от входа до выхода.
+- **`TextSwap` jerked on fast changes and even on rare ones.** The animation started from zero, the width was taken from an animation already running, and the outgoing line flashed in the last frame. An interruptible animation starts from the current state and drives the same element from enter to exit.
 
-- **Случайное направление символов оказалось лишним.** Хотелось простого: цифра выезжает вверх. Одно направление читается как счётчик, а разнобой отвлекает от значения.
+- **Random character direction turned out to be excess.** What was wanted was simple: a digit slides up. One direction reads as a counter, and a mix distracts from the value.
 
-- **Хвост текста мигал.** Посимвольные ячейки годятся только для цифр одной ширины: у слов разной длины ячейки сжимались, и буквы наезжали друг на друга. Цифры этого не показали, замеры тоже: кашу видно только на увеличенном кадре. Двигайте изменившуюся часть одним блоком.
+- **The tail of the text flashed.** Per-character cells suit only digits of equal width: for words of different lengths the cells shrank and letters ran into each other. Digits did not show this, nor did measurements: the mush is visible only on a zoomed frame. Move the changed part as one block.
 
-- **Новый текст появлялся раньше, чем уезжал старый.** Две строки в одном месте читаются как мигание. Сначала уход, потом приход. Задержка равна остатку ухода, иначе при быстрых сменах слот стоит пустым.
-- **Текст мигал при смене.** Старая строка гасла полностью, а новая появлялась рывком. Измерьте, сколько текста видно в каждый момент: сумма не должна проваливаться к нулю. Строки перекрываются там, где старая уже почти прозрачна, а старт новой плавный.
+- **New text appeared before the old one left.** Two lines in one place read as a flash. First the exit, then the entrance. The delay equals the remainder of the exit, otherwise the slot stands empty during rapid changes.
+- **Text flashed on change.** The old line faded out completely, and the new one appeared with a jerk. Measure how much text is visible at each moment: the sum must not drop toward zero. Lines overlap where the old one is already almost transparent, and the new one starts smoothly.
 
-- **Длинный текст обрезался под короткий.** Рамка сжималась, пока старая строка ещё уезжала. Ширина идёт по направлению: сжатие после ухода старого текста, расширение до прихода нового.
+- **Long text was clipped to fit the short one.** The border shrank while the old line was still leaving. Width follows the direction: shrinking after the old text leaves, growing before the new one arrives.
 
-- **Катящегося текста стало слишком много.** Одно нажатие катило четыре строки, отсчёт двигался каждую секунду, заголовок окна катился при выборе другого чата. Эффект заметен, пока редок: глаз следит за одним движением. Одно действие катит одну короткую строку того же объекта, там, куда человек уже смотрит. Таймеры, значения за вводом, таблицы и предложения не катятся.
+- **There was too much rolling text.** One press rolled four strings, a countdown moved every second, the window title rolled when another chat was chosen. The effect is noticeable while it is rare: the eye follows one movement. One action rolls one short string of the same object, where the person is already looking. Timers, values that follow input, tables and sentences do not roll.
 
-## Витрина
+## Showcase
 
-- **Блоки витрины были плоскими: кнопка, текст, ещё кнопка.** Такая витрина ничего не продаёт: kit показывает себя деталями. Каждый образец это один проработанный объект (чек, карта, договор, телефон) с жестом, правдоподобными данными и всеми состояниями: до, во время, успех, ошибка, путь назад. Если образец можно описать одной фразой «нажми кнопку», он не готов.
-- **Новые компоненты не появились среди примеров.** Компонент без примера никто не найдёт и не проверит. Новый компонент сразу получает пример со всеми состояниями, включая ошибку.
+- **Showcase blocks were flat: a button, text, another button.** Such a showcase sells nothing: the kit shows itself through details. Each sample is one crafted object (a receipt, a card, a contract, a phone) with a gesture, plausible data and all states: before, during, success, error, a way back. If a sample can be described in one phrase, "press the button", it is not ready.
+- **New components did not appear among the examples.** A component without an example will not be found or checked by anyone. A new component gets an example with all states right away, including the error.
 
-- **Бегунок подтверждения увеличивался при перетаскивании и выпирал за дорожку.** Масштаб внутри формы с жёстким краем ломает этот край. В узкой дорожке отклик дают курсор и заливка за бегунком, а сам бегунок держит размер дорожки.
-- **Нажатый переключатель с аватаром обводило полупрозрачное кольцо.** HeroUI красит выбранный `ToggleButton` мягким акцентом с прозрачностью, а под содержимым меньше кнопки он торчит ободком. Выбор нейтрален и непрозрачен, а если состояние уже видно по самому содержимому, содержимое занимает кнопку целиком.
+- **The confirmation handle grew when dragged and stuck out of the track.** Scaling inside a shape with a hard edge breaks that edge. In a narrow track the response comes from the cursor and the fill behind the handle, and the handle itself keeps the size of the track.
+- **A pressed toggle with an avatar was outlined by a translucent ring.** HeroUI paints a selected `ToggleButton` with a soft translucent accent, and under content smaller than the button it shows as a rim. Selection is neutral and opaque, and if the state is already visible from the content itself, the content fills the whole button.
 
-- **Кнопка «Слушать» не нажималась.** Слой заливки, отодвинутый transform'ом за край, остался лежать поверх кнопки невидимым и забирал нажатия. Всё, что прячется сдвигом и не принимает ввод, получает `pointerEvents="none"`. Проверяйте `elementFromPoint` в центре кнопки.
-- **Чек при перетаскивании трясся.** Наклон считался из мгновенной скорости, а события указателя приходят с интервалом в миллисекунду, и скорость скачет. Скорость для наклона и броска сглаживается по времени и ограничивается сверху.
-- **Рамка фокуса показывала стыки.** Её собрали из углов и растянутых сторон, и на дробных координатах швы расходились. Обводку рисуйте одним контуром. Если переезд такой рамки требует резать её на части, лучше проявить её на новом месте.
-- **Аватары в ряду слиплись, когда исчезло кольцо выбора.** Промежуток между ними давала подложка, а не отступ. Ряд объектов держит свой `gap`, независимый от их состояния.
+- **The "Listen" button could not be pressed.** A fill layer moved past the edge with a transform stayed on top of the button, invisible, and took the presses. Everything hidden by an offset that does not accept input gets `pointerEvents="none"`. Check `elementFromPoint` at the center of the button.
+- **The receipt shook while dragged.** The tilt was computed from instantaneous velocity, but pointer events arrive at millisecond intervals, and velocity jumps around. Velocity for tilt and throw is smoothed over time and capped.
+- **The focus border showed seams.** It was assembled from corners and stretched sides, and on fractional coordinates the seams separated. Draw an outline as one contour. If moving such a border requires cutting it into parts, fade it in at the new place instead.
+- **Avatars in a row stuck together when the selection ring disappeared.** The spacing between them came from a backdrop, not from a gap. A row of objects keeps its own `gap`, independent of their state.
 
-## Метод
+## Method
 
-- **Показания тестов расходились с глазами.** Тест проверял другой элемент и прошёл. Если человек видит проблему, а замер нет, неверен замер.
-- **Гипотезы про лаги и дёргания обычно ошибочны.** Сначала покадровый замер, потом правка.
-- **Правки делались только в одной теме.** Экран проверяется глазами в обеих темах и на телефоне, а не по счётчикам.
+- **Test results disagreed with the eyes.** The test checked a different element and passed. If a person sees a problem and a measurement does not, the measurement is wrong.
+- **Hypotheses about lag and jerks are usually wrong.** First a frame-by-frame measurement, then the fix.
+- **Fixes were made in one theme only.** A screen is checked by eye in both themes and on a phone, not by counters.

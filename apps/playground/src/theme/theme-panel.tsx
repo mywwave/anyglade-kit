@@ -22,20 +22,20 @@ import {
 } from "./theme-settings.ts";
 
 const modes = [
-  { id: "light", label: "Светлая" },
-  { id: "dark", label: "Тёмная" },
-  { id: "system", label: "Система" },
+  { id: "light", label: "Light" },
+  { id: "dark", label: "Dark" },
+  { id: "system", label: "System" },
 ];
 
 const buttonShapes: { id: ButtonShape; label: string }[] = [
-  { id: "pill", label: "Пилюля" },
-  { id: "rounded", label: "Как поля" },
+  { id: "pill", label: "Pill" },
+  { id: "rounded", label: "Like fields" },
 ];
 
 const textScales: { id: TextScale; label: string }[] = [
-  { id: "compact", label: "Меньше" },
-  { id: "default", label: "Обычный" },
-  { id: "large", label: "Больше" },
+  { id: "compact", label: "Smaller" },
+  { id: "default", label: "Default" },
+  { id: "large", label: "Larger" },
 ];
 
 interface OptionsProps<T extends string> {
@@ -106,16 +106,16 @@ export function ThemePanel() {
     <Popover>
       <Button size="sm" variant="secondary">
         <Sliders />
-        Тема
+        Theme
       </Button>
       <Popover.Content className="w-80" placement="bottom end">
-        <Popover.Dialog aria-label="Настройка темы">
+        <Popover.Dialog aria-label="Theme settings">
           <Box flexDirection="column" gap="l">
-            <Options label="Режим" options={modes} value={theme} onChange={setTheme} />
-            <Setting label="Акцент">
+            <Options label="Mode" options={modes} value={theme} onChange={setTheme} />
+            <Setting label="Accent">
               <Box flexDirection="column" gap="s">
                 <ColorSwatchPicker
-                  aria-label="Готовые цвета"
+                  aria-label="Preset colors"
                   value={settings.accent ?? undefined}
                   onChange={(color) => update({ accent: color.toString("hex") })}
                 >
@@ -128,7 +128,7 @@ export function ThemePanel() {
                 </ColorSwatchPicker>
                 <Box alignItems="center" gap="s">
                   <ColorField
-                    aria-label="Свой цвет в формате hex"
+                    aria-label="Custom color in hex"
                     className="w-full"
                     value={settings.accent}
                     onChange={(color) => update({ accent: color ? color.toString("hex") : null })}
@@ -143,33 +143,33 @@ export function ThemePanel() {
                     variant="ghost"
                     onPress={() => update({ accent: null })}
                   >
-                    Монохром
+                    Monochrome
                   </Button>
                 </Box>
               </Box>
             </Setting>
             <PercentSetting
-              label="Скругление"
+              label="Radius"
               maxValue={200}
               minValue={0}
               value={settings.radius}
               onChange={(radius) => update({ radius })}
             />
             <PercentSetting
-              label="Отступы"
+              label="Spacing"
               maxValue={150}
               minValue={75}
               value={settings.spacing}
               onChange={(spacing) => update({ spacing })}
             />
             <Options
-              label="Кнопки"
+              label="Buttons"
               options={buttonShapes}
               value={settings.buttonShape}
               onChange={(buttonShape) => update({ buttonShape })}
             />
             <Options
-              label="Размер текста"
+              label="Text size"
               options={textScales}
               value={settings.textScale}
               onChange={(textScale) => update({ textScale })}
@@ -178,14 +178,14 @@ export function ThemePanel() {
               <CopyButton
                 fullWidth
                 isLabelVisible
-                copiedLabel="CSS скопирован"
-                label="Скопировать CSS"
+                copiedLabel="CSS copied"
+                label="Copy CSS"
                 size="sm"
                 value={settingsToCss(settings)}
                 variant="primary"
               />
               <Button size="sm" variant="ghost" onPress={resetAll}>
-                Сбросить
+                Reset
               </Button>
             </Box>
           </Box>

@@ -25,9 +25,9 @@ const screenModes = {
 } as const;
 
 const cameraErrors: Record<string, string> = {
-  NotAllowedError: "Браузер не дал доступ к камере. Разрешите её в настройках сайта.",
-  NotFoundError: "Камера не найдена. Подключите её и попробуйте снова.",
-  NotReadableError: "Камера занята другой программой. Закройте её и попробуйте снова.",
+  NotAllowedError: "The browser blocked camera access. Allow it in the site settings.",
+  NotFoundError: "No camera found. Connect one and try again.",
+  NotReadableError: "Another app is using the camera. Close it and try again.",
 };
 
 const stopTracks = (stream: MediaStream | null) => {
@@ -87,7 +87,7 @@ export function useLocalMedia() {
       if (request === cameraRequest.current) {
         setCamera({ status: "off" });
         const reason = error instanceof DOMException ? error.name : "";
-        toast.danger(cameraErrors[reason] ?? "Не получилось включить камеру. Попробуйте снова.");
+        toast.danger(cameraErrors[reason] ?? "Couldn't turn on the camera. Try again.");
       }
     }
   }, []);
@@ -118,7 +118,7 @@ export function useLocalMedia() {
         return true;
       } catch (error) {
         if (!(error instanceof DOMException && error.name === "NotAllowedError")) {
-          toast.danger("Не получилось начать показ. Попробуйте снова.");
+          toast.danger("Couldn't start sharing. Try again.");
         }
         return false;
       }

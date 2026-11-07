@@ -4,7 +4,7 @@ import { simulateRequest } from "../../simulate.ts";
 
 type Face = "front" | "back";
 type Field = "number" | "expiry" | "cvc";
-type Brand = "МИР" | "VISA" | "Mastercard";
+type Brand = "VISA" | "Mastercard";
 
 interface Rect {
   x: number;
@@ -13,11 +13,11 @@ interface Rect {
   height: number;
 }
 
-/** Valid by Luhn, a МИР range: lets the whole path be walked without a real card. */
-const TEST_NUMBER = "2200700123456781";
+/** Valid by Luhn, a Visa range: lets the whole path be walked without a real card. */
+const TEST_NUMBER = "4242424242424242";
 /** Today is November 2026: a card expiring this month still works until its end. */
 const NOW = { year: 26, month: 11 };
-const BRANDS: Record<string, Brand> = { "2": "МИР", "4": "VISA", "5": "Mastercard" };
+const BRANDS: Record<string, Brand> = { "2": "Mastercard", "4": "VISA", "5": "Mastercard" };
 
 /** Size of a frame corner, equal to the `s` radius, and the stroke of the frame. */
 const CORNER = 8;
@@ -51,11 +51,11 @@ function passesLuhn(number: string) {
 function expiryError(expiry: string) {
   const month = Number(expiry.slice(0, 2));
   if (expiry.length >= 2 && (month < 1 || month > 12)) {
-    return "Нет такого месяца";
+    return "No such month";
   }
   const year = Number(expiry.slice(2));
   if (expiry.length === 4 && (year < NOW.year || (year === NOW.year && month < NOW.month))) {
-    return "Срок карты истёк";
+    return "This card has expired";
   }
   return null;
 }
@@ -296,7 +296,7 @@ function CardFace({
       </Text>
       <Box justifyContent="between" alignItems="end" width="100%">
         <Box ref={expiryRef} flexDirection="column">
-          <Text variant="caption">Срок</Text>
+          <Text variant="caption">Expires</Text>
           <Text variant="title" monospace tabularNums wrap="nowrap">
             <Slots length={2} value={expiry} />/<Slots from={2} length={2} value={expiry} />
           </Text>
@@ -337,7 +337,7 @@ export function CardFormBlock() {
   const brand = BRANDS[number[0] ?? ""] ?? null;
   const isNumberWrong = number.length === 16 && !passesLuhn(number);
   const dateError = expiryError(expiry);
-  const error = isNumberWrong ? "Проверьте номер" : dateError;
+  const error = isNumberWrong ? "Check the number" : dateError;
   const canLink =
     number.length === 16 && !isNumberWrong && expiry.length === 4 && !dateError && cvc.length === 3;
 
@@ -578,7 +578,7 @@ export function CardFormBlock() {
       >
         <Box flexDirection="column" gap="2xs">
           <TextField isInvalid={isNumberWrong} value={formatNumber(number)} onChange={changeNumber}>
-            <Label>Номер карты</Label>
+            <Label>Card number</Label>
             <Input
               ref={numberInput}
               autoComplete="cc-number"
@@ -592,7 +592,7 @@ export function CardFormBlock() {
             <Box aria-live="polite" display="block" minWidth={0}>
               <Box key={error ?? "hint"} display="block" motion="fade">
                 <Text variant="caption" color={error ? "danger" : "muted"} tabularNums truncate>
-                  {error ?? `Тестовая ${formatNumber(TEST_NUMBER)}`}
+                  {error ?? `Test card ${formatNumber(TEST_NUMBER)}`}
                 </Text>
               </Box>
             </Box>
@@ -602,7 +602,7 @@ export function CardFormBlock() {
               variant="ghost"
               onPress={fillTestNumber}
             >
-              Вставить
+              Paste
             </Button>
           </Box>
         </Box>
@@ -612,12 +612,12 @@ export function CardFormBlock() {
             value={formatExpiry(expiry)}
             onChange={changeExpiry}
           >
-            <Label>Срок</Label>
+            <Label>Expiry</Label>
             <Input
               ref={expiryInput}
               autoComplete="cc-exp"
               inputMode="numeric"
-              placeholder="ММ/ГГ"
+              placeholder="MM/YY"
               onBlur={() => blurField("expiry")}
               onFocus={() => setFocused("expiry")}
             />
@@ -635,7 +635,7 @@ export function CardFormBlock() {
           </TextField>
         </Box>
         <Button fullWidth isDisabled={!canLink} onPress={link}>
-          Привязать карту
+          Link card
         </Button>
       </Box>
 
@@ -643,14 +643,14 @@ export function CardFormBlock() {
         <Box position="absolute" top={layout.successTop} left={0} width="100%" display="block">
           <Box ref={success} flexDirection="column" alignItems="center" gap="xs" motion="enter">
             <Text color="success" tabularNums>
-              Карта •• {linked} привязана
+              Card •• {linked} linked
             </Text>
             <Text variant="caption" color="muted" tabularNums>
-              {brand}, действует до {formatExpiry(expiry)}
+              {brand}, valid through {formatExpiry(expiry)}
             </Text>
             <Box display="block" marginTop="s">
               <Button size="sm" variant="ghost" onPress={reset}>
-                Привязать другую
+                Link another card
               </Button>
             </Box>
           </Box>
@@ -660,4 +660,4 @@ export function CardFormBlock() {
   );
 }
 
-CardFormBlock.displayName = "Данные карты";
+CardFormBlock.displayName = "Card details";

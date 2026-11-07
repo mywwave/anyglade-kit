@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Question or idea
+    url: https://github.com/mywwave/anyglade-kit/discussions
+    about: Ask how to build something with the kit or share an idea.
+  - name: Security vulnerability
+    url: https://github.com/mywwave/anyglade-kit/security/advisories/new
+    about: Report it privately, not in a public issue.

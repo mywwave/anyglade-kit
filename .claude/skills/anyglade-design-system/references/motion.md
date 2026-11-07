@@ -1,139 +1,138 @@
-# Движение
+# Motion
 
-Значения в [generated/tokens.md](generated/tokens.md).
+Values are in [generated/tokens.md](generated/tokens.md).
 
-Открытие чата частое действие, поэтому уже существующие сообщения появляются сразу. Анимируется только то, что пришло при открытом чате. `withTransition` можно вызывать внахлёст: новый переход отменяет анимацию прошлого, изменения применяются оба.
+Opening a chat is a frequent action, so messages that already exist appear instantly. Only what arrives while the chat is open is animated. `withTransition` can be called on top of itself: a new transition cancels the previous animation, and both changes are applied.
 
-Перетаскивание пишет `transform` прямо в элемент, минуя рендер: содержимое панели не должно перерисовываться на каждое движение. Смещение считается от неограниченной точки указателя, иначе после захода за край панель отстаёт от курсора. Перетаскиваемый объект приподнимается на `scale(1.02)` от точки возле захвата: масштаб от угла уводит заголовок из-под курсора.
+Dragging writes `transform` straight into the element, bypassing render: the panel content must not re-render on every move. The offset is computed from the unclamped pointer position, otherwise the panel lags behind the cursor after it passes the edge. The dragged object lifts with `scale(1.02)` from a point near the grab: scaling from a corner pulls the title out from under the cursor.
 
-Разовое движение, которое нельзя выразить состоянием, идёт через Web Animations, а не через атрибут и `transitionend`: если сдвига нет, переход не начнётся и атрибут останется навсегда.
+A one-off movement that cannot be expressed as state goes through Web Animations, not through an attribute and `transitionend`: if there is no offset, the transition never starts and the attribute stays forever.
 
-## Принципы
+## Principles
 
-1. Движение объясняет изменение. Если объяснять нечего, анимации нет.
-2. Чем чаще действие, тем меньше движения. Анимация, которую видят сто раз в день, становится задержкой.
-3. Вход `base` с `decelerate`, выход `fast` с `accelerate`. Выход короче: человек уже решил уйти.
-4. Анимируются только `transform` и `opacity`. Высота, ширина и `grid-template-rows` пересчитывают раскладку страницы на каждом кадре и лагают.
-5. Масштаб стартует с 0,9–0,99, сдвиг не больше `s`. Никакого `scale(0)`.
-6. Без пружин и отскоков в рабочем интерфейсе.
-7. При `prefers-reduced-motion` исчезает перемещение, смена прозрачности остаётся. Компоненты kit это уже умеют.
-8. Тактильное нажатие кнопок HeroUI не отключается никогда. Это важнейшая обратная связь интерфейса.
+1. Motion explains a change. If there is nothing to explain, there is no animation.
+2. The more frequent the action, the less motion. An animation seen a hundred times a day becomes a delay.
+3. Enter with `base` and `decelerate`, exit with `fast` and `accelerate`. The exit is shorter: the person has already decided to leave.
+4. Animate only `transform` and `opacity`. Height, width and `grid-template-rows` recompute the page layout on every frame and lag.
+5. Scale starts from 0.9–0.99, offset is no more than `s`. Never `scale(0)`.
+6. No springs or bounces in a work interface.
+7. Under `prefers-reduced-motion` movement disappears and opacity changes remain. Kit components already do this.
+8. Never disable the tactile press of HeroUI buttons. It is the most important feedback in the interface.
 
-## Что использовать
+## What to use
 
-| Что происходит                                           | Решение                                                                                 |
-| -------------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| Кнопка запускает работу                                  | `onPress` возвращает промис, формы через `action` или `isPending`                       |
-| Экран или список загружается                             | `Loadable` со скелетоном той же формы                                                   |
-| Мелкое обратимое действие: отметка, переключатель        | Сразу применить, без лоадера, при ошибке откат и тост                                   |
-| Копирование                                              | `CopyButton`                                                                            |
-| Выбор одного из нескольких                               | `SegmentedControl`                                                                      |
-| Короткий текст сменил состояние: кнопка, статус, счётчик | `TextSwap`, если проходит условия из «Катание текста»                                   |
-| Идёт работа, показанная текстом                          | `Shimmer`                                                                               |
-| Смена порядка, фильтра, этапа, удаление, добавление      | `withTransition` и `viewTransitionName` на объекте. В `ItemList` строки переезжают сами |
-| Новый элемент появляется сам                             | `<Box motion="enter">`                                                                  |
-| Смена вкладок, блок целиком                              | `<Box motion="fade">`                                                                   |
-| Иконка сменилась                                         | `key` и `<Box motion="pop">`                                                            |
-| Успех после формы                                        | `motion="enter"` у нового состояния и путь дальше                                       |
+| What happens                                            | Solution                                                                                       |
+| ------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| A button starts work                                    | `onPress` returns a promise, forms use `action` or `isPending`                                 |
+| A screen or list is loading                             | `Loadable` with a skeleton of the same shape                                                   |
+| A small reversible action: a check, a switch            | Apply at once, no loader; on error roll back and show a toast                                  |
+| Copying                                                 | `CopyButton`                                                                                   |
+| Choosing one of several                                 | `SegmentedControl`                                                                             |
+| Short text changed state: a button, a status, a counter | `TextSwap`, if it meets the conditions in "Rolling text"                                       |
+| Work in progress shown as text                          | `Shimmer`                                                                                      |
+| Change of order, filter, stage, removal, addition       | `withTransition` and `viewTransitionName` on the object. In `ItemList` rows move by themselves |
+| A new element appears on its own                        | `<Box motion="enter">`                                                                         |
+| Switching tabs, a whole block                           | `<Box motion="fade">`                                                                          |
+| An icon changed                                         | `key` and `<Box motion="pop">`                                                                 |
+| Success after a form                                    | `motion="enter"` on the new state and a way forward                                            |
 
-`withTransition` применяйте к дискретным действиям: сортировка, фильтр, перемещение. Набор текста в поиске и пагинация идут без перехода, иначе интерфейс не успевает за вводом.
+Apply `withTransition` to discrete actions: sorting, filtering, moving. Typing in search and pagination go without a transition, otherwise the interface cannot keep up with input.
 
 ```tsx
 <SegmentedControl onChange={(next) => withTransition(() => setFilter(next))} />
 <Box viewTransitionName={`deal-${deal.id}`} />
 ```
 
-## Витрина
+## Showcase
 
-Галерея живых образцов это поверхность убеждения, а не рабочий экран: её смотрят один раз, чтобы почувствовать продукт. Здесь движение выразительнее. Объект идёт за пальцем, отпущенный пружинит обратно с лёгким перелётом, брошенный улетает, бумага печатается построчно. Ограничения остаются: только `transform` и `opacity`, длительности и кривые из токенов, `prefers-reduced-motion` убирает перемещение. Жест пишет `transform` прямо в элемент, а у каждого жеста есть путь с клавиатуры: кнопка или Enter.
+A gallery of live samples is a persuasion surface, not a work screen: people look at it once to get a feel for the product. Motion here is more expressive. An object follows the finger, springs back with a slight overshoot when released, flies away when thrown, paper prints line by line. The limits stay: only `transform` and `opacity`, durations and easings from tokens, `prefers-reduced-motion` removes movement. A gesture writes `transform` straight into the element, and every gesture has a keyboard path: a button or Enter.
 
-Плитка кладки не меняет высоту при смене состояния: иначе соседние колонки прыгают. Место под будущее содержимое резервируется заранее.
+A masonry tile does not change height when its state changes: otherwise neighboring columns jump. Space for future content is reserved in advance.
 
-## Что не анимировать
+## What not to animate
 
-Основную навигацию между экранами, действия с клавиатуры, графики, загрузку страницы каскадом на рабочих экранах, наведение на карточки, бегущие градиенты, числа при открытии экрана. Подъём карточек и счётчики годятся разве что для маркетинга.
+Main navigation between screens, keyboard actions, charts, a cascading page load on work screens, hover on cards, running gradients, numbers when a screen opens. Lifting cards and counters are fit for marketing at most.
 
-## Катание текста
+## Rolling text
 
-`TextSwap` заметнее любой другой смены текста, и это работает, только пока он редкий. Когда катится всё подряд, глазу не за чем следить, и эффект становится рябью. Прежде чем его ставить, проверьте все четыре условия:
+`TextSwap` is more noticeable than any other text change, and that only works while it is rare. When everything rolls, the eye has nothing to follow and the effect turns into ripple. Before using it, check all four conditions:
 
-1. **Тот же объект, новое состояние.** «Сохранить» стало «Сохранено», 12 стало 13. Другой объект на том же месте, например имя в заголовке окна после выбора другого чата, это новое содержимое, а не изменение.
-2. **Короткая строка.** Слово, два-три слова или число. Предложение на ходу не прочитать, а описание как раз читают.
-3. **Причина видна.** Смену вызвал человек или закончился шаг работы. То, что тикает, идёт за вводом или приходит потоком, двигалось бы постоянно.
-4. **Одно место на действие.** Глаз успевает за одним движением. Катите то, на что человек уже смотрит: подпись нажатой кнопки, а если она не меняется, главную строку результата. Всё остальное от того же действия меняется тихо.
+1. **Same object, new state.** "Save" became "Saved", 12 became 13. A different object in the same place, for example the name in a window title after choosing another chat, is new content, not a change.
+2. **A short string.** A word, two or three words, or a number. A sentence cannot be read on the move, and descriptions are exactly what people read.
+3. **The cause is visible.** The person caused the change or a step of work finished. Anything that ticks, follows input or arrives as a stream would move constantly.
+4. **One place per action.** The eye can follow one movement. Roll what the person is already looking at: the label of the pressed button, and if it does not change, the main line of the result. Everything else from the same action changes quietly.
 
-| Что меняется                                            | Решение                                                                  |
-| ------------------------------------------------------- | ------------------------------------------------------------------------ |
-| Подпись нажатой кнопки: «Сохранить», «Сохранено»        | `TextSwap`                                                               |
-| Статус объекта после действия                           | `TextSwap`                                                               |
-| Число, которое изменил человек: баланс после пополнения | `TextSwap`                                                               |
-| Шаг долгой работы: статус агента, строка лоадера, `2/5` | `TextSwap`, у статуса агента с `isShimmering`                            |
-| Таймер закончился: «Отправим через», «Отправить снова»  | `TextSwap` на словах, секунды отдельно обычным текстом                   |
-| Таймер, обратный отсчёт, длительность звонка            | Обычный текст с `tabularNums`                                            |
-| Значение за вводом: ползунок, поле, число найденного    | Обычный текст с `tabularNums`                                            |
-| Данные извне: люди в сети, цены, метрики                | Обычный текст с `tabularNums`                                            |
-| Ячейки таблицы и значения в строках списка              | Обычный текст. Десять катящихся строк читаются как рябь                  |
-| Предложение, описание, подпись у переключателя          | `key` и `<Box motion="fade">`. Переключатель сам показал новое состояние |
-| Второй текст от того же действия                        | `key` и `<Box motion="fade">`, счётчик рядом обычным текстом             |
-| Заголовок после выбора другого объекта, вкладки, экрана | Обычный текст или `motion="fade"` у всего блока                          |
+| What changes                                                | Solution                                                                    |
+| ----------------------------------------------------------- | --------------------------------------------------------------------------- |
+| Label of the pressed button: "Save", "Saved"                | `TextSwap`                                                                  |
+| Object status after an action                               | `TextSwap`                                                                  |
+| A number the person changed: balance after a top-up         | `TextSwap`                                                                  |
+| A step of long work: agent status, loader line, `2/5`       | `TextSwap`, with `isShimmering` for agent status                            |
+| A timer ran out: "Resend in", "Resend"                      | `TextSwap` on the words, seconds separately as plain text                   |
+| Timer, countdown, call duration                             | Plain text with `tabularNums`                                               |
+| A value that follows input: slider, field, count of matches | Plain text with `tabularNums`                                               |
+| External data: people online, prices, metrics               | Plain text with `tabularNums`                                               |
+| Table cells and values in list rows                         | Plain text. Ten rolling rows read as ripple                                 |
+| A sentence, description, label next to a switch             | `key` and `<Box motion="fade">`. The switch has already shown the new state |
+| Second text from the same action                            | `key` and `<Box motion="fade">`, the counter next to it as plain text       |
+| Title after choosing another object, tab, screen            | Plain text or `motion="fade"` on the whole block                            |
 
-Если текст остался без `TextSwap`, а его ширина меняется и соседи прыгают, дайте месту постоянную ширину.
+If text is left without `TextSwap` but its width changes and neighbors jump, give the slot a fixed width.
 
-## Лоадеры
+## Loaders
 
-| Ожидание                            | Что показать                                            |
-| ----------------------------------- | ------------------------------------------------------- |
-| Меньше `timings.loaderDelay`        | Ничего, индикатор только мигнёт                         |
-| Обратимое мелкое действие           | Оптимистичное обновление без лоадера                    |
-| Действие кнопкой                    | Лоадер внутри кнопки, ширина не меняется                |
-| Обновление поверх показанных данных | Данные остаются, тихий индикатор, без скелетона         |
-| Загрузка, форма известна            | `Skeleton` точно по размерам будущего контента          |
-| Форма неизвестна, поиск             | `Spinner` на месте результата                           |
-| Запуск всего приложения             | `PageLoader` на весь экран, с шагами в строке состояния |
+| Wait                                 | What to show                                            |
+| ------------------------------------ | ------------------------------------------------------- |
+| Less than `timings.loaderDelay`      | Nothing, an indicator would only flash                  |
+| A small reversible action            | Optimistic update without a loader                      |
+| A button action                      | Loader inside the button, width does not change         |
+| Refresh over data already shown      | Data stays, a quiet indicator, no skeleton              |
+| Loading, shape known                 | `Skeleton` matching the size of the future content      |
+| Shape unknown, search                | `Spinner` in place of the result                        |
+| Launch of the whole app              | Full-screen `PageLoader`, with steps in the status line |
+| More than 10 seconds or a percentage | `ProgressBar` with a percentage and cancel              |
 
-| Больше 10 секунд или есть проценты | `ProgressBar` с процентом и отменой |
+`PageLoader` waits `timings.pageLoaderDelay`, 400 ms, not the general 150: a screen is louder than a spinner, and fast pages must not show it. The `delay` prop changes the threshold for a particular screen. A value of `0` shows the loader immediately; this is justified only where loading is known to be long.
 
-`PageLoader` ждёт `timings.pageLoaderDelay`, 400 мс, а не общие 150: экран громче спиннера, и быстрые страницы не должны его видеть. Проп `delay` меняет порог под конкретный экран. Значение `0` показывает лоадер сразу, это оправдано только там, где загрузка заведомо долгая.
+A shown indicator stays for at least `timings.loaderMinimum`, otherwise a fast response looks like a flash. One loader per screen. For your own indicators these rules come from `useLoadingIndicator`.
 
-Показанный индикатор держится минимум `timings.loaderMinimum`, иначе быстрый ответ выглядит как мигание. На один экран один лоадер. Для своих индикаторов эти правила даёт `useLoadingIndicator`.
+A loader must not look like data, and vice versa. A thin ring indicator next to a running process reads as loading: show a percentage as a number instead.
 
-Лоадер не должен выглядеть как данные и наоборот. Тонкое кольцо-индикатор рядом с работающим процессом читается как загрузка: процент лучше показать числом.
+## Pace
 
-## Темп
+An interface where everything happens in one frame feels flickery. A state must have time to be read.
 
-Интерфейс, где всё происходит за один кадр, кажется мигающим. Состояние должно успеть прочитаться.
+- Blocks that follow each other enter with a pause, a cascade of rows through `duration.stagger`.
+- A View Transition replaces the whole page with a snapshot and blocks input for that time. It suits a rare discrete action. For a frequent one, like a new message, move only the elements themselves: FLIP on Web Animations, like `ItemList`. `withTransition` itself takes no snapshot while a `FloatingPanel` is open.
+- A status change is animated: the icon through `key` and `motion="pop"`, the text through `TextSwap`.
+- Minimum display time matters more than speed: a confirmation stays for `timings.confirmation`.
+- Show a confirmation at the place of the action rather than in a toast.
 
-- Следом идущие блоки входят с паузой, каскад строк через `duration.stagger`.
-- View Transition заменяет всю страницу снимком и на это время глушит ввод. Он подходит для редкого дискретного действия. Для частого, вроде нового сообщения, двигайте только сами элементы: FLIP на Web Animations, как `ItemList`. `withTransition` сам ничего не снимает, пока открыт `FloatingPanel`.
-- Смена статуса анимирована: значок через `key` и `motion="pop"`, текст через `TextSwap`.
-- Минимальное время показа важнее скорости: подтверждение держится `timings.confirmation`.
-- Подтверждение лучше показывать на месте действия, а не тостом.
+## Stability
 
-## Стабильность
+Nothing jumps. This matters more than the beauty of an animation.
 
-Ничто не прыгает. Это важнее красоты анимации.
+- A loader lays over the label instead of replacing it.
+- The status icon sits in a box of constant size: a spinner and a check mark of different sizes shift the text.
+- A late caption does not add a second line: it goes on the same line, otherwise everything below moves.
+- A skeleton repeats the shape of the content.
+- Neighbors of changing text do not twitch: `TextSwap` animates width.
+- `TextSwap` moves only what changed: the shared start and end stay put, the changed part slides up as one block and fades, and the new part appears from below when the old one is almost transparent. A real pause between them reads as a flash, full overlap as mush. In a counter this is one digit, in words the ending, for different words the whole string. With the `isShimmering` prop the whole string changes; this mode is for agent statuses. A change can arrive at any moment: the animation continues from the current position and width, not from zero. During rapid changes the border holds still, and after them it smoothly settles to the needed width.
+- Autoscroll does not jump to the end but catches up with it frame by frame. A one-frame jerk on a scrolled page is a defect.
 
-- Лоадер ложится поверх подписи, а не заменяет её.
-- Значок статуса в коробке постоянного размера: спиннер и галочка разного размера двигают текст.
-- Поздняя подпись не добавляет вторую строку: она ставится на ту же строку, иначе двигается всё ниже.
-- Скелетон повторяет форму контента.
-- Рядом с изменяющимся текстом соседи не дёргаются: `TextSwap` анимирует ширину.
-- `TextSwap` двигает только то, что изменилось: общее начало и конец стоят, а изменившаяся часть уезжает вверх одним блоком и растворяется, а новая проявляется снизу, когда старая уже почти прозрачна. Настоящая пауза между ними читается как мигание, полное совмещение как каша. В счётчике это одна цифра, в словах окончание, у разных слов вся строка. С пропом `isShimmering` строка меняется целиком, это режим для статусов агента. Смена может прийти в любой момент: анимация продолжается с текущего положения и ширины, а не с нуля. На быстрых сменах рамка стоит, а после них плавно приходит к нужной ширине.
-- Автопрокрутка не прыгает к концу, а догоняет его по кадрам. Рывок в один кадр на прокрученной странице это дефект.
+- Call tiles move to a new place through FLIP, not through a View Transition: a page snapshot would freeze live video. The speaker ring lies inside the tile and changes only `opacity`, so neighbors do not shift.
 
-- Плитки звонка переезжают на новое место через FLIP, а не через View Transition: снимок страницы заморозил бы живое видео. Кольцо говорящего лежит внутри плитки и меняет только `opacity`, поэтому соседи не сдвигаются.
+- Drag and drop runs on the pointer, not on browser drag: the browser draws its own ghost and does not let you control the landing. The chip follows the cursor and lifts, the source dims to 50 %, the target highlights with `--accent-soft` and opens up. Only this slot animates height, like a HeroUI disclosure, 200 ms. Data changes after the landing: the chip settles into the slot, the source collapses, the swap happens without a jerk. Cancel returns the chip to its place.
 
-- Перенос идёт на указателе, а не на браузерном drag: браузер рисует свой призрак и не даёт управлять посадкой. Чип едет за курсором и приподнимается, источник тускнеет до 50 %, цель подсвечивается `--accent-soft` и раздвигается. Высоту анимирует только этот слот, как раскрытие HeroUI, 200 мс. Данные меняются после посадки: чип садится в слот, источник схлопывается, замена происходит без рывка. Отмена возвращает чип на место.
+## Shimmer
 
-## Шиммер
+Shimmer means only "work in progress" and stops together with the work. Use the `Shimmer` component, do not build your own: a trivial implementation on `background-clip` changes letter antialiasing when it stops, and the text flashes. In `Shimmer` the real text is always present, the highlight runs as a separate layer and always finishes its pass, and it is removed when it is already outside the text.
 
-Шиммер означает только «идёт работа» и останавливается вместе с ней. Используйте компонент `Shimmer`, не собирайте свой: тривиальная реализация на `background-clip` меняет сглаживание букв при остановке, и текст мигает. В `Shimmer` настоящий текст лежит всегда, блик идёт отдельным слоем и всегда доигрывает проход, а снимается, когда он уже вне текста.
+## Performance
 
-## Производительность
+Lag comes from render more often than from CSS.
 
-Лаги чаще идут от рендера, чем от CSS.
-
-- Частое состояние, например стрим, держите отдельно от тяжёлых компонентов. Новое слово перерисовывает абзац, а не экран.
-- Мемоизируйте элементы списка и передавайте им стабильные обработчики.
-- Поле ввода не должно зависеть от стрима.
-- Проверяйте с замедлением процессора в 4 раза: на сильной машине лаг не виден, а в реальности кадр занимает сотни миллисекунд.
+- Keep frequent state, such as a stream, apart from heavy components. A new word re-renders a paragraph, not the screen.
+- Memoize list items and pass them stable handlers.
+- An input field must not depend on the stream.
+- Test with the CPU slowed down 4 times: on a strong machine lag is invisible, but in reality a frame takes hundreds of milliseconds.

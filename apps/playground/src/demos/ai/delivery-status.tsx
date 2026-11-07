@@ -2,10 +2,10 @@ import { Box, Text } from "@anyglade/kit";
 import { DeliveryStatus, Message, type Delivery } from "@anyglade/kit/ai";
 
 const labels = {
-  sending: "Отправляется",
-  sent: "Отправлено",
-  delivered: "Доставлено",
-  read: "Прочитано",
+  sending: "Sending",
+  sent: "Sent",
+  delivered: "Delivered",
+  read: "Read",
 };
 
 const statuses: Delivery[] = ["sending", "sent", "delivered", "read"];
@@ -20,7 +20,7 @@ export function DeliveryStatusDemo() {
           author="user"
           meta={<DeliveryStatus labels={labels} status={status} />}
         >
-          <Text>Договор ушёл на подпись</Text>
+          <Text>Contract sent for signature</Text>
         </Message>
       ))}
     </Box>

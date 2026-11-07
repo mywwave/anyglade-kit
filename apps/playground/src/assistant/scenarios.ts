@@ -42,26 +42,26 @@ export interface Script {
 const BEAT_MS = 350;
 
 export const suggestions = [
-  "Найди застрявшие сделки и напиши клиентам",
-  "Проверь отчёт за октябрь",
-  "Подготовь выгрузку клиентов",
+  "Find stalled deals and email the customers",
+  "Check the October report",
+  "Prepare a customer export",
 ];
 
 const dealSources: Source[] = [
   {
-    title: "Внедрение для «Вектора»",
+    title: "Vector Labs rollout",
     url: "https://example.com/deals/vector",
-    note: "11 дней без движения",
+    note: "No activity for 11 days",
   },
   {
-    title: "Лицензии для «Опоры»",
+    title: "Keystone licenses",
     url: "https://example.com/deals/opora",
-    note: "9 дней без движения",
+    note: "No activity for 9 days",
   },
   {
-    title: "Правила работы со сделками",
+    title: "Deal handling guidelines",
     url: "https://example.com/handbook",
-    note: "Раздел о застое",
+    note: "Section on stalled deals",
   },
 ];
 
@@ -72,7 +72,7 @@ async function think(script: Script, labels: string[], text: string) {
   const started = performance.now();
   const id = script.add({
     type: "reasoning",
-    label: labels[0] ?? "Думаю",
+    label: labels[0] ?? "Thinking",
     text: "",
     isStreaming: true,
   });
@@ -81,7 +81,7 @@ async function think(script: Script, labels: string[], text: string) {
     await script.wait(script.thinkMs);
   }
   const seconds = Math.max(1, Math.round((performance.now() - started) / 1000));
-  script.patch(id, { label: `Думал ${seconds} с`, text, isStreaming: false });
+  script.patch(id, { label: `Thought for ${seconds}s`, text, isStreaming: false });
 }
 
 const withStatus = (steps: PlanStep[], index: number, status: AgentStatus) =>
@@ -110,33 +110,33 @@ async function reply(script: Script, text: string, sources: Source[] = []) {
 async function stalledDeals(script: Script) {
   await think(
     script,
-    ["Смотрю воронку", "Ищу сделки без движения"],
-    "Застрявшей считаю сделку без движения дольше семи дней. Успешные исключаю: писать по ним незачем.",
+    ["Reviewing the pipeline", "Looking for inactive deals"],
+    "A deal counts as stalled after more than seven days without activity. Won deals are excluded, since there is no reason to follow up on them.",
   );
 
   const plan = script.add({
     type: "plan",
-    title: "План: написать клиентам",
+    title: "Plan: email the customers",
     steps: [
-      { id: "find", title: "Найти сделки без движения", status: "pending" },
-      { id: "pick", title: "Определить контакты", status: "pending" },
-      { id: "write", title: "Подготовить письма", status: "pending", note: "Тон из прошлых писем" },
+      { id: "find", title: "Find inactive deals", status: "pending" },
+      { id: "pick", title: "Pick the contacts", status: "pending" },
+      { id: "write", title: "Draft the emails", status: "pending", note: "Tone from past emails" },
     ],
   });
   await walk(
     script,
     plan,
     [
-      { id: "find", title: "Найти сделки без движения", status: "pending", note: "Нашлось три" },
-      { id: "pick", title: "Определить контакты", status: "pending" },
-      { id: "write", title: "Подготовить письма", status: "pending", note: "Тон из прошлых писем" },
+      { id: "find", title: "Find inactive deals", status: "pending", note: "Found three" },
+      { id: "pick", title: "Pick the contacts", status: "pending" },
+      { id: "write", title: "Draft the emails", status: "pending", note: "Tone from past emails" },
     ],
     900,
   );
 
   const search = script.add({
     type: "tool",
-    title: "Читаю сделки",
+    title: "Reading deals",
     name: "find_stalled_deals",
     status: "running",
     input: `{ "minDays": 7, "excludeStage": "won" }`,
@@ -144,16 +144,16 @@ async function stalledDeals(script: Script) {
   await script.wait(1300);
   script.patch(search, {
     status: "done",
-    output: `[\n  { "deal": "Внедрение для «Вектора»", "days": 11 },\n  { "deal": "Лицензии для «Опоры»", "days": 9 },\n  { "deal": "Аудит для «Трассы»", "days": 8 }\n]`,
+    output: `[\n  { "deal": "Vector Labs rollout", "days": 11 },\n  { "deal": "Keystone licenses", "days": 9 },\n  { "deal": "Meridian audit", "days": 8 }\n]`,
   });
 
   const send = script.add({
     type: "tool",
-    title: "Отправляю письма",
+    title: "Sending emails",
     name: "send_email",
     status: "waiting",
     input: `{ "recipients": 3, "template": "follow-up" }`,
-    question: "Отправить три письма клиентам? Отменить это будет нельзя.",
+    question: "Send three emails to customers? This can't be undone.",
   });
 
   if (await script.approval(send)) {
@@ -162,14 +162,14 @@ async function stalledDeals(script: Script) {
     script.patch(send, { status: "done", output: `{ "sent": 3, "failed": 0 }` });
     await reply(
       script,
-      "Письма ушли всем троим. Самая крупная сделка у «Вектора» [1], она стоит 11 дней, и риск по ней выше других.\n\nПо «Опоре» [2] срок близок к порогу из правил [3], поэтому поставил напоминание на четверг.",
+      "All three emails are sent. Vector Labs has the largest deal [1]; it has been idle for 11 days, so it carries the highest risk.\n\nKeystone [2] is close to the threshold in the guidelines [3], so I set a reminder for Thursday.",
       dealSources,
     );
   } else {
-    script.patch(send, { status: "failed", output: `{ "sent": 0, "reason": "отменено" }` });
+    script.patch(send, { status: "failed", output: `{ "sent": 0, "reason": "cancelled" }` });
     await reply(
       script,
-      "Письма не отправлены. Черновики остались, сделки по-прежнему стоят: «Вектор» [1] и «Опора» [2].",
+      "The emails weren't sent. The drafts are saved, and the deals are still stalled: Vector Labs [1] and Keystone [2].",
       dealSources,
     );
   }
@@ -178,8 +178,8 @@ async function stalledDeals(script: Script) {
 async function monthReport(script: Script) {
   await think(
     script,
-    ["Читаю отчёт", "Сверяю итоги"],
-    "Сначала прогоняю проверки, затем сравниваю суммы.",
+    ["Reading the report", "Reconciling totals"],
+    "First I run the checks, then I compare the totals.",
   );
 
   const terminal = script.add({
@@ -191,25 +191,25 @@ async function monthReport(script: Script) {
   await script.stream(
     terminal,
     "output",
-    "Загружено сделок: 118\nЗагружено платежей: 342\nПроверка валют пройдена\nПроверка дат пройдена\nСверка сумм не прошла\n",
+    "Deals loaded: 118\nPayments loaded: 342\nCurrency check passed\nDate check passed\nTotals check failed\n",
   );
   script.patch(terminal, { isStreaming: false });
 
   script.add({
     type: "run",
-    summary: "Две проверки из трёх пройдены",
+    summary: "Two of three checks passed",
     steps: [
-      { id: "currency", title: "Валюты", status: "done", note: "342 платежа" },
-      { id: "dates", title: "Даты закрытия", status: "done", note: "118 сделок" },
+      { id: "currency", title: "Currencies", status: "done", note: "342 payments" },
+      { id: "dates", title: "Close dates", status: "done", note: "118 deals" },
       {
         id: "sum",
-        title: "Сумма по сделкам равна сумме платежей",
+        title: "Deal total matches payment total",
         status: "failed",
-        note: "Расхождение 49 000 ₽",
+        note: "Off by $4,900",
         output: {
-          title: "AssertionError: сумма платежей не совпала",
+          title: "AssertionError: payment total does not match",
           tone: "danger",
-          text: "ожидалось 3 710 000\nполучено  3 661 000\n\n  at compareTotals (report/check.ts:42:11)\n  at runChecks (report/check.ts:18:5)\n  at main (report/cli.ts:9:3)",
+          text: "expected 371,000\nreceived 366,100\n\n  at compareTotals (report/check.ts:42:11)\n  at runChecks (report/check.ts:18:5)\n  at main (report/cli.ts:9:3)",
         },
       },
     ],
@@ -217,39 +217,43 @@ async function monthReport(script: Script) {
   await script.wait(300);
   await reply(
     script,
-    "Отчёт не сходится на 49 000 ₽. Разница совпадает с платежом студии «Север», который упал с ошибкой и не был повторён.\n\nПовторите платёж, и проверка пройдёт.",
+    "The report is off by $4,900. The gap matches a payment from North Studio that failed and was never retried.\n\nRetry the payment and the check will pass.",
   );
 }
 
 async function exportCustomers(script: Script) {
-  await think(script, ["Собираю требования"], "Клиентов выгружаю вместе с выручкой и менеджером.");
+  await think(
+    script,
+    ["Gathering requirements"],
+    "Exporting customers with their revenue and account manager.",
+  );
 
   const subagent = {
     id: "subagent",
-    title: "Помощник по данным",
+    title: "Data assistant",
     status: "pending" as const,
-    note: "Отдельный агент",
+    note: "Separate agent",
     substeps: [
-      { id: "read", title: "Прочитать клиентов", status: "done" as const, note: "9 записей" },
-      { id: "merge", title: "Добавить выручку", status: "done" as const },
+      { id: "read", title: "Read customers", status: "done" as const, note: "9 records" },
+      { id: "merge", title: "Add revenue", status: "done" as const },
     ],
   };
   const run = script.add({
     type: "run",
-    summary: "Выгрузка готова",
+    summary: "Export is ready",
     steps: [
-      { id: "scope", title: "Определить поля", status: "pending" },
+      { id: "scope", title: "Choose fields", status: "pending" },
       subagent,
-      { id: "write", title: "Записать файлы", status: "pending" },
+      { id: "write", title: "Write files", status: "pending" },
     ],
   });
   await walk(
     script,
     run,
     [
-      { id: "scope", title: "Определить поля", status: "pending" },
+      { id: "scope", title: "Choose fields", status: "pending" },
       subagent,
-      { id: "write", title: "Записать файлы", status: "pending" },
+      { id: "write", title: "Write files", status: "pending" },
     ],
     800,
   );
@@ -257,20 +261,27 @@ async function exportCustomers(script: Script) {
   script.add({
     type: "files",
     files: [
-      { path: "exports/2026-11/klienty.csv", added: 10 },
-      { path: "exports/2026-11/svodka.md", added: 24 },
+      { path: "exports/2026-11/customers.csv", added: 10 },
+      { path: "exports/2026-11/summary.md", added: 24 },
       { path: "exports/README.md", added: 2, removed: 1 },
     ],
   });
-  await reply(script, "Готово: три файла в папке выгрузок. Откройте файл в дереве выше.");
+  await reply(
+    script,
+    "Done: three files in the exports folder. Open any of them in the tree above.",
+  );
 }
 
 async function freeform(script: Script, prompt: string, attachments: string[]) {
-  await think(script, ["Думаю над запросом"], "Вопрос общий, данные CRM не нужны.");
-  const files = attachments.length > 0 ? ` Вложений учтено: ${attachments.length}.` : "";
+  await think(
+    script,
+    ["Thinking about the request"],
+    "This is a general question, no CRM data needed.",
+  );
+  const files = attachments.length > 0 ? ` Attachments considered: ${attachments.length}.` : "";
   await reply(
     script,
-    `Это демонстрация, ответы заготовлены заранее, поэтому на «${prompt}» отвечу общими словами.${files}\n\nПопробуйте подсказки: в них видны план, подтверждение, ошибка и файлы.`,
+    `This is a demo with prepared answers, so I can only reply to "${prompt}" in general terms.${files}\n\nTry the suggestions to see a plan, an approval, an error and files.`,
   );
 }
 

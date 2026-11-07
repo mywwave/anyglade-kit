@@ -1,81 +1,81 @@
-# Аудит акцентного цвета
+# Accent color audit
 
-Проверка от 5 ноября 2026 года по правилам из раздела «Акцент» в `packages/kit/README.md`.
+Review of November 5, 2026 against the rules in the "Accent" section of `packages/kit/README.md`.
 
-Способ: в панели темы задан яркий акцент `#DB2777`, затем в Edge на ширине 1280 px в обеих темах подсчитаны основные кнопки, заливки, текст, линии и рамки цвета акцента на каждом экране CRM, на витрине и в 14 блоках. Контраст посчитан по WCAG для всех семи пресетов панели на худшей поверхности темы: `#F3F4F6` в светлой, `#181818` в тёмной.
+Method: a bright accent `#DB2777` was set in the theme panel, then in Edge at a width of 1280 px, in both themes, primary buttons, fills, text, lines and borders in the accent color were counted on every CRM screen, on the showcase and in 14 blocks. Contrast was computed per WCAG for all seven panel presets on the worst surface of each theme: `#F3F4F6` in light, `#181818` in dark.
 
-Не проверялись состояния наведения, ширина телефона и раздел «Компоненты».
+Not checked: hover states, phone width and the "Components" section.
 
-## Итог
+## Summary
 
-Применение акцента на страницах дисциплинированное, нарушений композиции почти нет. Главная проблема в другом: цвет, заданный панелью темы, не приспособлен к теме, поэтому каждый из семи пресетов нарушает контраст.
+Accent use on the pages is disciplined, there are almost no composition violations. The main problem is elsewhere: the color set by the theme panel is not adapted to the theme, so each of the seven presets fails contrast.
 
-## Замеры по страницам
+## Measurements by page
 
-Результаты в светлой и тёмной темах совпали.
+Results in the light and dark themes were the same.
 
-| Страница           | Основных кнопок | Доля площади | Где акцент                             |
-| ------------------ | --------------- | ------------ | -------------------------------------- |
-| Витрина            | 4               | 3,38 %       | Кнопки, переключатели, радио, ползунок |
-| CRM Сегодня        | 0               | 0 %          | 5 линий графиков, сектор, 2 точки      |
-| CRM Сделки         | 0               | 0 %          | Нет                                    |
-| CRM Клиенты        | 0               | 0 %          | Нет, пока не выбрана строка            |
-| CRM Задачи         | 1               | 0,57 %       | «Добавить»                             |
-| CRM Аналитика      | 0               | 0 %          | 6 столбцов, 2 линии, 2 точки           |
-| SignIn             | 1               | 4,72 %       | «Продолжить»                           |
-| CheckoutForm       | 1               | 4,24 %       | «Оплатить»                             |
-| PlanPicker         | 1               | 5,71 %       | «Продолжить», радио                    |
-| SettingsForm       | 1               | 0,78 %       | «Сохранить», переключатель             |
-| Hero               | 1               | 1,96 %       | «Начать бесплатно»                     |
-| Pricing            | 1               | 2,07 %       | «Выбрать», ползунок                    |
-| Остальные 8 блоков | 0               | 0 %          | Нет                                    |
+| Page               | Primary buttons | Area share | Where the accent is               |
+| ------------------ | --------------- | ---------- | --------------------------------- |
+| Showcase           | 4               | 3.38 %     | Buttons, switches, radios, slider |
+| CRM Today          | 0               | 0 %        | 5 chart lines, a slice, 2 dots    |
+| CRM Deals          | 0               | 0 %        | None                              |
+| CRM Customers      | 0               | 0 %        | None until a row is selected      |
+| CRM Tasks          | 1               | 0.57 %     | "Add"                             |
+| CRM Analytics      | 0               | 0 %        | 6 bars, 2 lines, 2 dots           |
+| SignIn             | 1               | 4.72 %     | "Continue"                        |
+| CheckoutForm       | 1               | 4.24 %     | "Pay"                             |
+| PlanPicker         | 1               | 5.71 %     | "Continue", radio                 |
+| SettingsForm       | 1               | 0.78 %     | "Save", switch                    |
+| Hero               | 1               | 1.96 %     | "Start for free"                  |
+| Pricing            | 1               | 2.07 %     | "Choose", slider                  |
+| The other 8 blocks | 0               | 0 %        | None                              |
 
-Соблюдается: не больше одной основной кнопки на блок, доля площади ниже 10 %, ни одной рамки и ни одного текста цветом акцента, выбор в навигации и фильтрах нейтральный, статусы своими цветами.
+Upheld: no more than one primary button per block, area share below 10 %, not a single border or text in the accent color, selection in navigation and filters is neutral, statuses use their own colors.
 
-## Контраст пресетов
+## Preset contrast
 
-Норма: 4,5 для текста, 3 для контролов, линий графика и фокуса.
+Standard: 4.5 for text, 3 for controls, chart lines and focus.
 
-| Пресет               | Подпись сейчас | Лучшая подпись | На светлой | На тёмной |
-| -------------------- | -------------- | -------------- | ---------- | --------- |
-| Синий `#2563EB`      | Белая 5,17     | Белая 5,17     | 4,70       | **3,44**  |
-| Индиго `#4F46E5`     | Белая 6,29     | Белая 6,29     | 5,71       | **2,82**  |
-| Фиолетовый `#7C3AED` | Белая 5,70     | Белая 5,70     | 5,18       | **3,12**  |
-| Розовый `#DB2777`    | Белая 4,60     | Белая 4,60     | **4,18**   | **3,86**  |
-| Оранжевый `#EA580C`  | **Белая 3,56** | Чёрная 5,90    | **3,23**   | 4,99      |
-| Зелёный `#059669`    | **Белая 3,77** | Чёрная 5,57    | **3,42**   | 4,71      |
-| Бирюзовый `#0891B2`  | **Белая 3,68** | Чёрная 5,70    | **3,35**   | 4,82      |
+| Preset           | Current label  | Best label | On light | On dark  |
+| ---------------- | -------------- | ---------- | -------- | -------- |
+| Blue `#2563EB`   | White 5.17     | White 5.17 | 4.70     | **3.44** |
+| Indigo `#4F46E5` | White 6.29     | White 6.29 | 5.71     | **2.82** |
+| Violet `#7C3AED` | White 5.70     | White 5.70 | 5.18     | **3.12** |
+| Pink `#DB2777`   | White 4.60     | White 4.60 | **4.18** | **3.86** |
+| Orange `#EA580C` | **White 3.56** | Black 5.90 | **3.23** | 4.99     |
+| Green `#059669`  | **White 3.77** | Black 5.57 | **3.42** | 4.71     |
+| Teal `#0891B2`   | **White 3.68** | Black 5.70 | **3.35** | 4.82     |
 
-Жирным выделено то, что ниже нормы 4,5 для текста. Индиго на тёмной поверхности не проходит и норму 3 для контролов и линий.
+Bold marks values below the 4.5 text standard. Indigo on the dark surface also fails the 3 standard for controls and lines.
 
-## Находки
+## Findings
 
-### Важно
+### Important
 
-1. **Подпись на кнопке нечитаема у трёх пресетов.** `apps/playground/src/theme/theme-settings.ts:45`: порог яркости 0,45 оставляет белый текст там, где чёрный даёт почти вдвое больший контраст. Нужно выбирать цвет с большим контрастом, а не сравнивать с порогом. Этот же код уходит в экспорт CSS.
-2. **Один цвет текста на обе темы.** `theme-settings.ts:62-63`: `--link` и `--ag-text-accent` получают значение пресета как есть, хотя токен `text-accent` задан парой для светлой и тёмной темы. Все семь пресетов проваливают норму хотя бы в одной теме. Нужна пара значений, выведенная из акцента с подгонкой до 4,5.
-3. **Фокус и линии графика наследуют ту же проблему.** `theme-settings.ts:61,64`: индиго на тёмной карточке даёт 2,82, а для них нужно 3. Им подойдёт та же пара значений.
+1. **The button label is unreadable for three presets.** `apps/playground/src/theme/theme-settings.ts:45`: a luminance threshold of 0.45 keeps white text where black gives almost twice the contrast. The color with the higher contrast should be picked instead of comparing against a threshold. The same code goes into the CSS export.
+2. **One text color for both themes.** `theme-settings.ts:62-63`: `--link` and `--ag-text-accent` get the preset value as is, although the `text-accent` token is defined as a pair for the light and dark themes. All seven presets fail the standard in at least one theme. A pair of values derived from the accent and adjusted to 4.5 is needed.
+3. **Focus and chart lines inherit the same problem.** `theme-settings.ts:61,64`: indigo on a dark card gives 2.82, while they need 3. The same pair of values will work for them.
 
-### Средне
+### Medium
 
-4. **Спарклайны расходуют акцент на украшение.** `packages/kit/src/charts/charts.tsx:404`: на экране «Сегодня» акцентом окрашены четыре спарклайна рядом с основным графиком. Спарклайн показывает тенденцию и должен быть нейтральным, иначе экран без единой кнопки становится самым цветным в CRM.
-5. **Два пресета спорят со статусами.** `theme-settings.ts:4`: зелёный близок к `text-success`, а оранжевый к `text-warning`. С таким акцентом основная кнопка выглядит как статус. Их стоит убрать из пресетов.
-6. **`background-accent` не следует за акцентом.** `packages/kit/src/tokens.ts:54`: токен нигде не используется и остаётся синим при любом акценте. Его надо удалить.
-7. **Основное действие экрана «Сегодня» не выделено.** `apps/playground/src/crm/overview.tsx:74`: заголовок говорит о застрявших сделках, а единственное действие «Открыть сделки» имеет вид `secondary`. Здесь уместна основная кнопка.
+4. **Sparklines spend the accent on decoration.** `packages/kit/src/charts/charts.tsx:404`: on the "Today" screen four sparklines next to the main chart are colored with the accent. A sparkline shows a trend and must be neutral, otherwise a screen without a single button becomes the most colorful one in the CRM.
+5. **Two presets clash with statuses.** `theme-settings.ts:4`: green is close to `text-success`, and orange to `text-warning`. With such an accent the primary button looks like a status. They should be removed from the presets.
+6. **`background-accent` does not follow the accent.** `packages/kit/src/tokens.ts:54`: the token is not used anywhere and stays blue with any accent. It should be deleted.
+7. **The main action of the "Today" screen is not highlighted.** `apps/playground/src/crm/overview.tsx:74`: the heading talks about stuck deals, and the only action, "Open deals", is `secondary`. A primary button fits here.
 
-### Мелочи
+### Minor
 
-8. **Витрина показывает четыре основные кнопки.** `apps/playground/src/showcase.tsx`: это карточки разных компонентов, а не один экран, поэтому правило смягчено. Если витрина должна быть образцом, основной стоит оставить одну.
-9. **Ссылки на страницах не встречаются.** В CRM и блоках нет ни одного `Link`, поэтому находка 2 пока видна только в демо компонентов. В продукте она проявится сразу.
+8. **The showcase shows four primary buttons.** `apps/playground/src/showcase.tsx`: these are cards of different components, not one screen, so the rule is relaxed. If the showcase is meant as a model, it should keep one primary button.
+9. **Links do not appear on the pages.** There is not a single `Link` in the CRM and blocks, so finding 2 is visible only in the component demos for now. In a product it will show up at once.
 
-## Исправления
+## Fixes
 
-Находки 1–7 закрыты. Числа выше относятся к состоянию до исправлений.
+Findings 1–7 are closed. The numbers above describe the state before the fixes.
 
-- Находки 1–3: `apps/playground/src/theme/accent.ts` выводит из акцента пару значений для тем с подгонкой до нормы. Кнопка сохраняет точный цвет бренда, контролы используют `--ag-accent-control`. `accent.test.ts` проверяет контраст всех пресетов и крайних цветов.
-- Находка 4: спарклайны нарисованы `text-secondary`.
-- Находка 5: зелёный и оранжевый убраны из пресетов. Позже весь набор заменён на семь приглушённых цветов одной светлоты: мята, небо, лаванда, сирень, роза, глина, шалфей. Числа из таблицы контраста к ним не относятся.
-- Находка 6: токен `background-accent` удалён.
-- Находка 7: «Открыть сделки» стала основной кнопкой.
+- Findings 1–3: `apps/playground/src/theme/accent.ts` derives a pair of theme values from the accent, adjusted to the standard. The button keeps the exact brand color, controls use `--ag-accent-control`. `accent.test.ts` checks the contrast of all presets and of extreme colors.
+- Finding 4: sparklines are drawn in `text-secondary`.
+- Finding 5: green and orange are removed from the presets. Later the whole set was replaced with seven muted colors of the same lightness: mint, sky, lavender, lilac, rose, clay, sage. The numbers in the contrast table do not apply to them.
+- Finding 6: the `background-accent` token is deleted.
+- Finding 7: "Open deals" became the primary button.
 
-Находки 8 и 9 оставлены: витрина под правило не попадает, а ссылки появятся вместе с первым экраном, где они нужны.
+Findings 8 and 9 are left as is: the showcase is not subject to the rule, and links will appear with the first screen that needs them.

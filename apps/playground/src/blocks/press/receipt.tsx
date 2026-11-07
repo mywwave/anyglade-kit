@@ -2,7 +2,7 @@ import { Box, Button, Shimmer, Text, tokens } from "@anyglade/kit";
 import { Scissors } from "@anyglade/kit/icons";
 import { useLayoutEffect, useRef, useState, type PointerEvent } from "react";
 import { simulateRequest } from "../../simulate.ts";
-import { formatRubles } from "../format.ts";
+import { formatMoney } from "../format.ts";
 
 interface Line {
   name: string;
@@ -20,32 +20,32 @@ interface Order {
 const orders: readonly Order[] = [
   {
     table: 4,
-    cashier: "Дарья",
-    card: "Карта •• 4417",
+    cashier: "Diana",
+    card: "Card •• 4417",
     lines: [
-      { name: "Эспрессо", quantity: 2, price: 120 },
-      { name: "Круассан с миндалём", quantity: 1, price: 260 },
-      { name: "Вода «Шишкин лес»", quantity: 1, price: 140 },
+      { name: "Espresso", quantity: 2, price: 4 },
+      { name: "Almond croissant", quantity: 1, price: 5 },
+      { name: "Sparkling water", quantity: 1, price: 3 },
     ],
   },
   {
     table: 7,
-    cashier: "Дарья",
-    card: "Карта •• 1185",
+    cashier: "Diana",
+    card: "Card •• 1185",
     lines: [
-      { name: "Раф лавандовый", quantity: 1, price: 340 },
-      { name: "Чизкейк", quantity: 1, price: 390 },
-      { name: "Морс клюквенный", quantity: 2, price: 150 },
+      { name: "Lavender latte", quantity: 1, price: 6 },
+      { name: "Cheesecake", quantity: 1, price: 7 },
+      { name: "Cranberry juice", quantity: 2, price: 4 },
     ],
   },
   {
     table: 2,
-    cashier: "Тимур",
-    card: "СБП",
+    cashier: "Tom",
+    card: "Apple Pay",
     lines: [
-      { name: "Флэт уайт", quantity: 2, price: 290 },
-      { name: "Сырники со сметаной", quantity: 1, price: 420 },
-      { name: "Чай облепиховый", quantity: 1, price: 310 },
+      { name: "Flat white", quantity: 2, price: 5 },
+      { name: "Ricotta pancakes", quantity: 1, price: 9 },
+      { name: "Ginger tea", quantity: 1, price: 4 },
     ],
   },
 ];
@@ -78,12 +78,12 @@ const translateY = (y: number) => `translateY(${y}px)`;
 /** The roll behind the receipt shows only the part pulled out of the slot. */
 const rollAt = (pull: number) => translateY(pull - TEAR_AT);
 
-const dateFormat = new Intl.DateTimeFormat("ru-RU", {
+const dateFormat = new Intl.DateTimeFormat("en-US", {
   day: "2-digit",
   month: "2-digit",
   year: "numeric",
 });
-const timeFormat = new Intl.DateTimeFormat("ru-RU", { hour: "2-digit", minute: "2-digit" });
+const timeFormat = new Intl.DateTimeFormat("en-US", { hour: "numeric", minute: "2-digit" });
 
 /** A torn paper edge. The fill is the paper surface token, so it matches the paper in both themes. */
 function Teeth({ edge }: { edge: "top" | "bottom" }) {
@@ -183,15 +183,15 @@ function Paper({ order, number, printedAt }: { order: Order; number: number; pri
     <>
       <Box flexDirection="column" alignItems="center">
         <Text variant="title" monospace>
-          Кофейня «Зерно»
+          Grain Coffee
         </Text>
         <Text variant="caption" monospace color="muted">
-          Москва, Покровка, 17
+          17 Elm Street, Austin
         </Text>
       </Box>
       <Box flexDirection="column">
         <Pair left={dateFormat.format(printedAt)} right={timeFormat.format(printedAt)} />
-        <Pair left={`Кассир ${order.cashier}`} right={`Чек № ${number}`} />
+        <Pair left={`Cashier ${order.cashier}`} right={`No. ${number}`} />
       </Box>
       <Box flexDirection="column" gap="xs">
         {order.lines.map((line) => (
@@ -200,20 +200,20 @@ function Paper({ order, number, printedAt }: { order: Order; number: number; pri
               {line.name}
             </Text>
             <Leader
-              label={`${line.quantity} × ${formatRubles(line.price)}`}
-              amount={formatRubles(line.quantity * line.price)}
+              label={`${line.quantity} × ${formatMoney(line.price)}`}
+              amount={formatMoney(line.quantity * line.price)}
             />
           </Box>
         ))}
       </Box>
       <Box flexDirection="column" gap="xs">
-        <Leader label="В т. ч. НДС 20 %" amount={formatRubles(Math.round(total / 6))} />
+        <Leader label="Incl. sales tax 8%" amount={formatMoney(Math.round((total * 8) / 108))} />
         <Box justifyContent="between" alignItems="baseline" gap="m">
           <Text variant="heading-xxs" monospace>
-            ИТОГО
+            TOTAL
           </Text>
           <Text variant="heading-xxs" monospace tabularNums wrap="nowrap">
-            {formatRubles(total)}
+            {formatMoney(total)}
           </Text>
         </Box>
       </Box>
@@ -233,13 +233,13 @@ function Paper({ order, number, printedAt }: { order: Order; number: number; pri
         </Box>
         <Box flexDirection="column" minWidth={0}>
           <Text variant="title" monospace>
-            Спасибо!
+            Thank you
           </Text>
           <Text variant="caption" monospace color="muted" wrap="nowrap">
             {order.card}
           </Text>
           <Text variant="caption" monospace color="muted" wrap="nowrap">
-            Столик {order.table}
+            Table {order.table}
           </Text>
         </Box>
       </Box>
@@ -582,7 +582,7 @@ export function ReceiptBlock() {
             ease="standard"
             aria-hidden={phase !== "idle"}
           >
-            <Text variant="title">Столик {order.table}</Text>
+            <Text variant="title">Table {order.table}</Text>
             <Box flexDirection="column" gap="xs" width={PAPER_WIDTH}>
               {order.lines.map((line) => (
                 <Box key={line.name} justifyContent="between" gap="m">
@@ -590,7 +590,7 @@ export function ReceiptBlock() {
                     {line.quantity > 1 ? `${line.name} × ${line.quantity}` : line.name}
                   </Text>
                   <Text tabularNums wrap="nowrap">
-                    {formatRubles(line.quantity * line.price)}
+                    {formatMoney(line.quantity * line.price)}
                   </Text>
                 </Box>
               ))}
@@ -660,19 +660,19 @@ export function ReceiptBlock() {
       <Box alignItems="center" justifyContent="center" minHeight={40} aria-live="polite">
         {phase === "idle" ? (
           <Box key="pay" display="block" motion="fade">
-            <Button onPress={pay}>Оплатить {formatRubles(total)}</Button>
+            <Button onPress={pay}>Pay {formatMoney(total)}</Button>
           </Box>
         ) : phase === "printing" ? (
           <Box key="printing" display="block" motion="fade">
             <Text variant="caption" color="muted">
-              <Shimmer>Печатаем чек</Shimmer>
+              <Shimmer>Printing the receipt</Shimmer>
             </Text>
           </Box>
         ) : (
           <Box key="tear" display="block" motion="fade">
             <Button size="sm" variant="ghost" isDisabled={phase !== "printed"} onPress={tearOff}>
               <Scissors />
-              Оторвать чек
+              Tear off receipt
             </Button>
           </Box>
         )}
@@ -681,4 +681,4 @@ export function ReceiptBlock() {
   );
 }
 
-ReceiptBlock.displayName = "Чек";
+ReceiptBlock.displayName = "Receipt";

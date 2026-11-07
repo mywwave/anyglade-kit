@@ -1,17 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" font-family="Inter, system-ui, sans-serif">
   <rect width="1280" height="720" fill="#f7f7f8"/>
   <rect x="48" y="48" width="1184" height="624" rx="16" fill="#ffffff"/>
-  <text x="96" y="124" font-size="20" fill="#7a7a85">Карточка сделки, второй вариант</text>
-  <text x="96" y="180" font-size="40" font-weight="600" fill="#111114">Студия «Север»</text>
-  <text x="96" y="232" font-size="24" fill="#7a7a85">Договор на подписи</text>
-  <text x="96" y="336" font-size="20" fill="#7a7a85">Сумма</text>
-  <text x="96" y="384" font-size="36" font-weight="500" fill="#111114">380 000 ₽</text>
-  <text x="96" y="472" font-size="20" fill="#7a7a85">Срок</text>
-  <text x="96" y="520" font-size="36" font-weight="500" fill="#111114">до 28 ноября</text>
+  <text x="96" y="124" font-size="20" fill="#7a7a85">Deal card, version two</text>
+  <text x="96" y="180" font-size="40" font-weight="600" fill="#111114">North Studio</text>
+  <text x="96" y="232" font-size="24" fill="#7a7a85">Contract out for signature</text>
+  <text x="96" y="336" font-size="20" fill="#7a7a85">Amount</text>
+  <text x="96" y="384" font-size="36" font-weight="500" fill="#111114">$4,750</text>
+  <text x="96" y="472" font-size="20" fill="#7a7a85">Due</text>
+  <text x="96" y="520" font-size="36" font-weight="500" fill="#111114">By November 28</text>
   <rect x="96" y="568" width="200" height="56" rx="12" fill="#2563eb"/>
-  <text x="196" y="604" font-size="22" font-weight="500" fill="#ffffff" text-anchor="middle">Оплатить</text>
+  <text x="196" y="604" font-size="22" font-weight="500" fill="#ffffff" text-anchor="middle">Pay</text>
   <path d="M640 520 L740 470 L840 490 L940 380 L1040 400 L1140 280" fill="none" stroke="#111114" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-  <text x="640" y="280" font-size="20" fill="#7a7a85">Оплаты по неделям</text>
-  <text x="640" y="584" font-size="20" fill="#7a7a85">Октябрь</text>
-  <text x="1140" y="584" font-size="20" fill="#7a7a85" text-anchor="end">Ноябрь</text>
+  <text x="640" y="280" font-size="20" fill="#7a7a85">Weekly payments</text>
+  <text x="640" y="584" font-size="20" fill="#7a7a85">October</text>
+  <text x="1140" y="584" font-size="20" fill="#7a7a85" text-anchor="end">November</text>
 </svg>

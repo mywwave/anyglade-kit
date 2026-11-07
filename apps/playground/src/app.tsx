@@ -11,25 +11,25 @@ import { Showcase } from "./showcase.tsx";
 import { ThemePanel } from "./theme/theme-panel.tsx";
 
 const views = {
-  showcase: { label: "Витрина", categories: [] },
+  showcase: { label: "Showcase", categories: [] },
   crm: { label: "CRM", categories: [] },
-  assistant: { label: "Помощник", categories: [] },
-  messenger: { label: "Сообщения", categories: [] },
-  meet: { label: "Миты", categories: [] },
-  components: { label: "Компоненты", categories: componentCategories },
-  blocks: { label: "Блоки", categories: blockCategories },
+  assistant: { label: "Assistant", categories: [] },
+  messenger: { label: "Messages", categories: [] },
+  meet: { label: "Meet", categories: [] },
+  components: { label: "Components", categories: componentCategories },
+  blocks: { label: "Blocks", categories: blockCategories },
 };
 
 type View = keyof typeof views;
 
 const descriptions: Record<View, string> = {
-  showcase: "Компоненты kit в работе.",
+  showcase: "Kit components at work.",
   crm: "",
   assistant: "",
   messenger: "",
   meet: "",
-  components: "Компоненты и токены из исходников пакета.",
-  blocks: "Живые детали из kit: нажмите, потяните, введите.",
+  components: "Components and tokens from the package source.",
+  blocks: "Live pieces built with the kit: press, drag, type.",
 };
 
 const viewNames = Object.keys(views) as View[];
@@ -70,8 +70,8 @@ export function App() {
         paddingVertical="s"
       >
         <Box alignItems="center" gap="l" minWidth={0}>
-          <img src="/logo.svg" alt="" width={44} height={24} />
-          <Box as="nav" aria-label="Разделы" gap="xs" overflowX="auto">
+          <img src={`${import.meta.env.BASE_URL}logo.svg`} alt="" width={44} height={24} />
+          <Box as="nav" aria-label="Sections" gap="xs" overflowX="auto">
             {viewNames.map((name) => (
               <Button
                 key={name}
@@ -118,7 +118,7 @@ function Documentation({
       {categories.length > 0 && !isBlocks ? (
         <Box
           as="nav"
-          aria-label="Содержание"
+          aria-label="Contents"
           display={{ base: "none", md: "flex" }}
           flexDirection="column"
           gap="xl"

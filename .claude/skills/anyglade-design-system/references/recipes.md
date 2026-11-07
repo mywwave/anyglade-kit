@@ -1,8 +1,8 @@
-# Рецепты
+# Recipes
 
-Рабочие сборки составных компонентов. Части компонентов HeroUI легко перепутать, поэтому копируйте отсюда, а не по памяти. Все примеры компилируются.
+Working assemblies of compound components. The parts of HeroUI components are easy to mix up, so copy from here rather than from memory. All examples compile.
 
-У компонентов HeroUI `className` открыт, но только для размера: `w-*`, `h-*`, `min-w-*`, `max-w-*`, `rounded-*`. Цвет, отступы и шрифт через него не задаются.
+HeroUI components keep `className` open, but only for size: `w-*`, `h-*`, `min-w-*`, `max-w-*`, `rounded-*`. Color, spacing and type are not set through it.
 
 ```tsx
 import {
@@ -37,9 +37,9 @@ import { EllipsisVertical, Magnifier } from "@anyglade/kit/icons";
 import { useState } from "react";
 ```
 
-## Таблица с сортировкой, поиском, фильтром и выбором
+## Table with sorting, search, filter and selection
 
-Порядок: отфильтровать, отсортировать, разрезать на страницы. `tableProps` передаётся в `Table.Content`. Ширина на телефоне задаётся `className="min-w-*"` там же.
+Order: filter, sort, slice into pages. `tableProps` goes to `Table.Content`. The width on the phone is set with `className="min-w-*"` in the same place.
 
 ```tsx
 type Status = "paid" | "failed";
@@ -52,13 +52,13 @@ interface Invoice {
 }
 
 const statusLabels = {
-  paid: { label: "Оплачен", color: "muted" },
-  failed: { label: "Ошибка оплаты", color: "danger" },
+  paid: { label: "Paid", color: "muted" },
+  failed: { label: "Payment failed", color: "danger" },
 } as const;
 
 const filters = [
-  { id: "all", label: "Все" },
-  { id: "failed", label: "Ошибки" },
+  { id: "all", label: "All" },
+  { id: "failed", label: "Failed" },
 ] as const;
 
 const sortAccessors: SortAccessors<Invoice> = {
@@ -104,15 +104,15 @@ function InvoiceTable({ invoices }: { invoices: Invoice[] }) {
     <Box flexDirection="column" gap="l">
       <Box flexDirection={{ base: "column", md: "row" }} justifyContent="between" gap="m">
         <SegmentedControl
-          label="Статус"
+          label="Status"
           options={filters}
           value={filter}
           onChange={(next) => withTransition(() => setFilter(next))}
         />
-        <SearchField aria-label="Поиск по клиентам" value={query} onChange={setQuery}>
+        <SearchField aria-label="Search customers" value={query} onChange={setQuery}>
           <SearchField.Group>
             <SearchField.SearchIcon />
-            <SearchField.Input className="w-64" placeholder="Клиент" />
+            <SearchField.Input className="w-64" placeholder="Customer" />
             <SearchField.ClearButton />
           </SearchField.Group>
         </SearchField>
@@ -121,18 +121,18 @@ function InvoiceTable({ invoices }: { invoices: Invoice[] }) {
         <EmptyPanel
           actions={
             <Button size="sm" variant="secondary" onPress={reset}>
-              Сбросить фильтры
+              Reset filters
             </Button>
           }
-          description="Измените запрос или фильтры."
+          description="Change the search or the filters."
           icon={<Magnifier />}
-          title="Ничего не найдено"
+          title="Nothing found"
         />
       ) : (
         <Table>
           <Table.ScrollContainer>
             <Table.Content
-              aria-label="Счета"
+              aria-label="Invoices"
               className="min-w-150"
               selectedKeys={selected}
               selectionMode="multiple"
@@ -141,14 +141,14 @@ function InvoiceTable({ invoices }: { invoices: Invoice[] }) {
             >
               <Table.Header>
                 <Table.Column className="w-12">
-                  <SelectionCheckbox label="Выбрать все" />
+                  <SelectionCheckbox label="Select all" />
                 </Table.Column>
                 <SortableColumn isRowHeader id="client">
-                  Клиент
+                  Customer
                 </SortableColumn>
-                <Table.Column>Статус</Table.Column>
+                <Table.Column>Status</Table.Column>
                 <SortableColumn className="text-right" id="amount">
-                  Сумма
+                  Amount
                 </SortableColumn>
               </Table.Header>
               <Table.Body>
@@ -159,7 +159,7 @@ function InvoiceTable({ invoices }: { invoices: Invoice[] }) {
                     style={{ viewTransitionName: `invoice-${invoice.id}` }}
                   >
                     <Table.Cell>
-                      <SelectionCheckbox label={`Выбрать ${invoice.client}`} />
+                      <SelectionCheckbox label={`Select ${invoice.client}`} />
                     </Table.Cell>
                     <Table.Cell>{invoice.client}</Table.Cell>
                     <Table.Cell>
@@ -169,7 +169,10 @@ function InvoiceTable({ invoices }: { invoices: Invoice[] }) {
                     </Table.Cell>
                     <Table.Cell>
                       <Text align="right" tabularNums>
-                        {invoice.amount.toLocaleString("ru-RU")} ₽
+                        {invoice.amount.toLocaleString("en-US", {
+                          style: "currency",
+                          currency: "USD",
+                        })}
                       </Text>
                     </Table.Cell>
                   </Table.Row>
@@ -179,15 +182,15 @@ function InvoiceTable({ invoices }: { invoices: Invoice[] }) {
           </Table.ScrollContainer>
         </Table>
       )}
-      <Text color="muted">Выбрано {chosen.length}</Text>
+      <Text color="muted">{chosen.length} selected</Text>
     </Box>
   );
 }
 ```
 
-## Загрузка
+## Loading
 
-Размер `Skeleton` задаётся через `className`, а не пропсами. Скелетон повторяет форму контента.
+The size of a `Skeleton` is set through `className`, not props. The skeleton repeats the shape of the content.
 
 ```tsx
 function InvoicesSkeleton() {
@@ -210,9 +213,9 @@ function InvoicesScreen({ data }: { data: Invoice[] | null }) {
 }
 ```
 
-## Строка открывает панель
+## A row opens a panel
 
-`onRowAction` получает id строки. Панель из раздела «Панель с деталями» рендерится рядом с таблицей, а не внутри строки.
+`onRowAction` receives the row id. The panel from the "Details panel" section renders next to the table, not inside the row.
 
 ```tsx
 function InvoicesWithDetails({ invoices }: { invoices: Invoice[] }) {
@@ -224,12 +227,12 @@ function InvoicesWithDetails({ invoices }: { invoices: Invoice[] }) {
       <Table>
         <Table.ScrollContainer>
           <Table.Content
-            aria-label="Счета"
+            aria-label="Invoices"
             className="min-w-150"
             onRowAction={(id) => setOpenedId(String(id))}
           >
             <Table.Header>
-              <Table.Column isRowHeader>Клиент</Table.Column>
+              <Table.Column isRowHeader>Customer</Table.Column>
             </Table.Header>
             <Table.Body>
               {invoices.map((invoice) => (
@@ -247,13 +250,13 @@ function InvoicesWithDetails({ invoices }: { invoices: Invoice[] }) {
 }
 ```
 
-## Выбор из списка
+## Choosing from a list
 
 ```tsx
 function OwnerSelect({ value, onChange }: { value: string; onChange: (value: string) => void }) {
   return (
     <Select
-      aria-label="Менеджер"
+      aria-label="Manager"
       className="w-48"
       value={value}
       onChange={(key) => onChange(String(key))}
@@ -264,8 +267,8 @@ function OwnerSelect({ value, onChange }: { value: string; onChange: (value: str
       </Select.Trigger>
       <Select.Popover>
         <ListBox>
-          <ListBox.Item id="all" textValue="Все менеджеры">
-            Все менеджеры
+          <ListBox.Item id="all" textValue="All managers">
+            All managers
             <ListBox.ItemIndicator />
           </ListBox.Item>
         </ListBox>
@@ -275,7 +278,7 @@ function OwnerSelect({ value, onChange }: { value: string; onChange: (value: str
 }
 ```
 
-## Поле с ошибкой
+## Field with an error
 
 ```tsx
 function NameField() {
@@ -290,27 +293,27 @@ function NameField() {
       value={value}
       onChange={setValue}
     >
-      <Label>Название</Label>
+      <Label>Name</Label>
       <Input />
-      <FieldError>Укажите хотя бы два символа</FieldError>
+      <FieldError>Enter at least two characters</FieldError>
     </TextField>
   );
 }
 ```
 
-## Меню действий
+## Action menu
 
 ```tsx
 function RowMenu({ onArchive }: { onArchive: () => void }) {
   return (
     <Dropdown>
-      <Button isIconOnly aria-label="Действия" size="sm" variant="ghost">
+      <Button isIconOnly aria-label="Actions" size="sm" variant="ghost">
         <EllipsisVertical />
       </Button>
       <Dropdown.Popover>
-        <Dropdown.Menu aria-label="Действия" onAction={onArchive}>
-          <Dropdown.Item id="archive" textValue="В архив">
-            <Label>В архив</Label>
+        <Dropdown.Menu aria-label="Actions" onAction={onArchive}>
+          <Dropdown.Item id="archive" textValue="Archive">
+            <Label>Archive</Label>
           </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown.Popover>
@@ -319,9 +322,9 @@ function RowMenu({ onArchive }: { onArchive: () => void }) {
 }
 ```
 
-## Панель с деталями
+## Details panel
 
-Состояние открытия живёт снаружи: панель показывает выбранный объект.
+The open state lives outside: the panel shows the selected object.
 
 ```tsx
 function InvoiceDrawer({ invoice, onClose }: { invoice: Invoice | null; onClose: () => void }) {
@@ -341,7 +344,7 @@ function InvoiceDrawer({ invoice, onClose }: { invoice: Invoice | null; onClose:
                 </Drawer.Body>
                 <Drawer.Footer>
                   <Button fullWidth variant="secondary" onPress={onClose}>
-                    Закрыть
+                    Close
                   </Button>
                 </Drawer.Footer>
               </>
@@ -354,28 +357,28 @@ function InvoiceDrawer({ invoice, onClose }: { invoice: Invoice | null; onClose:
 }
 ```
 
-## Окно
+## Modal
 
-Кнопка со `slot="close"` закрывает окно сама.
+A button with `slot="close"` closes the modal by itself.
 
 ```tsx
 function HelpModal() {
   return (
     <Modal>
-      <Button variant="secondary">Как это устроено</Button>
+      <Button variant="secondary">How it works</Button>
       <Modal.Backdrop>
         <Modal.Container>
           <Modal.Dialog>
             <Modal.CloseTrigger />
             <Modal.Header>
-              <Modal.Heading>Три шага до отчёта</Modal.Heading>
+              <Modal.Heading>Three steps to a report</Modal.Heading>
             </Modal.Header>
             <Modal.Body>
-              <Text as="p">Подключите кассу, и отчёт соберётся сам.</Text>
+              <Text as="p">Connect your register and the report builds itself.</Text>
             </Modal.Body>
             <Modal.Footer>
               <Button fullWidth slot="close">
-                Понятно
+                Got it
               </Button>
             </Modal.Footer>
           </Modal.Dialog>
@@ -386,29 +389,29 @@ function HelpModal() {
 }
 ```
 
-## Опасное подтверждение
+## Dangerous confirmation
 
 ```tsx
 function DeleteDialog({ onDelete }: { onDelete: () => void }) {
   return (
     <AlertDialog>
-      <Button variant="danger-soft">Удалить проект</Button>
+      <Button variant="danger-soft">Delete project</Button>
       <AlertDialog.Backdrop>
         <AlertDialog.Container>
           <AlertDialog.Dialog>
             <AlertDialog.Header>
               <AlertDialog.Icon status="danger" />
-              <AlertDialog.Heading>Удалить проект?</AlertDialog.Heading>
+              <AlertDialog.Heading>Delete project?</AlertDialog.Heading>
             </AlertDialog.Header>
             <AlertDialog.Body>
-              <Text as="p">Счета и отчёты удалятся без возможности восстановить.</Text>
+              <Text as="p">Invoices and reports will be deleted permanently.</Text>
             </AlertDialog.Body>
             <AlertDialog.Footer>
               <Button slot="close" variant="tertiary">
-                Отменить
+                Cancel
               </Button>
               <Button slot="close" variant="danger" onPress={onDelete}>
-                Удалить проект
+                Delete project
               </Button>
             </AlertDialog.Footer>
           </AlertDialog.Dialog>
@@ -419,16 +422,16 @@ function DeleteDialog({ onDelete }: { onDelete: () => void }) {
 }
 ```
 
-## Звонок
+## Call
 
-`MediaStage` сам подбирает колонки и держит один элемент для плитки, поэтому видео не перезапускается при смене раскладки.
+`MediaStage` picks the columns by itself and keeps one element per tile, so the video does not restart when the layout changes.
 
 ```tsx
 <MediaStage
   focusId={pinnedId}
   items={tiles}
-  label="Участники звонка"
-  more={{ label: (count) => `Ещё ${count}, показать всех`, onPress: openPeople }}
+  label="Call participants"
+  more={{ label: (count) => `${count} more, show all`, onPress: openPeople }}
   renderItem={(tile) => (
     <MediaTile isSpeaking={tile.id === speakerId} name={tile.name} status={<MemberStatus />}>
       {tile.stream ? <StreamVideo label={tile.name} stream={tile.stream} /> : <Avatar />}
@@ -437,9 +440,9 @@ function DeleteDialog({ onDelete }: { onDelete: () => void }) {
 />
 ```
 
-Весь экран показывают с `fit="contain"`, свою камеру с `isMirrored`.
+Show a shared screen with `fit="contain"` and your own camera with `isMirrored`.
 
-## Перенос между группами
+## Moving between groups
 
 ```tsx
 <ItemList
@@ -456,25 +459,25 @@ function DeleteDialog({ onDelete }: { onDelete: () => void }) {
 />
 ```
 
-Строка, которая не примет значение, не подсвечивается. Предпросмотр короткий: имя, а не вся строка. `slot` задаёт отступы места, куда встанет значение: они должны совпасть с настоящей вёрсткой строки, иначе при посадке будет рывок.
+A row that will not accept the value is not highlighted. The preview is short: a name, not the whole row. `slot` sets the offsets of the spot where the value will land: they must match the row's real layout, otherwise there is a jerk on landing.
 
-## Вкладки
+## Tabs
 
 ```tsx
 function SectionTabs() {
   return (
     <Tabs className="w-full">
       <Tabs.ListContainer>
-        <Tabs.List aria-label="Разделы">
+        <Tabs.List aria-label="Sections">
           <Tabs.Tab id="overview">
-            Обзор
+            Overview
             <Tabs.Indicator />
           </Tabs.Tab>
         </Tabs.List>
       </Tabs.ListContainer>
       <Tabs.Panel id="overview">
         <Box display="block" paddingTop="l">
-          <Text>Содержимое</Text>
+          <Text>Content</Text>
         </Box>
       </Tabs.Panel>
     </Tabs>

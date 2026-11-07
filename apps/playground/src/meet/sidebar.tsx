@@ -39,7 +39,7 @@ export function SpaceRail({ spaces, channels, spaceId, onSelect, onCreate }: Spa
   return (
     <Box
       as="nav"
-      aria-label="Беседы"
+      aria-label="Spaces"
       flexDirection="column"
       alignItems="center"
       gap="m"
@@ -57,7 +57,7 @@ export function SpaceRail({ spaces, channels, spaceId, onSelect, onCreate }: Spa
               <Button
                 isIconOnly
                 aria-current={id === spaceId ? "page" : undefined}
-                aria-label={unread > 0 ? `${name}, непрочитанных: ${unread}` : name}
+                aria-label={unread > 0 ? `${name}, ${unread} unread` : name}
                 variant={id === spaceId ? "secondary" : "ghost"}
                 onPress={() => onSelect(id)}
               >
@@ -76,11 +76,11 @@ export function SpaceRail({ spaces, channels, spaceId, onSelect, onCreate }: Spa
         );
       })}
       <Tooltip delay={0}>
-        <Button isIconOnly aria-label="Новая беседа" variant="ghost" onPress={onCreate}>
+        <Button isIconOnly aria-label="New space" variant="ghost" onPress={onCreate}>
           <Plus />
         </Button>
         <Tooltip.Content placement="right">
-          <Text as="p">Новая беседа</Text>
+          <Text as="p">New space</Text>
         </Tooltip.Content>
       </Tooltip>
     </Box>
@@ -133,7 +133,7 @@ function RoomPerson({ member, speakerId }: { member: Member; speakerId: string |
       </Box>
       {member.isMuted ? (
         <Box as="span" display="inline-flex" color="text-tertiary">
-          <MicrophoneSlash aria-label="Микрофон выключен" />
+          <MicrophoneSlash aria-label="Microphone muted" />
         </Box>
       ) : null}
     </Box>
@@ -177,14 +177,14 @@ export function ChannelColumn({
         </Text>
       </Box>
       <Box flexDirection="column" gap="xs">
-        <SectionTitle>Текстовые каналы</SectionTitle>
+        <SectionTitle>Text channels</SectionTitle>
         <ItemList
           currentId={openId}
           getText={(channel) =>
-            channel.unread > 0 ? `${channel.name}, непрочитанных: ${channel.unread}` : channel.name
+            channel.unread > 0 ? `${channel.name}, ${channel.unread} unread` : channel.name
           }
           items={texts}
-          label="Текстовые каналы"
+          label="Text channels"
           renderItem={(channel) => (
             <ChannelName
               icon={Hashtag}
@@ -197,15 +197,15 @@ export function ChannelColumn({
         />
       </Box>
       <Box flexDirection="column" gap="xs">
-        <SectionTitle>Голосовые каналы</SectionTitle>
+        <SectionTitle>Voice channels</SectionTitle>
         <ItemList
           currentId={openId}
           getText={(channel) => {
             const count = roster(channel.id).length;
-            return count > 0 ? `${channel.name}, внутри: ${count}` : channel.name;
+            return count > 0 ? `${channel.name}, ${count} inside` : channel.name;
           }}
           items={voices}
-          label="Голосовые каналы"
+          label="Voice channels"
           drop={moves}
           renderItem={(channel) => {
             const inside = roster(channel.id);
@@ -274,7 +274,7 @@ export function CallDock({
           color={isOffline ? "text-warning" : "text-success"}
         >
           <Text as="span" variant="caption" color="inherit">
-            {isOffline ? "Нет сети" : "Подключено"}
+            {isOffline ? "Offline" : "Connected"}
           </Text>
           <CallTimer startedAt={startedAt} />
         </Box>
@@ -285,15 +285,9 @@ export function CallDock({
         <SoundButton isOn={!meet.self.isDeafened} size="sm" onToggle={meet.toggleDeafen} />
         <Box display="block" flexGrow={1} />
         <Button size="sm" variant="ghost" onPress={onReturn}>
-          К звонку
+          Back to call
         </Button>
-        <Button
-          isIconOnly
-          aria-label="Отключиться"
-          size="sm"
-          variant="danger-soft"
-          onPress={onLeave}
-        >
+        <Button isIconOnly aria-label="Leave" size="sm" variant="danger-soft" onPress={onLeave}>
           <ArrowRightFromSquare />
         </Button>
       </Box>

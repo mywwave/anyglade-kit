@@ -13,6 +13,7 @@ import {
 } from "@anyglade/kit";
 import { ArrowLeft, Lock, PersonPlus } from "@anyglade/kit/icons";
 import { CameraButton, CallBar, CallTimer, MicButton } from "./controls.tsx";
+import { pluralize } from "../crm/format.ts";
 import { firstName, ME, type Member, type VoiceChannel } from "./data.ts";
 import { PersonAvatar, TileView, buildTiles, type PersonActions } from "./tiles.tsx";
 import type { ScreenMode, useLocalMedia } from "./use-local-media.ts";
@@ -21,22 +22,16 @@ import type { Meet } from "./use-meet.ts";
 type Media = ReturnType<typeof useLocalMedia>;
 
 const screenModes: { id: ScreenMode; label: string }[] = [
-  { id: "text", label: "Текст" },
-  { id: "motion", label: "Видео" },
+  { id: "text", label: "Text" },
+  { id: "motion", label: "Video" },
 ];
 
-const countLabel = (count: number) => {
-  const tens = count % 100;
-  const ones = count % 10;
-  if (tens > 10 && tens < 20) return `${count} участников`;
-  if (ones === 1) return `${count} участник`;
-  return ones > 1 && ones < 5 ? `${count} участника` : `${count} участников`;
-};
+const countLabel = (count: number) => `${count} ${pluralize(count, "participant", "participants")}`;
 
 function BackButton({ onBack, isPadded = false }: { onBack: () => void; isPadded?: boolean }) {
   return (
     <Box display={{ base: "flex", md: "none" }} flexShrink={0} padding={isPadded ? "m" : undefined}>
-      <Button isIconOnly aria-label="К списку каналов" size="sm" variant="ghost" onPress={onBack}>
+      <Button isIconOnly aria-label="Back to channels" size="sm" variant="ghost" onPress={onBack}>
         <ArrowLeft />
       </Button>
     </Box>
@@ -45,11 +40,11 @@ function BackButton({ onBack, isPadded = false }: { onBack: () => void; isPadded
 
 function whoIsInside(inside: readonly Member[]) {
   if (inside.length === 0) {
-    return "Пока никого. Подключитесь первым.";
+    return "No one here yet. Be the first to join.";
   }
   const names = inside.slice(0, 2).map((member) => firstName(member.personId));
   const rest = inside.length - names.length;
-  return `Внутри: ${names.join(", ")}${rest > 0 ? ` и ещё ${rest}` : ""}`;
+  return `Inside: ${names.join(", ")}${rest > 0 ? ` and ${rest} more` : ""}`;
 }
 
 interface LobbyProps {
@@ -89,9 +84,9 @@ export function Lobby({
       >
         <Box flexDirection="column" gap="l" width="100%" maxWidth={tokens.widths.form}>
           <Box display="block" width="100%" aspectRatio="16 / 9">
-            <MediaTile name="Вы">
+            <MediaTile name="You">
               {media.camera.status === "on" ? (
-                <StreamVideo isMirrored label="Ваша камера" stream={media.camera.stream} />
+                <StreamVideo isMirrored label="Your camera" stream={media.camera.stream} />
               ) : (
                 <PersonAvatar personId={ME} size="tile" />
               )}
@@ -104,8 +99,8 @@ export function Lobby({
               </Text>
               <Text variant="caption" color="muted" truncate>
                 {activeChannelName
-                  ? `Вы сейчас в канале «${activeChannelName}»`
-                  : `${isInvited ? "Вас пригласили. " : ""}${whoIsInside(inside)}`}
+                  ? `You are in ${activeChannelName} right now`
+                  : `${isInvited ? "You were invited. " : ""}${whoIsInside(inside)}`}
               </Text>
             </Box>
             <Box alignItems="center" gap="s" flexShrink={0}>
@@ -118,11 +113,11 @@ export function Lobby({
             </Box>
           </Box>
           <Button fullWidth onPress={onConnect}>
-            {activeChannelName ? "Перейти в этот канал" : "Подключиться"}
+            {activeChannelName ? "Switch to this channel" : "Join"}
           </Button>
           <Button fullWidth variant="ghost" onPress={onInvite}>
             <PersonPlus />
-            Пригласить по ссылке
+            Invite with a link
           </Button>
         </Box>
       </Box>
@@ -145,12 +140,12 @@ export function LockedRoom({ channel, isRequested, onRequest, onBack }: LockedRo
         <EmptyPanel
           actions={
             <Button isDisabled={isRequested} size="sm" variant="secondary" onPress={onRequest}>
-              {isRequested ? "Запрос отправлен" : "Запросить доступ"}
+              {isRequested ? "Request sent" : "Request access"}
             </Button>
           }
-          description={`В канал «${channel.name}» входят по приглашению организатора.`}
+          description={`Joining ${channel.name} requires an invitation from the organizer.`}
           icon={<Lock />}
-          title="Закрытый канал"
+          title="Private channel"
         />
       </Box>
     </Box>
@@ -173,9 +168,9 @@ function ShareBar({ media, onReplace }: { media: Media; onReplace: () => void })
       paddingBottom="s"
       motion="fade"
     >
-      <Text weight="medium">Вы показываете экран</Text>
+      <Text weight="medium">You are sharing your screen</Text>
       <SegmentedControl
-        label="Что важнее в показе"
+        label="Optimize sharing for"
         options={screenModes}
         value={screen.mode}
         onChange={media.setScreenMode}
@@ -186,16 +181,16 @@ function ShareBar({ media, onReplace }: { media: Media; onReplace: () => void })
             <Switch.Control>
               <Switch.Thumb />
             </Switch.Control>
-            Звук
+            Sound
           </Switch.Content>
         </Switch>
       ) : null}
       <Box display="block" flexGrow={1} />
       <Button size="sm" variant="ghost" onPress={onReplace}>
-        Сменить
+        Change
       </Button>
       <Button size="sm" variant="danger-soft" onPress={media.stopScreen}>
-        Остановить
+        Stop
       </Button>
     </Box>
   );
@@ -255,7 +250,7 @@ export function Room({
         </Box>
         <Button size="sm" variant="secondary" onPress={onInvite}>
           <PersonPlus />
-          Пригласить
+          Invite
         </Button>
       </Box>
       {isOffline ? (
@@ -269,7 +264,9 @@ export function Room({
           motion="fade"
         >
           <Spinner size="sm" />
-          <Text color="inherit">Нет сети. Вернём вас в звонок, как только она появится.</Text>
+          <Text color="inherit">
+            You are offline. We will bring you back to the call once the connection returns.
+          </Text>
         </Box>
       ) : null}
       <ShareBar media={media} onReplace={onShare} />
@@ -277,9 +274,9 @@ export function Room({
         <MediaStage
           focusId={focusId}
           items={buildTiles(roster)}
-          label="Участники звонка"
+          label="Call participants"
           more={{
-            label: (count) => `Ещё ${count}, показать всех`,
+            label: (count) => `${count} more, show all`,
             onPress: onTogglePeople,
           }}
           renderItem={(tile) => (

@@ -1,7 +1,7 @@
 import { Box, Button, CopyButton, Input, Label, ListBox, Modal, Select, Text } from "@anyglade/kit";
 import { inviteLink, inviteTerms, type Invite, type InviteTerm } from "./use-invites.ts";
 
-const expiry = new Intl.DateTimeFormat("ru-RU", {
+const expiry = new Intl.DateTimeFormat("en-US", {
   day: "numeric",
   month: "long",
   hour: "2-digit",
@@ -39,14 +39,14 @@ export function InviteModal({
           <Modal.Dialog>
             <Modal.CloseTrigger />
             <Modal.Header>
-              <Modal.Heading>Пригласить в канал «{channelName}»</Modal.Heading>
+              <Modal.Heading>Invite to {channelName}</Modal.Heading>
             </Modal.Header>
             <Modal.Body>
               <Box flexDirection="column" gap="m">
-                <Text color="muted">По этой ссылке человек сразу попадёт в канал.</Text>
+                <Text color="muted">Anyone with this link joins the channel right away.</Text>
                 <Input
                   readOnly
-                  aria-label="Ссылка-приглашение"
+                  aria-label="Invite link"
                   fullWidth
                   value={link}
                   variant="secondary"
@@ -57,7 +57,7 @@ export function InviteModal({
                     value={invite?.term}
                     onChange={(key) => onTerm(key as InviteTerm)}
                   >
-                    <Label>Срок действия</Label>
+                    <Label>Expires after</Label>
                     <Select.Trigger>
                       <Select.Value />
                       <Select.Indicator />
@@ -77,12 +77,12 @@ export function InviteModal({
                 <Box alignItems="center" justifyContent="between" gap="s" minHeight={32}>
                   <Text variant="caption" color="muted">
                     {invite?.expiresAt
-                      ? `Ссылка работает до ${expiry.format(invite.expiresAt)}`
-                      : "Ссылка работает, пока её не сбросят"}
+                      ? `Link works until ${expiry.format(invite.expiresAt)}`
+                      : "Link works until it is reset"}
                   </Text>
                   {canManage ? (
                     <Button size="sm" variant="ghost" onPress={onReset}>
-                      Сбросить
+                      Reset
                     </Button>
                   ) : null}
                 </Box>
@@ -92,8 +92,8 @@ export function InviteModal({
               <CopyButton
                 fullWidth
                 isLabelVisible
-                copiedLabel="Ссылка скопирована"
-                label="Скопировать ссылку"
+                copiedLabel="Link copied"
+                label="Copy link"
                 size="md"
                 value={link}
                 variant="primary"

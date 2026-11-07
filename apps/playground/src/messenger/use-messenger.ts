@@ -53,7 +53,7 @@ function createActions({ setChats, setNotes }: Setters) {
     patch(id, { place });
     const toastId = toast(message, {
       actionProps: {
-        children: "Отменить",
+        children: "Undo",
         onPress: () => {
           patch(id, { place: from });
           toast.close(toastId);
@@ -113,14 +113,14 @@ function createActions({ setChats, setNotes }: Setters) {
     setComment: (id: string, comment: string) => patch(id, { comment }),
     setLabel: (id: string, label: LabelId) => patch(id, { label }),
     toggleStar: (chat: Chat) => patch(chat.id, { isStarred: !chat.isStarred }),
-    archive: (chat: Chat) => moveTo(chat.id, "archive", "Чат в архиве", chat.place),
-    restore: (chat: Chat) => moveTo(chat.id, "inbox", "Чат возвращён", chat.place),
-    trash: (chat: Chat) => moveTo(chat.id, "trash", "Чат в корзине", chat.place),
+    archive: (chat: Chat) => moveTo(chat.id, "archive", "Chat archived", chat.place),
+    restore: (chat: Chat) => moveTo(chat.id, "inbox", "Chat restored", chat.place),
+    trash: (chat: Chat) => moveTo(chat.id, "trash", "Chat moved to trash", chat.place),
 
     removeForever: (id: string) => {
       setChats((list) => list.filter((chat) => chat.id !== id));
       setNotes(({ [id]: _removed, ...rest }) => rest);
-      toast("Чат удалён");
+      toast("Chat deleted");
     },
 
     send: (chatId: string, text: string, attachments: string[]) => {

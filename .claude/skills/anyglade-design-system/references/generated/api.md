@@ -1,6 +1,6 @@
-# Публичный API
+# Public API
 
-Файл создан автоматически. Не правьте его вручную.
+This file is generated. Do not edit it by hand.
 
 ## @anyglade/kit
 
@@ -14,9 +14,9 @@
 
 `AreaChart`, `BarChart`, `DonutChart`, `LineChart`, `Sparkline`
 
-Основной вход дополнительно отдаёт все компоненты HeroUI и объект `tokens` со значениями шкал: `tokens.widths.content`, `tokens.timings.confirmation`.
+The main entry also exports every HeroUI component and the `tokens` object with scale values: `tokens.widths.content`, `tokens.timings.confirmation`.
 
-## Функции и хуки
+## Functions and hooks
 
 ```ts
 function useLoadingIndicator(isLoading: boolean, delay: number = timings.loaderDelay);
@@ -27,11 +27,11 @@ type SortAccessors<T> = Record<string, (item: T) => string | number>;
 type StatusLabels = Record<AgentStatus, string>;
 ```
 
-## Пропсы Box
+## Box props
 
-Значения можно задавать объектом условий. Отрицательные отступы пишутся с минусом: `-s`.
+Values can be given as an object of conditions. Negative spacing takes a minus sign: `-s`.
 
-| Проп | Значения |
+| Prop | Values |
 | --- | --- |
 | `padding` | none, 2xs, xs, s, m, l, xl, 2xl, 3xl, 4xl, 5xl |
 | `paddingTop` | none, 2xs, xs, s, m, l, xl, 2xl, 3xl, 4xl, 5xl |
@@ -85,11 +85,11 @@ type StatusLabels = Record<AgentStatus, string>;
 | `transitionDuration` | instant, fast, base, slow, slower, shimmer, drift, stagger |
 | `ease` | standard, decelerate, accelerate |
 
-Свободные значения: `width`, `height`, `minWidth`, `maxWidth`, `minHeight`, `maxHeight`, `flexBasis`, `top`, `right`, `bottom`, `left`, `inset`, `viewTransitionName`, `flex`, `aspectRatio`, `zIndex`, `gridTemplateColumns`, `gridTemplateRows`, `gridTemplateAreas`, `gridColumn`, `gridRow`, `gridArea`, `columns`, `opacity`, `transform`.
+Free values: `width`, `height`, `minWidth`, `maxWidth`, `minHeight`, `maxHeight`, `flexBasis`, `top`, `right`, `bottom`, `left`, `inset`, `viewTransitionName`, `flex`, `aspectRatio`, `zIndex`, `gridTemplateColumns`, `gridTemplateRows`, `gridTemplateAreas`, `gridColumn`, `gridRow`, `gridArea`, `columns`, `opacity`, `transform`.
 
-## Пропсы Text
+## Text props
 
-Значения `variant`, `color` и `weight` в tokens.md.
+Values of `variant`, `color` and `weight` are in tokens.md.
 
 ```ts
 interface TextStyleProps {
@@ -108,7 +108,7 @@ interface TextStyleProps {
 }
 ```
 
-## Пропсы и типы
+## Props and types
 
 ```ts
 export interface BarChartProps extends CartesianChartProps {
@@ -531,7 +531,7 @@ export interface ShimmerProps {
 export interface SignaturePadProps {
   /** What is being signed, for a screen reader. */
   label: string;
-  /** Sits on the line until the first stroke: "Подпишите здесь". */
+  /** Sits on the line until the first stroke: "Sign here". */
   placeholder: string;
   clearLabel: string;
   /** A PNG data URL after every stroke, `null` once cleared. */
@@ -541,7 +541,7 @@ export interface SignaturePadProps {
 
 ```ts
 export interface SlideToConfirmProps {
-  /** The action and its stake, short enough for one line: "Перевести 48 000 ₽". */
+  /** The action and its stake, short enough for one line: "Send $480". */
   label: string;
   /** Shown while `onConfirm` runs, with a shimmer. */
   pendingLabel: string;

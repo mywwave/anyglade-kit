@@ -1,62 +1,62 @@
-# Решения по дизайн-системе
+# Design system decisions
 
-Исследование: [polar-research.md](polar-research.md).
+Research: [polar-research.md](polar-research.md).
 
-## Принято
+## Accepted
 
-- Близость к Polar максимальная: значения шкал, пилюли, монохром, вложенные рамки. Логотип, название и бренд Polar не используются.
-- Заимствованный код и токены Orbit сопровождаются уведомлением Apache-2.0 в `NOTICE`.
-- Фундамент: HeroUI как движок поведения и доступности, сверху семантические токены, типизированные `Box` и `Text`, закрытые обёртки. StyleX не используется: подключение к проекту остаётся одной строкой CSS.
-- `Box` не зависит от сборки потребителя: `styles/box.css` генерируется из таблицы пропсов в TypeScript и публикуется готовым. Компонент работает в серверных компонентах и не вставляет `<style>` при рендере, в отличие от Orbit. Токены шкал не попадают в `@theme` Tailwind, иначе `--spacing-sm` сломал бы `max-w-sm` у потребителей.
-- Строгость: закрытый API и правила oxlint, которые публикуются вместе с kit и работают в проектах-потребителях.
-- Продукты: SaaS-дашборды, маркетинг, чекаут и кабинеты, внутренние инструменты.
-- Шрифты: Inter для интерфейса, Geist Mono для чисел и кода.
-- Тема: следует настройке ОС, светлая и тёмная равноправны.
-- Тактильный отклик важен: нажатие кнопки со scale из HeroUI сохраняется, хотя у Polar его нет. Отключать анимации HeroUI ради сходства нельзя.
-- Типографика: шкала текста, веса и трекинг Tailwind подменены значениями из `tokens.ts`, поэтому HeroUI и утилиты потребителя идут по ней автоматически. Вес 600 и 700 заменён на 550, отрицательного трекинга нет, текст без роли равен роли `default` (14/21, вес 450).
-- Спейсинг: шкала 0, 2, 4, 8, 12, 16, 24, 32, 48, 64, 96. Шаг `2xs` (2 px) добавлен для внутренностей мелких контролов. Отступы кнопок на шкале: 12, 16, 24 вместо 20 у Polar. Допустимые исключения: сумма токенов для выравнивания описания по подписи (28) и отступы в `em` внутри `Link`.
-- Рамки только у полей и объектов коллекции: `Frame` и `EmptyPanel` выделяются поверхностью. Статус в таблице передаётся текстом с цветом роли, чипы не используются.
-- Ширина: содержимое не растягивается на всю доступную область. Формы до 400, чтение и настройки до 720, смешанный контент до 880, на всю ширину только данные и маркетинг.
-- Кнопки `secondary` и нейтральные заливки на шаг темнее `background-card`, иначе на карточках светлой темы они не видны.
-- Изображения: примеры используют настоящие картинки и иконки из интернета, логотипы сторонних сервисов только по назначению.
-- Графики: `@anyglade/kit/charts` на Recharts. Монохром, не больше трёх серий, без сетки и линии осей, значения в подсказке.
-- Настройка темы: playground даёт живую панель с экспортом CSS. Из одного цвета акцента выводится пара значений для светлой и тёмной темы с подгонкой до нормы контраста, подпись выбирается по большему контрасту, значения по умолчанию ничего не переопределяют.
-- Движение объясняет изменение. Чем чаще действие, тем меньше движения: основная навигация, ввод с клавиатуры и графики без анимации. Вход `base` с `decelerate`, выход `fast` с `accelerate`. Кривые HeroUI направлены на наши токены. При `prefers-reduced-motion` исчезает перемещение, смена прозрачности остаётся.
-- Ожидание: `Button` из kit заменяет кнопку HeroUI и сама показывает лоадер для промиса из `onPress`, отправки формы и `isPending`. Лоадер ждёт `timings.loaderDelay` и держится `timings.loaderMinimum`. Лоадер лежит поверх подписи, поэтому ширина не прыгает. Экраны загружаются через `Loadable` со скелетоном той же формы.
-- Перетекание: фильтры на `SegmentedControl` с индикатором React Aria. Сортировка, смена фильтра и перемещение объектов идут через `withTransition`, набор текста в поиске и пагинация без перехода.
-- Акцент означает главное действие или включённое состояние контрола и больше ничего. Правила в разделе «Акцент» в `packages/kit/README.md`, замеры в `accent-audit.md`. Монохром остаётся темой по умолчанию.
-- Тёмная тема: основной текст, инверсная поверхность и главная линия графика используют `ink-100` вместо чистого белого, у Polar там белый. Контраст 15:1 вместо 20:1: чистый белый на почти чёрном режет глаз при чтении. Иерархия с `text-secondary` сохраняется.
-- Шиммер в два слоя: настоящий текст лежит всегда, блик идёт копией поверх и всегда доигрывает свой проход, а снимается между проходами, когда он вне текста. Один слой с `background-clip` меняет сглаживание букв в момент остановки, и текст будто мигает.
-- Строки текста стоят на целых пикселях. Обычный текст браузер привязывает к пикселю, а шиммер на `background-clip` нет, поэтому на дробной координате буквы прыгают в момент смены статуса.
-- Короткий текст, сменивший состояние, идёт через `TextSwap`: подпись кнопки, статус, счётчик. Ширина анимируется, чтобы соседи не прыгали.
-- `DeliveryStatus` различает четыре состояния, как в мессенджерах: часы, одна галочка, две, две цветом `success`. «Прочитано» важно для ответа на сообщение, поэтому это редкий случай цвета в потоке. Акцент здесь запрещён: он значит «главное действие».
-- Контекстное меню строки живёт в `ItemList`, а не отдельным компонентом: нужен `Dropdown`, потому что подменю React Aria работает только внутри `MenuTrigger`, поэтому якорем служит невидимая точка в координатах клика. Меню одно на список и монтируется при первом открытии.
-- `TextSwap` сравнивает старый и новый текст и двигает только изменившуюся середину, вверх и одним блоком. Шиммер оставляет цельной строкой: блик идёт по всей строке.
-- `TextSwap` ограничен по применению: одно действие катит одну короткую строку того же объекта. Эффект заметен, пока редок. Поэтому `FloatingPanel` не катит заголовок: смена заголовка там почти всегда другой объект, а не новое состояние.
-- `text-accent` по умолчанию монохромный и совпадает с акцентом: синий был отдельным значением, которое акцент не менял. Ссылка всегда подчёркнута тонкой линией, потому что цвет перестал её отличать.
-- Скилл публикуется внутри пакета, а в проект ложатся только ссылки: копия устарела бы при первом обновлении, а сгенерированный API всегда должен совпадать с установленной версией. Подключение идёт из `postinstall`, но `init` остаётся основным путём: bun и pnpm блокируют скрипты зависимостей.
-- `PageLoader` красит логотип через маску: файл с цветами не знает выбранной темы, а маска берёт цвет из токенов. Блик идёт через `transform`, поэтому не перерисовывает страницу.
-- `MediaStage` держит плитки в одном плоском списке и меняет только раскладку: перенос узла в другой родитель перезапустил бы видео.
-- Подбор колонок считается по 4:3: так на узком телефоне лица не режутся в полоски.
-- Выключенный микрофон это `danger-soft`, выключенная камера нейтральна: первое мешает разговору незаметно для говорящего, второе нормально.
-- `VideoSlash` дорисован в kit: в Gravity есть перечёркнутый микрофон, но нет камеры.
-- `Draggable` живёт рядом с `ItemList` и работает на указателе: браузерный drag не даёт управлять предпросмотром и посадкой. Цель находится через `elementFromPoint`, поэтому чип не перехватывает указатель. Касание остаётся за меню: долгое нажатие на строке уже открывает его.
-- Цвета меток это отдельные токены `text-label-*`: статусные роли заняты смыслом, а хром метки не несёт.
-- `CountBadge` монохромный, на `background-inverse`: акцент значит главное действие, а счётчик это не действие.
-- Чат в панели и окне это `Conversation` с `isContained`: поле ввода вне прокрутки, лента прокручивается только по `followKey`, а его сдвигает только своё сообщение. `sticky` остаётся у экрана ассистента, где прокручивается страница.
-- `ItemList` переставляет строки через FLIP на Web Animations, а не через View Transition: сообщения приходят часто, а снимок страницы заменял бы и живые окна.
-- Панель без `triggerRef` это отдельный режим, а не закреплённая панель с пустым якорем: тип запрещает булавку без кнопки, к которой можно вернуться. Позиция и размер пишутся в DOM напрямую, чтобы перетаскивание не перерисовывало чат внутри. Порядок окон задаёт `z-index` внутри общего слоя `.ag-floating-layer`.
-- `ItemList.onAltOpen` читает Alt при нажатии, потому что `onAction` не передаёт событие.
-- `FloatingPanel` собран на `useMove`, `useOverlay` и `FocusScope`, а не на `Popover`: панель не должна размонтироваться при закреплении и не привязана к кнопке. Закреплённая панель не модальна и не закрывается снаружи и по Esc. Перетаскивание сразу закрепляет: отрыв от кнопки и есть намерение оставить панель. Закрытая панель помнит закрепление и место.
-- Мессенджер: три панели, каждая скроллится сама, потому что список не должен двигать открытый разговор. Это исключение из правила о скролле страницы. Строка с собственными кнопками это `ItemList` на `GridList`: внутри `ListBox` вложенные кнопки недопустимы.
-- Боковая навигация по вложенным объектам это `TreeNav`, `FileTree` собран на нём. Людей в дереве показывают аватарками, иконки остаются у папок и файлов.
-- Движение в AI: лента не едет за текстом. Вопрос уходит наверх, под ним резервируется место на весь экран, и ответ растёт в него, поэтому читать можно спокойно. Когда ответ доходит до поля ввода, страница плавно следует за ним, пока читатель не прокрутит вверх. Анимации только на `opacity` и `transform`: высота пересчитывает раскладку всей страницы на каждом кадре и лагает. Шаги входят каскадом через `duration.stagger`, смена статуса анимирована. Рывок в один кадр на прокрученной странице считается дефектом.
-- AI: паттерны shadcn AI Elements переосмыслены. Очередь, задача, цепочка мыслей, субагент и тесты отличаются данными, а не формой, поэтому все они это `Run`. План это отдельный объект: намерение агента читается иначе, чем ход работы, поэтому `Plan` имеет заголовок, прогресс и линию. Терминал и трассировка стека это `CodeOutput`, вызов инструмента и подтверждение это `ToolCall`. Статус показывают значок и текст, а не теги. Шиммер только у идущей работы, цитата открывается нажатием, потому что наведения нет на телефоне. Привязки к AI SDK нет.
-- Знание о системе живёт в переносимом скилле `anyglade-design-system`: его папку копируют в другой проект. Токены и API генерируются из кода, а скилл `design-system-sync` с тестом и pre-commit не даёт правилам отстать от kit.
-- Цвет: монохромный интерфейс, синий для фокуса и ссылок, статусные цвета только со смыслом. Зелёная заглушка удаляется.
-- Вкладка «Блоки» это галерея-кладка живых образцов, как у bencho.dev, а не набор секций страниц: секции повторяли шаблоны и ничего не показывали. Папка блока задаёт вид взаимодействия, и по нему же фильтрует галерея. Название плитки берётся из `displayName`.
-- `Masonry` собран на CSS-колонках, а не на раскладке скриптом: он остаётся серверным и не ждёт замера ширины. Цена этого — порядок по колонкам, поэтому для данных, где важен порядок по строкам, нужна сетка.
-- `SlideToConfirm` подтверждает жестом. Бегунок это `div` с `useButton` и `useMove`: нажатие указателем после перетаскивания не считается подтверждением, Enter считается. Заливка шириной с дорожку сдвигается transform'ом, поэтому её край всегда под бегунком и ничего не пересчитывает раскладку.
-- `SignaturePad` рисует на `canvas` цветом текста, который читается из стилей в момент штриха, поэтому чернила следуют теме. Наружу уходит PNG data URL.
-- Выбранный `ToggleButton` получает непрозрачный `--default` вместо полупрозрачного `--accent-soft` HeroUI: выбор нейтрален, а цвет через прозрачность меняется от поверхности к поверхности.
-- Витрина допускает выразительное движение жестов с перелётом кривой: это поверхность убеждения. Рабочие экраны остаются без пружин.
+- Stay as close to Polar as possible: scale values, pills, monochrome, nested frames. The Polar logo, name and brand are not used.
+- Borrowed Orbit code and tokens come with the Apache-2.0 notice in `NOTICE`.
+- Foundation: HeroUI as the engine for behaviour and accessibility, with semantic tokens, typed `Box` and `Text` and closed wrappers on top. StyleX is not used: connecting the kit to a project stays one line of CSS.
+- `Box` does not depend on the consumer's build: `styles/box.css` is generated from the prop table in TypeScript and published ready to use. The component works in server components and does not inject `<style>` on render, unlike Orbit. Scale tokens do not go into the Tailwind `@theme`, otherwise `--spacing-sm` would break `max-w-sm` for consumers.
+- Strictness: a closed API and oxlint rules that ship with the kit and work in consumer projects.
+- Products: SaaS dashboards, marketing, checkout and account areas, internal tools.
+- Fonts: Inter for the interface, Geist Mono for numbers and code.
+- Theme: follows the OS setting, light and dark are equal.
+- Tactile feedback matters: the HeroUI scale on button press stays, even though Polar has none. HeroUI animations must not be turned off for the sake of resemblance.
+- Typography: the Tailwind text scale, weights and tracking are replaced with values from `tokens.ts`, so HeroUI and the consumer's utilities follow it automatically. Weights 600 and 700 are replaced with 550, there is no negative tracking, and text without a role equals the `default` role (14/21, weight 450).
+- Spacing: the scale is 0, 2, 4, 8, 12, 16, 24, 32, 48, 64, 96. The `2xs` step (2 px) was added for the insides of small controls. Button padding is on the scale: 12, 16, 24 instead of Polar's 20. Allowed exceptions: a sum of tokens to align a description with its label (28) and `em` padding inside `Link`.
+- Borders only on fields and collection items: `Frame` and `EmptyPanel` stand out by surface. Status in a table is shown as text in the role color, chips are not used.
+- Width: content does not stretch across all available space. Forms up to 400, reading and settings up to 720, mixed content up to 880, full width only for data and marketing.
+- `secondary` buttons and neutral fills are one step darker than `background-card`, otherwise they are invisible on cards in the light theme.
+- Images: examples use real pictures and icons from the internet, third-party logos only for their intended purpose.
+- Charts: `@anyglade/kit/charts` on Recharts. Monochrome, no more than three series, no grid and no axis lines, values in the tooltip.
+- Theme settings: the playground has a live panel with CSS export. A pair of values for the light and dark themes is derived from one accent color and adjusted to the contrast standard, the label color is picked by the higher contrast, and the defaults override nothing.
+- Motion explains a change. The more frequent the action, the less motion: main navigation, keyboard input and charts have no animation. Enter is `base` with `decelerate`, exit is `fast` with `accelerate`. HeroUI curves point to our tokens. With `prefers-reduced-motion` movement disappears and opacity changes stay.
+- Waiting: the kit `Button` replaces the HeroUI button and shows a loader by itself for a promise from `onPress`, a form submission and `isPending`. The loader waits `timings.loaderDelay` and holds for `timings.loaderMinimum`. The loader sits on top of the label, so the width does not jump. Screens load through `Loadable` with a skeleton of the same shape.
+- Morphing: filters use `SegmentedControl` with the React Aria indicator. Sorting, changing a filter and moving objects go through `withTransition`. Typing in search and pagination have no transition.
+- Accent means the main action or the on state of a control and nothing else. The rules are in the "Accent" section of `packages/kit/README.md`, the measurements in `accent-audit.md`. Monochrome stays the default theme.
+- Dark theme: primary text, the inverse surface and the main chart line use `ink-100` instead of pure white, where Polar uses white. Contrast is 15:1 instead of 20:1: pure white on near black strains the eyes when reading. The hierarchy with `text-secondary` is kept.
+- The shimmer has two layers: the real text is always there, the highlight runs as a copy on top, always finishes its pass and is removed between passes, when it is outside the text. A single layer with `background-clip` changes the glyph antialiasing at the moment it stops, and the text seems to blink.
+- Text lines sit on whole pixels. The browser snaps plain text to the pixel, but not a shimmer on `background-clip`, so on a fractional coordinate the letters jump when the status changes.
+- Short text that changed state goes through `TextSwap`: a button label, a status, a counter. The width is animated so the neighbours do not jump.
+- `DeliveryStatus` tells four states apart, as messengers do: a clock, one check, two, two in `success` color. "Read" matters for replying to a message, so it is a rare case of color in the flow. Accent is forbidden here: it means "the main action".
+- The row context menu lives in `ItemList`, not in a separate component: it needs `Dropdown`, because React Aria submenus only work inside `MenuTrigger`, so the anchor is an invisible point at the click coordinates. There is one menu per list, mounted on first open.
+- `TextSwap` compares the old and the new text and moves only the middle that changed, upwards and as one block. With a shimmer it keeps the line whole: the highlight runs along the whole line.
+- `TextSwap` is limited in use: one action rolls one short line of the same object. The effect is noticeable while it is rare. So `FloatingPanel` does not roll its title: a title change there almost always means another object, not a new state.
+- `text-accent` is monochrome by default and matches the accent: blue was a separate value that the accent did not change. A link is always underlined with a thin line, because color no longer sets it apart.
+- The skill ships inside the package, and the project gets only pointers: a copy would go stale at the first update, and the generated API must always match the installed version. Connection runs from `postinstall`, but `init` stays the main path: bun and pnpm block dependency scripts.
+- `PageLoader` colors the logo through a mask: a file with colors does not know the chosen theme, while a mask takes its color from the tokens. The highlight moves through `transform`, so it does not repaint the page.
+- `MediaStage` keeps the tiles in one flat list and changes only the layout: moving a node to another parent would restart the video.
+- Columns are fitted at 4:3: this way faces are not cut into strips on a narrow phone.
+- A muted microphone is `danger-soft`, a turned-off camera is neutral: the first hurts the conversation without the speaker noticing, the second is normal.
+- `VideoSlash` is drawn in the kit: Gravity has a crossed-out microphone but no camera.
+- `Draggable` lives next to `ItemList` and works on the pointer: native browser drag does not allow control over the preview and the landing. The target is found through `elementFromPoint`, so the chip does not capture the pointer. Touch is left to the menu: a long press on a row already opens it.
+- Label colors are separate `text-label-*` tokens: status roles are taken by meaning, and a label's hue carries none.
+- `CountBadge` is monochrome, on `background-inverse`: accent means the main action, and a counter is not an action.
+- Chat in a panel or a window is `Conversation` with `isContained`: the input stays outside the scroll, the feed scrolls only on `followKey`, and only your own message moves it. `sticky` stays on the assistant screen, where the page scrolls.
+- `ItemList` reorders rows with FLIP on Web Animations, not with a View Transition: messages arrive often, and a page snapshot would replace the live windows too.
+- A panel without `triggerRef` is a separate mode, not a pinned panel with an empty anchor: the type forbids a pin without a button to return to. Position and size are written to the DOM directly, so dragging does not re-render the chat inside. Window order is set by `z-index` inside the shared `.ag-floating-layer` layer.
+- `ItemList.onAltOpen` reads Alt on press, because `onAction` does not pass the event.
+- `FloatingPanel` is built on `useMove`, `useOverlay` and `FocusScope`, not on `Popover`: the panel must not unmount when pinned and is not tied to the button. A pinned panel is not modal and does not close on an outside click or on Esc. Dragging pins it at once: pulling it away from the button is the intent to keep the panel. A closed panel remembers whether it was pinned and where.
+- Messenger: three panels, each scrolls on its own, because the list must not move the open conversation. This is an exception to the page scroll rule. A row with its own buttons is `ItemList` on `GridList`: nested buttons are not allowed inside `ListBox`.
+- Side navigation through nested objects is `TreeNav`, and `FileTree` is built on it. People in the tree are shown with avatars, icons stay with folders and files.
+- Motion in AI: the feed does not chase the text. The question moves to the top, a full screen of space is reserved under it, and the answer grows into it, so reading stays calm. When the answer reaches the input, the page follows it smoothly until the reader scrolls up. Animations only on `opacity` and `transform`: height recalculates the layout of the whole page on every frame and lags. Steps enter in a cascade through `duration.stagger`, status changes are animated. A one-frame jump on a scrolled page counts as a defect.
+- AI: the shadcn AI Elements patterns are rethought. A queue, a task, a chain of thought, a subagent and tests differ in data, not in form, so all of them are `Run`. A plan is a separate object: the agent's intent reads differently from the course of the work, so `Plan` has a title, progress and a line. A terminal and a stack trace are `CodeOutput`, a tool call and its approval are `ToolCall`. Status is shown by an icon and text, not by tags. Shimmer only on work in progress, a citation opens on press, because there is no hover on a phone. There is no binding to the AI SDK.
+- Knowledge about the system lives in the portable `anyglade-design-system` skill: its folder is copied into another project. Tokens and API are generated from code, and the `design-system-sync` skill with a test and a pre-commit hook keeps the rules from falling behind the kit.
+- Color: a monochrome interface, blue for focus and links, status colors only with meaning. The green placeholder is removed.
+- The "Blocks" tab is a masonry gallery of live pieces, like bencho.dev, not a set of page sections: the sections repeated templates and showed nothing. A block's folder sets the kind of interaction, and the gallery filters by it. The tile name comes from `displayName`.
+- `Masonry` is built on CSS columns, not on a scripted layout: it stays server-rendered and does not wait for a width measurement. The price is column order, so data where row order matters needs a grid.
+- `SlideToConfirm` confirms with a gesture. The thumb is a `div` with `useButton` and `useMove`: a pointer press after a drag does not count as confirmation, Enter does. A fill as wide as the track is shifted with a transform, so its edge is always under the thumb and nothing recalculates the layout.
+- `SignaturePad` draws on a `canvas` in the text color, read from the styles at the moment of the stroke, so the ink follows the theme. It outputs a PNG data URL.
+- A selected `ToggleButton` gets an opaque `--default` instead of the semi-transparent HeroUI `--accent-soft`: selection is neutral, and a color through transparency changes from surface to surface.
+- The showcase allows expressive gesture motion with curve overshoot: it is a surface for persuasion. Working screens stay without springs.

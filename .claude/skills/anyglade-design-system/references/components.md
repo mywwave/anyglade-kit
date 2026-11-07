@@ -1,10 +1,10 @@
-# Компоненты
+# Components
 
-Точные пропсы в [generated/api.md](generated/api.md), готовый код составных компонентов в [recipes.md](recipes.md), значения токенов в [generated/tokens.md](generated/tokens.md). Здесь выбор и правила.
+Exact props are in [generated/api.md](generated/api.md), ready code for compound components in [recipes.md](recipes.md), token values in [generated/tokens.md](generated/tokens.md). This file covers choice and rules.
 
-## Вёрстка
+## Layout
 
-**`Box`** это любой контейнер. По умолчанию `display: flex`, кроме `span`, `label`, `li`, `a`. Элемент меняется через `as`. `className` и `style` закрыты типами: внешний вид задают только пропсы.
+**`Box`** is any container. It defaults to `display: flex`, except for `span`, `label`, `li`, `a`. The element is changed through `as`. `className` and `style` are closed off by the types: appearance is set only through props.
 
 ```tsx
 <Box
@@ -17,67 +17,67 @@
 />
 ```
 
-Условия в значении пропса: `base`, `sm`, `md`, `lg`, `xl`, `hover`, `focus`, `focusVisible`, `focusWithin`, `active`. Кладку дают `columns` и `breakInside="avoid"`, но обычно её собирает `Masonry`. Для обычного потока нужен `display="block"`. У `Box` есть `motion`, `viewTransitionName`, `transitionProperty`.
+Conditions inside a prop value: `base`, `sm`, `md`, `lg`, `xl`, `hover`, `focus`, `focusVisible`, `focusWithin`, `active`. Masonry comes from `columns` and `breakInside="avoid"`, but `Masonry` usually assembles it. Normal flow needs `display="block"`. `Box` has `motion`, `viewTransitionName`, `transitionProperty`.
 
-**`Text`** это любой текст. Роль задаёт `variant`, элемент `as`, цвет `color`: `default`, `muted`, `subtle`, `disabled`, `inverse`, `accent`, `success`, `warning`, `danger`, `inherit`. Вложенный `Text` сбрасывает размер, поэтому у него указывайте `variant`. Отступов у `Text` нет, их задаёт родительский `Box`.
+**`Text`** is any text. The role is set by `variant`, the element by `as`, the color by `color`: `default`, `muted`, `subtle`, `disabled`, `inverse`, `accent`, `success`, `warning`, `danger`, `inherit`. A nested `Text` resets the size, so give it a `variant`. `Text` has no spacing; the parent `Box` sets it.
 
-## Что выбрать
+## What to choose
 
-| Задача                                                       | Компонент                                                                                                                                                                                                                                 |
-| ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Шапка страницы                                               | `PageHeader`                                                                                                                                                                                                                              |
-| Показатель                                                   | `Stat`                                                                                                                                                                                                                                    |
-| Строка «подпись и значение»                                  | `DetailRow`, пустое значение покажет «—». В `action` кладётся `CopyButton`                                                                                                                                                                |
-| Витрина продукта на маркетинге                               | `Frame` и `FrameTile`, не больше одного на блок                                                                                                                                                                                           |
-| Пустое состояние                                             | `EmptyPanel`                                                                                                                                                                                                                              |
-| Копирование                                                  | `CopyButton`, подтверждение прямо на кнопке                                                                                                                                                                                               |
-| Один из двух-пяти коротких вариантов                         | `SegmentedControl`, индикатор перетекает. Больше вариантов или длинные подписи: `Select`                                                                                                                                                  |
-| Сортируемая таблица                                          | `Table`, `SortableColumn`, `useTableSort`                                                                                                                                                                                                 |
-| Загрузка экрана или списка                                   | `Loadable` и `Skeleton`                                                                                                                                                                                                                   |
-| Идёт работа, текстом                                         | `Shimmer`                                                                                                                                                                                                                                 |
-| Короткий текст сменил состояние                              | `TextSwap`, условия в [motion.md](motion.md)                                                                                                                                                                                              |
-| Свой индикатор ожидания                                      | `useLoadingIndicator`                                                                                                                                                                                                                     |
-| Перетекание объектов                                         | `withTransition` и `viewTransitionName`                                                                                                                                                                                                   |
-| Модальный вопрос                                             | `AlertDialog` для опасного, `Modal` для короткой задачи                                                                                                                                                                                   |
-| Панель с деталями                                            | `Drawer`, на телефоне `Sheet`                                                                                                                                                                                                             |
-| Сведения, которые нужны рядом во время работы со страницей   | `FloatingPanel`: поповер у кнопки, который можно закрепить и перетащить. Закрывается сам, пока не закреплён. Без `triggerRef` панель сразу стоит на экране, их можно держать несколько, `resize` добавляет изменение размера              |
-| Навигация по вложенным объектам                              | `TreeNav`: группы, статус справа, выбранный пункт. Людей показывайте аватарками                                                                                                                                                           |
-| Список, строки которого открывают объект и имеют свои кнопки | `ItemList`. В `ListBox` вложенные кнопки недопустимы. Опция `menu` даёт контекстное меню строки                                                                                                                                           |
-| Запуск всего приложения, форма будущего экрана неизвестна    | `PageLoader`: логотип с медленным бликом, тонкая полоса и строка состояния. Для экрана внутри приложения берите `Skeleton`                                                                                                                |
-| Плитки людей и экранов в звонке                              | `MediaStage` раскладывает, `MediaTile` показывает, `StreamVideo` выводит живой поток                                                                                                                                                      |
-| Перенос между группами строк                                 | `Draggable` внутри строки и проп `drop` у `ItemList`. То же действие обязательно есть в меню                                                                                                                                              |
-| Галерея объектов разной высоты: витрина, подборка, портфолио | `Masonry` и `MasonryTile`. Колонки заполняются сверху вниз, поэтому порядок чтения идёт по колонке. Данные с одинаковыми строками кладите в сетку, а не в кладку                                                                          |
-| Необратимое действие, которое нельзя совершить случайно      | `SlideToConfirm`: перевод денег, удаление навсегда, особенно на телефоне, где легко промахнуться. Жест до конца дорожки и есть подтверждение, клавиатура подтверждает Enter. Обычное опасное действие с вопросом идёт через `AlertDialog` |
-| Подпись от руки                                              | `SignaturePad`. Чернила берут цвет текста и следуют теме, но сохранённый PNG тему уже не меняет                                                                                                                                           |
-| Меню действий                                                | `Dropdown`                                                                                                                                                                                                                                |
-| Выбор из списка                                              | `Select`, с поиском `ComboBox`, короткий набор `SegmentedControl` или `RadioGroup`                                                                                                                                                        |
-| Подсказка                                                    | `Tooltip`, только дополнение, важное не прячьте                                                                                                                                                                                           |
-| Сколько нового ждёт человека: непрочитанное, очередь         | `CountBadge`. Монохромный счётчик, не статус и не акцент                                                                                                                                                                                  |
-| Результат действия                                           | `toast`, если результата не видно на экране                                                                                                                                                                                               |
-| График                                                       | `LineChart`, `AreaChart`, `BarChart`, `DonutChart`, `Sparkline`                                                                                                                                                                           |
-| Иконка                                                       | Gravity UI Icons из `@anyglade/kit/icons`                                                                                                                                                                                                 |
+| Task                                                                       | Component                                                                                                                                                                                                                                                                    |
+| -------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Page header                                                                | `PageHeader`                                                                                                                                                                                                                                                                 |
+| Metric                                                                     | `Stat`                                                                                                                                                                                                                                                                       |
+| A "label and value" row                                                    | `DetailRow`; an empty value shows "—". Put a `CopyButton` in `action`                                                                                                                                                                                                        |
+| Product showcase on marketing                                              | `Frame` and `FrameTile`, no more than one per block                                                                                                                                                                                                                          |
+| Empty state                                                                | `EmptyPanel`                                                                                                                                                                                                                                                                 |
+| Copying                                                                    | `CopyButton`, confirmation right on the button                                                                                                                                                                                                                               |
+| One of two to five short options                                           | `SegmentedControl`, the indicator morphs. More options or long labels: `Select`                                                                                                                                                                                              |
+| Sortable table                                                             | `Table`, `SortableColumn`, `useTableSort`                                                                                                                                                                                                                                    |
+| Loading a screen or list                                                   | `Loadable` and `Skeleton`                                                                                                                                                                                                                                                    |
+| Work in progress, as text                                                  | `Shimmer`                                                                                                                                                                                                                                                                    |
+| Short text changed state                                                   | `TextSwap`, conditions in [motion.md](motion.md)                                                                                                                                                                                                                             |
+| Custom waiting indicator                                                   | `useLoadingIndicator`                                                                                                                                                                                                                                                        |
+| Morphing objects                                                           | `withTransition` and `viewTransitionName`                                                                                                                                                                                                                                    |
+| Modal question                                                             | `AlertDialog` for something dangerous, `Modal` for a short task                                                                                                                                                                                                              |
+| Details panel                                                              | `Drawer`, `Sheet` on the phone                                                                                                                                                                                                                                               |
+| Information needed nearby while working with the page                      | `FloatingPanel`: a popover at a button that can be pinned and dragged. It closes by itself until pinned. Without `triggerRef` the panel stands on screen right away and several can be kept open; `resize` adds resizing                                                     |
+| Navigation through nested objects                                          | `TreeNav`: groups, status on the right, the selected item. Show people as avatars                                                                                                                                                                                            |
+| A list whose rows open an object and have their own buttons                | `ItemList`. Nested buttons are not allowed in `ListBox`. The `menu` option gives a row context menu                                                                                                                                                                          |
+| Launching the whole app, the shape of the future screen is unknown         | `PageLoader`: a logo with a slow glint, a thin bar and a status line. For a screen inside the app, use `Skeleton`                                                                                                                                                            |
+| Tiles of people and screens in a call                                      | `MediaStage` lays them out, `MediaTile` shows one, `StreamVideo` outputs a live stream                                                                                                                                                                                       |
+| Moving between groups of rows                                              | `Draggable` inside a row and the `drop` prop on `ItemList`. The same action must also be in the menu                                                                                                                                                                         |
+| A gallery of objects of different heights: showcase, collection, portfolio | `Masonry` and `MasonryTile`. Columns fill top to bottom, so reading order goes down a column. Put data with uniform rows in a grid, not in masonry                                                                                                                           |
+| An irreversible action that must not happen by accident                    | `SlideToConfirm`: a money transfer, permanent deletion, especially on the phone where it is easy to miss. The gesture to the end of the track is the confirmation; the keyboard confirms with Enter. An ordinary dangerous action with a question goes through `AlertDialog` |
+| Handwritten signature                                                      | `SignaturePad`. The ink takes the text color and follows the theme, but a saved PNG no longer changes with the theme                                                                                                                                                         |
+| Action menu                                                                | `Dropdown`                                                                                                                                                                                                                                                                   |
+| Choosing from a list                                                       | `Select`, with search `ComboBox`, a short set `SegmentedControl` or `RadioGroup`                                                                                                                                                                                             |
+| Hint                                                                       | `Tooltip`, only as a supplement; do not hide anything important                                                                                                                                                                                                              |
+| How much new stuff awaits the person: unread, a queue                      | `CountBadge`. A monochrome counter, neither status nor accent                                                                                                                                                                                                                |
+| Result of an action                                                        | `toast`, if the result is not visible on screen                                                                                                                                                                                                                              |
+| Chart                                                                      | `LineChart`, `AreaChart`, `BarChart`, `DonutChart`, `Sparkline`                                                                                                                                                                                                              |
+| Icon                                                                       | Gravity UI Icons from `@anyglade/kit/icons`                                                                                                                                                                                                                                  |
 
-Весь HeroUI доступен из `@anyglade/kit`: `Accordion`, `Alert`, `Autocomplete`, `Avatar`, `Calendar`, `Checkbox`, `DatePicker`, `Disclosure`, `Form`, `Input`, `InputOTP`, `Link`, `ListBox`, `Meter`, `NumberField`, `Pagination`, `Popover`, `ProgressBar`, `Radio`, `ScrollShadow`, `SearchField`, `Separator`, `Slider`, `Spinner`, `Switch`, `Tabs`, `TagGroup`, `TextArea`, `TextField`, `ToggleButton`, `Toolbar` и другие.
+All of HeroUI is available from `@anyglade/kit`: `Accordion`, `Alert`, `Autocomplete`, `Avatar`, `Calendar`, `Checkbox`, `DatePicker`, `Disclosure`, `Form`, `Input`, `InputOTP`, `Link`, `ListBox`, `Meter`, `NumberField`, `Pagination`, `Popover`, `ProgressBar`, `Radio`, `ScrollShadow`, `SearchField`, `Separator`, `Slider`, `Spinner`, `Switch`, `Tabs`, `TagGroup`, `TextArea`, `TextField`, `ToggleButton`, `Toolbar` and others.
 
-## Кнопка
+## Button
 
-`Button` из kit заменяет кнопку HeroUI и сама показывает лоадер. Своих спиннеров рядом с кнопкой не делайте.
+The kit's `Button` replaces the HeroUI button and shows the loader by itself. Do not add your own spinners next to the button.
 
 ```tsx
-<Button onPress={save}>Сохранить</Button>            // onPress вернул промис
-<form action={save}><Button type="submit">Сохранить</Button></form>
-<Button isPending={isSaving} type="submit">Сохранить</Button>
+<Button onPress={save}>Save</Button>            // onPress returned a promise
+<form action={save}><Button type="submit">Save</Button></form>
+<Button isPending={isSaving} type="submit">Save</Button>
 ```
 
-Кнопка сразу перестаёт нажиматься, лоадер появляется через `timings.loaderDelay`, держится минимум `timings.loaderMinimum`, ширина не меняется.
+The button stops accepting presses immediately, the loader appears after `timings.loaderDelay`, stays for at least `timings.loaderMinimum`, and the width does not change.
 
-`action` подходит только для форм без контролируемых полей. React сбрасывает форму после `action`, а `TextField` откатывает значение к начальному. Для контролируемых полей используйте `onSubmit` с `useTransition` и передавайте `isPending`.
+`action` suits only forms without controlled fields. React resets the form after `action`, and `TextField` rolls its value back to the initial one. For controlled fields use `onSubmit` with `useTransition` and pass `isPending`.
 
-Иерархия: `primary` одна на экран, `secondary` для обычных действий, `ghost` для тихих и строчных, `danger` и `danger-soft` для опасных. `primary` стоит по умолчанию, поэтому у второстепенных кнопок вариант указывайте явно. Кнопка только с иконкой получает `isIconOnly` и `aria-label`.
+Hierarchy: one `primary` per screen, `secondary` for ordinary actions, `ghost` for quiet and inline ones, `danger` and `danger-soft` for dangerous ones. `primary` is the default, so set the variant explicitly on secondary buttons. An icon-only button gets `isIconOnly` and `aria-label`.
 
-## Таблицы
+## Tables
 
-Сортировку включают два шага: `SortableColumn` в шапке и `tableProps` из `useTableSort` на `Table.Content`. Строка открывает детали через `onRowAction`, см. [recipes.md](recipes.md).
+Sorting takes two steps: `SortableColumn` in the header and `tableProps` from `useTableSort` on `Table.Content`. A row opens details through `onRowAction`, see [recipes.md](recipes.md).
 
 ```tsx
 const accessors: SortAccessors<Order> = {
@@ -91,41 +91,41 @@ const { sorted, tableProps } = useTableSort(filtered, accessors, {
 });
 ```
 
-Объект accessors держите вне компонента. Сортировка идёт по значению, а не по подписи: «2 нояб.» и «Вчера» сравниваются как даты. Строкам задавайте `style={{ viewTransitionName: \`order-${id}\` }}`, тогда они перетекают при сортировке. Статус это текст с цветом, а не `Chip`. Таблицу оборачивайте в `Table.ScrollContainer`и задавайте`min-w-*`, иначе на телефоне она сломает страницу. Тип выбора строк это `Selection`, тип сортировки `SortDescriptor`.
+Keep the accessors object outside the component. Sorting goes by value, not by label: "Nov 2" and "Yesterday" are compared as dates. Give rows `style={{ viewTransitionName: \`order-${id}\` }}`and they morph when sorted. Status is colored text, not a`Chip`. Wrap the table in `Table.ScrollContainer`and set`min-w-*`, otherwise it breaks the page on the phone. The row selection type is `Selection`, the sort type is `SortDescriptor`.
 
-Типы колонок задают единый вид таблиц:
+Column types give all tables one look:
 
-| Данные              | Выравнивание            | Вид                    |
-| ------------------- | ----------------------- | ---------------------- |
-| Объект: имя, аватар | Слева                   | Основной цвет          |
-| Текст               | Слева, забирает остаток | `muted`, обрезка       |
-| Число, деньги       | Справа                  | `tabularNums`          |
-| Дата                | Слева                   | `muted`, `tabularNums` |
-| Статус              | Слева                   | Текст с цветом         |
-| Действия            | Справа                  | `ghost`, иконки        |
+| Data                 | Alignment                 | Look                   |
+| -------------------- | ------------------------- | ---------------------- |
+| Object: name, avatar | Left                      | Main color             |
+| Text                 | Left, takes the remainder | `muted`, truncated     |
+| Number, money        | Right                     | `tabularNums`          |
+| Date                 | Left                      | `muted`, `tabularNums` |
+| Status               | Left                      | Colored text           |
+| Actions              | Right                     | `ghost`, icons         |
 
-Одинаковые данные одной ширины во всех таблицах. Ряд заканчивается деньгами или действием, а не текстом. Строка открывает детали, редкие действия в меню. Сокращения в заголовках запрещены.
+The same data has the same width in every table. A row ends with money or an action, not with text. A row opens details; rare actions go in a menu. Abbreviations in headers are banned.
 
-## Графики
+## Charts
 
-Монохром, не больше трёх серий, без сетки и линии осей, значения в подсказке. График стоит, только если отвечает на вопрос, который человек задаёт этому экрану: декоративный график и график из одной точки не нужны. Чем детальнее диаграмма, тем хуже: если мысль выражается числом или предложением, график не нужен. `isAnimationActive` у графиков выключен намеренно: это данные для чтения.
+Monochrome, no more than three series, no grid and no axis lines, values in the tooltip. A chart belongs only if it answers a question the person asks this screen: a decorative chart and a single-point chart are not needed. The more detailed the diagram, the worse: if the point can be expressed as a number or a sentence, no chart is needed. `isAnimationActive` is turned off on charts on purpose: this is data for reading.
 
-## Изображения и иконки
+## Images and icons
 
-Иконка не у каждой подписи, а там, где ускоряет чтение. Настоящие картинки лучше заглушек. Чужие логотипы только по назначению.
+An icon goes not on every label, but where it speeds up reading. Real pictures are better than placeholders. Other companies' logos only for their intended purpose.
 
-## Новый компонент
+## A new component
 
-Если идею нельзя собрать из существующего, создавайте компонент. Обходные пути хуже: сложная вёрстка внутри страницы, копипаст между экранами, стили мимо токенов.
+If the idea cannot be assembled from what exists, create a component. Workarounds are worse: complex layout inside a page, copy-paste between screens, styles that bypass tokens.
 
-Сначала проверьте по порядку: компоненты HeroUI, паттерны kit, правка через токен. Затем:
+First check, in order: HeroUI components, kit patterns, a change through a token. Then:
 
-1. Собирайте из `Box`, `Text` и компонентов kit.
-2. Поведение и доступность берите из HeroUI или React Aria. Клавиатуру, фокус и роли руками не пишите.
-3. Закрытый API: без `className` и `style`, внешний вид задают смысловые пропсы. Вызывающий код не принимает визуальных решений.
-4. Несовместимые состояния исключаются типами.
-5. Значения только из токенов. Пустые слоты не рендерятся. Значение по умолчанию самое частое.
-6. Названия по смыслу, а не по виду: `tone="danger"`, а не `red`.
-7. Без хуков компонент остаётся серверным.
+1. Assemble from `Box`, `Text` and kit components.
+2. Take behavior and accessibility from HeroUI or React Aria. Do not hand-write keyboard handling, focus and roles.
+3. Closed API: no `className` and `style`, appearance is set by semantic props. The calling code makes no visual decisions.
+4. Incompatible states are ruled out by types.
+5. Values only from tokens. Empty slots are not rendered. The default value is the most common one.
+6. Names by meaning, not by look: `tone="danger"`, not `red`.
+7. Without hooks the component stays a server component.
 
-Логика для одного экрана остаётся в его файле. Общий компонент появляется, когда он нужен минимум двум экранам.
+Logic for a single screen stays in its file. A shared component appears when at least two screens need it.

@@ -2,11 +2,11 @@ import { Box } from "@anyglade/kit";
 import { CodeOutput, Run, type StatusLabels } from "@anyglade/kit/ai";
 
 const statusLabels: StatusLabels = {
-  pending: "Ожидает",
-  running: "Выполняется",
-  waiting: "Нужен ответ",
-  done: "Готово",
-  failed: "Ошибка",
+  pending: "Pending",
+  running: "Running",
+  waiting: "Needs input",
+  done: "Done",
+  failed: "Failed",
 };
 
 export function RunDemo() {
@@ -15,28 +15,28 @@ export function RunDemo() {
       <Run
         isDefaultExpanded
         statusLabels={statusLabels}
-        summary="План"
+        summary="Plan"
         steps={[
-          { id: "1", title: "Найти сделки", status: "done", note: "Нашлось три" },
-          { id: "2", title: "Подготовить письма", status: "running" },
-          { id: "3", title: "Дождаться ответа", status: "pending" },
+          { id: "1", title: "Find deals", status: "done", note: "Found three" },
+          { id: "2", title: "Draft emails", status: "running" },
+          { id: "3", title: "Wait for replies", status: "pending" },
         ]}
       />
       <Run
         isDefaultExpanded
         statusLabels={statusLabels}
-        summary="Две проверки из трёх"
+        summary="Two of three checks"
         steps={[
-          { id: "1", title: "Валюты", status: "done" },
+          { id: "1", title: "Currencies", status: "done" },
           {
             id: "2",
-            title: "Сверка сумм",
+            title: "Totals match",
             status: "failed",
             detail: (
               <CodeOutput
-                copiedLabel="Скопировано"
-                copyLabel="Скопировать"
-                output={"ожидалось 3 710 000\nполучено  3 661 000"}
+                copiedLabel="Copied"
+                copyLabel="Copy"
+                output={"expected 185,500\nreceived 183,050"}
                 title="AssertionError"
                 tone="danger"
               />

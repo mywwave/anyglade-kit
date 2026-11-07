@@ -19,11 +19,11 @@ import { Tasks } from "./tasks.tsx";
 type Screen = "overview" | "deals" | "customers" | "tasks" | "analytics";
 
 const screens: { id: Screen; label: string; icon: ComponentType }[] = [
-  { id: "overview", label: "Сегодня", icon: House },
-  { id: "deals", label: "Сделки", icon: SquareListUl },
-  { id: "customers", label: "Клиенты", icon: Persons },
-  { id: "tasks", label: "Задачи", icon: CircleCheck },
-  { id: "analytics", label: "Аналитика", icon: ChartColumn },
+  { id: "overview", label: "Today", icon: House },
+  { id: "deals", label: "Deals", icon: SquareListUl },
+  { id: "customers", label: "Customers", icon: Persons },
+  { id: "tasks", label: "Tasks", icon: CircleCheck },
+  { id: "analytics", label: "Analytics", icon: ChartColumn },
 ];
 
 const skeletons: Record<Screen, ReactNode> = {
@@ -49,10 +49,10 @@ function Navigation({ active, counts, onSelect, footer }: NavigationProps) {
       <Box flexDirection="column" gap="xl">
         <Box alignItems="center" gap="s" paddingHorizontal="s">
           <Text as="span" variant="title">
-            Касание
+            Touchpoint
           </Text>
         </Box>
-        <Box as="nav" aria-label="Разделы CRM" flexDirection="column" gap="xs">
+        <Box as="nav" aria-label="CRM sections" flexDirection="column" gap="xs">
           {screens.map(({ id, label, icon: Icon }) => (
             <Button
               key={id}
@@ -121,7 +121,7 @@ export function CrmApp() {
   }
 
   function addTask(title: string, group: TaskGroup) {
-    const task = { id: crypto.randomUUID(), title, company: "Без компании", group, isDone: false };
+    const task = { id: crypto.randomUUID(), title, company: "No company", group, isDone: false };
     withTransition(() => setTasks((list) => [task, ...list]));
   }
 
@@ -147,15 +147,15 @@ export function CrmApp() {
   const footer = (
     <Box alignItems="center" gap="s" paddingHorizontal="s">
       <Avatar size="sm">
-        <Avatar.Image alt="Анна Смирнова" src={`${AVATARS}/blue.jpg`} />
-        <Avatar.Fallback>АС</Avatar.Fallback>
+        <Avatar.Image alt="Anna Wright" src={`${AVATARS}/blue.jpg`} />
+        <Avatar.Fallback>AW</Avatar.Fallback>
       </Avatar>
       <Box flexDirection="column" minWidth={0}>
         <Text variant="title" truncate>
-          Анна Смирнова
+          Anna Wright
         </Text>
         <Text variant="caption" color="muted" truncate>
-          Отдел продаж
+          Sales team
         </Text>
       </Box>
     </Box>
@@ -186,11 +186,11 @@ export function CrmApp() {
         padding="m"
       >
         <Text as="span" variant="title">
-          Касание
+          Touchpoint
         </Text>
         <Button
           isIconOnly
-          aria-label="Открыть меню"
+          aria-label="Open menu"
           size="sm"
           variant="secondary"
           onPress={() => setIsMenuOpen(true)}
@@ -201,7 +201,7 @@ export function CrmApp() {
       <Drawer>
         <Drawer.Backdrop isOpen={isMenuOpen} onOpenChange={setIsMenuOpen}>
           <Drawer.Content placement="left">
-            <Drawer.Dialog aria-label="Меню">
+            <Drawer.Dialog aria-label="Menu">
               <Drawer.Body>
                 <Box flexDirection="column" minHeight="100%">
                   <Navigation active={screen} counts={counts} footer={footer} onSelect={select} />

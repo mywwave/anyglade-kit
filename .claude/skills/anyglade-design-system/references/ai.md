@@ -1,40 +1,40 @@
-# Интерфейс с агентом
+# Agent interface
 
-Всё лежит в `@anyglade/kit/ai`. Компоненты не зависят от провайдера и принимают обычные данные, поэтому подходят для любого SDK. Подписи передаются пропсами, kit не навязывает язык.
+Everything lives in `@anyglade/kit/ai`. The components do not depend on a provider and take plain data, so they fit any SDK. Labels are passed as props; the kit does not impose a language.
 
-## Что выбрать
+## What to choose
 
-| Задача                                                      | Компонент                                                                                                                                                                                                                                                                                                                        |
-| ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Лента на скролле страницы                                   | `Conversation`, `ConversationTurn`                                                                                                                                                                                                                                                                                               |
-| Реплика                                                     | `Message`: `user` пузырём справа, `assistant` без пузыря, `contact` пузырём слева. `isHistory` у того, что уже было при открытии чата: история не анимируется                                                                                                                                                                    |
-| Чат в панели или окне                                       | `Conversation` с `isContained`: сообщения прокручиваются в своей коробке, поле стоит под ней вне прокрутки. Без него прокручивается страница, это режим экрана ассистента. `onReachEnd` сообщает, что конец увиден, `newCount` показывает число на кнопке вниз, `ConversationNewMark` ставит отметку, на которой чат открывается |
-| Статус своего сообщения                                     | `DeliveryStatus` в слоте `meta` у `Message`: часы, одна галочка «отправлено», две «доставлено», две цветом успеха «прочитано». Слово только в подсказке при наведении, открытая подсказка меняет его через `TextSwap`                                                                                                            |
-| Ответ по словам                                             | `StreamingText`, метка `[1]` становится ссылкой на источник                                                                                                                                                                                                                                                                      |
-| Ввод, вложения, отправка, остановка                         | `PromptComposer`                                                                                                                                                                                                                                                                                                                 |
-| Подсказки                                                   | `Suggestions`                                                                                                                                                                                                                                                                                                                    |
-| Рассуждения                                                 | `Reasoning`                                                                                                                                                                                                                                                                                                                      |
-| Намерение агента                                            | `Plan`                                                                                                                                                                                                                                                                                                                           |
-| Ход работы: задачи, очередь, цепочка шагов, тесты, субагент | `Run`, шаги субагента в поле `steps`                                                                                                                                                                                                                                                                                             |
-| Вызов инструмента и подтверждение                           | `ToolCall`                                                                                                                                                                                                                                                                                                                       |
-| Терминал, трассировка стека                                 | `CodeOutput`, для ошибок `tone="danger"`                                                                                                                                                                                                                                                                                         |
-| Изменённые файлы                                            | `FileTree`                                                                                                                                                                                                                                                                                                                       |
-| Источники                                                   | `Sources`, в тексте `Citation`                                                                                                                                                                                                                                                                                                   |
-| Модель и глубина, заполнение контекста                      | `ModelPicker`, `ContextMeter`                                                                                                                                                                                                                                                                                                    |
-| Точка возврата                                              | `Checkpoint`                                                                                                                                                                                                                                                                                                                     |
+| Task                                                            | Component                                                                                                                                                                                                                                                                                                                                 |
+| --------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A feed on the page scroll                                       | `Conversation`, `ConversationTurn`                                                                                                                                                                                                                                                                                                        |
+| A message                                                       | `Message`: `user` as a bubble on the right, `assistant` without a bubble, `contact` as a bubble on the left. `isHistory` on what was already there when the chat opened: history is not animated                                                                                                                                          |
+| A chat in a panel or dialog                                     | `Conversation` with `isContained`: messages scroll in their own box, the input sits below it outside the scroll. Without it the page scrolls; this is the assistant screen mode. `onReachEnd` reports that the end was seen, `newCount` shows a number on the scroll-down button, `ConversationNewMark` places the mark the chat opens at |
+| Status of your own message                                      | `DeliveryStatus` in the `meta` slot of `Message`: a clock, one check "sent", two "delivered", two in the success color "read". The word appears only in the hover tooltip; an open tooltip changes it through `TextSwap`                                                                                                                  |
+| A word-by-word answer                                           | `StreamingText`, the `[1]` mark becomes a link to the source                                                                                                                                                                                                                                                                              |
+| Input, attachments, send, stop                                  | `PromptComposer`                                                                                                                                                                                                                                                                                                                          |
+| Suggestions                                                     | `Suggestions`                                                                                                                                                                                                                                                                                                                             |
+| Reasoning                                                       | `Reasoning`                                                                                                                                                                                                                                                                                                                               |
+| The agent's intent                                              | `Plan`                                                                                                                                                                                                                                                                                                                                    |
+| Progress of work: tasks, queue, chain of steps, tests, subagent | `Run`, subagent steps in the `steps` field                                                                                                                                                                                                                                                                                                |
+| Tool call and approval                                          | `ToolCall`                                                                                                                                                                                                                                                                                                                                |
+| Terminal, stack trace                                           | `CodeOutput`, `tone="danger"` for errors                                                                                                                                                                                                                                                                                                  |
+| Changed files                                                   | `FileTree`                                                                                                                                                                                                                                                                                                                                |
+| Sources                                                         | `Sources`, `Citation` in the text                                                                                                                                                                                                                                                                                                         |
+| Model and depth, context usage                                  | `ModelPicker`, `ContextMeter`                                                                                                                                                                                                                                                                                                             |
+| A restore point                                                 | `Checkpoint`                                                                                                                                                                                                                                                                                                                              |
 
-Статусы шагов `AgentStatus`: `pending`, `running`, `waiting`, `done`, `failed`. Текст статусов для скринридера передаётся в `statusLabels`. Типы данных: `RunStep`, `Source`, `ChangedFile`, `PromptAttachment`, `ToolApproval`, `StatusLabels`.
+Step statuses `AgentStatus`: `pending`, `running`, `waiting`, `done`, `failed`. Status text for a screen reader is passed in `statusLabels`. Data types: `RunStep`, `Source`, `ChangedFile`, `PromptAttachment`, `ToolApproval`, `StatusLabels`.
 
-## Модель ленты
+## Feed model
 
-Скроллится страница, двигаются только сообщения. Шапка и поле ввода стоят на месте.
+The page scrolls, only messages move. The header and the input stay in place.
 
 ```tsx
 <Conversation
   followKey={lastTurn?.id}
   footer={<Composer />}
-  label="Диалог"
-  scrollLabel="К последнему сообщению"
+  label="Conversation"
+  scrollLabel="Jump to latest message"
   topInset={64}
 >
   {turns.map((turn) => (
@@ -43,45 +43,45 @@
 </Conversation>
 ```
 
-Новый вопрос уезжает наверх, под шапку, а под ним резервируется место на весь экран. Ответ растёт в это место, экран стоит на месте, поэтому читать можно спокойно. Когда ответ доходит до поля ввода, страница плавно едет за ним. Если человек прокрутил вверх, страница больше не двигается и появляется кнопка вниз.
+A new question moves up, under the header, and a full screen of space is reserved below it. The answer grows into that space while the screen stays still, so it can be read calmly. When the answer reaches the input, the page smoothly follows it. If the person scrolled up, the page no longer moves and a scroll-down button appears.
 
-- `topInset` это высота всего, что прилипло сверху, плюс небольшой отступ.
-- `followKey` это id последней реплики. Он меняется при отправке.
-- Подсказки после ответа кладите внутрь последней реплики, иначе они окажутся за нижней границей экрана.
-- Под `Conversation` не должно быть отступа, иначе поле ввода ездит.
+- `topInset` is the height of everything stuck to the top, plus a small gap.
+- `followKey` is the id of the last message. It changes on send.
+- Put suggestions after an answer inside the last message, otherwise they end up below the bottom edge of the screen.
+- There must be no gap below `Conversation`, otherwise the input moves around.
 
-## План и ход работы
+## Plan and progress
 
-`Plan` и `Run` это разные объекты. План читается как намерение: заголовок, прогресс, шаги-галочки на линии. Ход работы это тихий список. Если их смешать, план теряется среди задач.
+`Plan` and `Run` are different objects. A plan reads as intent: a heading, progress, check-mark steps on a line. Progress of work is a quiet list. If you mix them, the plan gets lost among the tasks.
 
-Активности выглядят как тихие строки одной высоты, а не как блоки: подпись и счётчик рядом с заголовком, без жирного. Вложенность показывает отступ. Вторая шапка внутри группы превращает список в лесенку.
+Activities look like quiet rows of equal height, not like blocks: the label and counter next to the heading, no bold. Nesting is shown by indentation. A second header inside a group turns the list into a staircase.
 
-Заголовок группы показывает текущий шаг, пока он идёт, затем итог в `summary`. Статус это значок и текст, а не тег.
+The group heading shows the current step while it runs, then the outcome in `summary`. A status is an icon and text, not a tag.
 
-## Подтверждение
+## Approval
 
-`ToolCall` с `approval` останавливает агента до ответа. Вопрос называет последствие: «Отправить три письма? Отменить будет нельзя». Пока агент ждёт, поле ввода показывает остановку, поэтому основная кнопка на экране одна.
+`ToolCall` with `approval` stops the agent until it gets an answer. The question names the consequence: "Send three emails? This cannot be undone." While the agent waits, the input shows the stop, so there is one primary button on the screen.
 
-## Поле ввода
+## Input
 
-Весь `PromptComposer` это одно поле: наведение и фокус работают на него целиком, клик по пустому месту ставит курсор в текст. Отправка и остановка находятся в одном месте, чтобы выход всегда был под курсором. Вложения видны до отправки.
+The whole `PromptComposer` is one field: hover and focus apply to it as a whole, and a click on empty space puts the cursor into the text. Send and stop are in the same place, so the way out is always under the cursor. Attachments are visible before sending.
 
-## Стрим
+## Stream
 
-- Новые слова проявляются, а уже прочитанная строка не двигается.
-- Состояние стрима держите отдельно от поля ввода, реплики мемоизируйте. Иначе каждое слово перерисовывает диалог, и на обычном ноутбуке кадр занимает сотни миллисекунд.
-- Рендеры обновляют только изменившуюся реплику, части реплики тоже мемоизированы.
+- New words fade in, and a line already read does not move.
+- Keep stream state apart from the input, memoize messages. Otherwise every word re-renders the conversation, and on an ordinary laptop a frame takes hundreds of milliseconds.
+- Renders update only the message that changed; the parts of a message are memoized too.
 
-## Остановка
+## Stopping
 
-Всё останавливается в любой момент: рассуждение, шаг, инструмент, стрим. После остановки ничего не шиммерит, незавершённые шаги возвращаются в `pending`, ожидающие подтверждения закрываются, в ответе остаётся «Остановлено» и «Повторить».
+Everything stops at any moment: reasoning, a step, a tool, the stream. After stopping nothing shimmers, unfinished steps return to `pending`, pending approvals close, and the answer keeps "Stopped" and "Retry".
 
-«Повторить» показывается только у последней реплики: иначе старый ответ уезжает в конец диалога. `Checkpoint` убирает реплику и всё после неё, а текст запроса возвращается в поле.
+"Retry" is shown only on the last message: otherwise the old answer moves to the end of the conversation. `Checkpoint` removes a message and everything after it, and the request text returns to the input.
 
-## Цитаты
+## Citations
 
-`Citation` открывается нажатием, а не наведением: наведения нет на телефоне, а ссылка внутри должна быть достижима с клавиатуры.
+`Citation` opens on press, not on hover: there is no hover on a phone, and the link inside must be reachable from the keyboard.
 
-## Контекст
+## Context
 
-`ContextMeter` показывает заполнение числом, а не кольцом: тонкое кольцо рядом с работающим агентом читается как лоадер. Цвет меняется только у порогов предупреждения и опасности.
+`ContextMeter` shows usage as a number, not a ring: a thin ring next to a working agent reads as a loader. The color changes only at the warning and danger thresholds.

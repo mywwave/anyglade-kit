@@ -1,68 +1,68 @@
-# Цвет и контраст
+# Color and contrast
 
-Палитра в [generated/tokens.md](generated/tokens.md). Цвет задаётся только токенами, тёмная тема работает сама через `light-dark()`. `dark:` и цвета по месту запрещены: они ломают вторую тему.
+The palette is in [generated/tokens.md](generated/tokens.md). Color is set only through tokens; the dark theme works by itself through `light-dark()`. `dark:` and ad-hoc colors are banned: they break the second theme.
 
-Текущий элемент списка и навигации выделяется слоем `--default`, тем же, что у активной кнопки. Нажатый `ToggleButton` выделяется так же: это выбор, а не акцент, и подложка у него непрозрачная. `background-card` на `background-canvas` в светлой теме сливается с фоном.
+The current item in a list or navigation is highlighted with the `--default` layer, the same one as an active button. A pressed `ToggleButton` is highlighted the same way: it is a selection, not an accent, and its background is opaque. `background-card` on `background-canvas` blends into the background in the light theme.
 
-## Основа
+## Foundation
 
-Интерфейс монохромный. Цвет это информация: чем его меньше, тем сильнее каждое появление. Синий служит фокусом и ссылками, статусные цвета появляются только со смыслом.
+The interface is monochrome. Color is information: the less of it, the stronger each appearance. Blue serves focus and links; status colors appear only with meaning.
 
-Поверхности от дальней к ближней: `background-canvas`, `background-panel`, `background-card`. Кнопки `secondary` и нейтральные заливки на шаг темнее карточки, иначе на карточках светлой темы они не видны.
+Surfaces from far to near: `background-canvas`, `background-panel`, `background-card`. `secondary` buttons and neutral fills are one step darker than the card, otherwise they are invisible on cards in the light theme.
 
-Три уровня текста: `text-primary`, `text-secondary`, `text-tertiary`. Четвёртый оттенок почти всегда признак того, что не решена иерархия. Цвет через `opacity` запрещён: на другой поверхности он становится другим цветом.
+Three text levels: `text-primary`, `text-secondary`, `text-tertiary`. A fourth shade is almost always a sign that the hierarchy is unresolved. Color through `opacity` is banned: on another surface it becomes a different color.
 
-## Акцент
+## Accent
 
-Акцент отвечает на два вопроса: что здесь главное действие и что сейчас включено. Всё остальное монохромно. Без заданного цвета акцентом служит основной цвет текста, и это полноценная тема.
+The accent answers two questions: what is the main action here, and what is on right now. Everything else is monochrome. Without a set color, the main text color serves as the accent, and that is a complete theme.
 
-- **Одна основная кнопка на экран или блок.** Если главного действия нет, основной кнопки тоже нет.
-- **Включённое состояние контрола.** Чекбокс, радио, переключатель и ползунок красятся сами. Выбор в навигации, фильтрах и таблицах нейтрален.
-- **Ссылка идёт за акцентом.** По умолчанию акцент монохромный, поэтому и ссылка монохромная, а отличает её тонкая линия. Задан брендовый акцент, ссылка берёт его тон с контрастом 4,5:1, линия тоже. Отдельного синего для ссылок нет.
-- **Текст акцентом только у ссылок.** Заголовки, числа, суммы и иконки акцентом не красятся. Важность задают размер и формулировка.
-- **Никаких заливок поверхностей и рамок.** Сильный участок делается через `background-inverse`. Заливки акцентом занимают меньше 10 % площади блока.
-- **Одна серия на график.** Акцент получает главная серия, остальные нейтральны. Спарклайны нейтральны всегда: иначе экран без кнопок становится самым цветным в продукте.
+- **One primary button per screen or block.** If there is no main action, there is no primary button either.
+- **The on state of a control.** Checkbox, radio, switch and slider color themselves. Selection in navigation, filters and tables is neutral.
+- **Links follow the accent.** By default the accent is monochrome, so links are monochrome too, distinguished by a thin underline. When a brand accent is set, the link takes its hue at 4.5:1 contrast, and so does the underline. There is no separate blue for links.
+- **Accent text only on links.** Headings, numbers, amounts and icons are not colored with the accent. Importance comes from size and wording.
+- **No accent fills on surfaces or borders.** A strong area is made with `background-inverse`. Accent fills take up less than 10% of a block's area.
+- **One series per chart.** The main series gets the accent, the rest are neutral. Sparklines are always neutral: otherwise a screen without buttons becomes the most colorful one in the product.
 
-Цвет акцента спокойный: кислотные оттенки режут глаз и спорят с данными. Хорошая точка отсчёта это OKLCH со светлотой около 0,74 и насыщенностью около 0,1. Наборы цветов строятся системно: равномерно по кругу тонов, по одному на семейство, с одной светлотой. Подбор по одному даёт перекос, например четыре оттенка синего.
+The accent color is calm: acid hues hurt the eyes and compete with the data. A good starting point is OKLCH with lightness around 0.74 and chroma around 0.1. Color sets are built systematically: evenly around the hue wheel, one per family, at one lightness. Picking them one by one gives a skew, for example four shades of blue.
 
-## Статусы
+## Statuses
 
-| Значение       | Токен     | Когда                                                          |
-| -------------- | --------- | -------------------------------------------------------------- |
-| Успех          | `success` | Завершилось хорошо и это важно. Обычный успех можно не красить |
-| Предупреждение | `warning` | Нужно внимание, но ничего не сломано                           |
-| Ошибка         | `danger`  | Сломано или опасно                                             |
+| Meaning | Token     | When                                                                   |
+| ------- | --------- | ---------------------------------------------------------------------- |
+| Success | `success` | It ended well and that matters. An ordinary success can stay uncolored |
+| Warning | `warning` | Needs attention, but nothing is broken                                 |
+| Error   | `danger`  | Broken or dangerous                                                    |
 
-Метки это категории, а не статусы, поэтому у них свои тона: `text-label-blue`, `text-label-violet`, `text-label-teal`, `text-label-pink`. Ими красится только значок метки, текст остаётся нейтральным. Статусный цвет на метке читается как тревога или успех, которых нет.
+Labels are categories, not statuses, so they have their own hues: `text-label-blue`, `text-label-violet`, `text-label-teal`, `text-label-pink`. Only the label's marker is colored; the text stays neutral. A status color on a label reads as an alarm or a success that is not there.
 
-В звонке выключенный микрофон и звук получают `danger-soft`: человек говорит, и его никто не слышит, это нельзя пропустить. Выключенная камера остаётся нейтральной, это обычное состояние. Показ экрана и поднятая рука включены, поэтому это акцент. Кольцо говорящего тоже акцент: это единственный сигнал «сейчас включено» на плитке.
+In a call, a muted microphone and muted sound get `danger-soft`: the person is talking and nobody hears them, which must not be missed. A turned-off camera stays neutral, it is a normal state. Screen sharing and a raised hand are on, so they get the accent. The speaker ring is the accent too: it is the only "on right now" signal on the tile.
 
-Статус не акцент. Акцент не должен читаться как статус: тон `success`, янтарный, красный и насыщенный оранжевый между ними для него не подходят. Мята и приглушённая глина подходят, потому что мягче и не совпадают по тону.
+Status is not accent. The accent must not read as a status: the `success` hue, amber, red and the saturated orange between them do not work for it. Mint and muted clay work, because they are softer and do not match in hue.
 
-Цвет не единственный сигнал: ошибку видно по тексту или значку, включённое состояние по галочке и положению. Иначе интерфейс теряет смысл при дальтонизме.
+Color is not the only signal: an error is visible from the text or an icon, an on state from the check mark and position. Otherwise the interface loses its meaning for color-blind people.
 
-## Контраст
+## Contrast
 
-Нормы WCAG AA:
+WCAG AA requirements:
 
-| Что                                               | Минимум                                               |
-| ------------------------------------------------- | ----------------------------------------------------- |
-| Обычный текст                                     | 4,5:1                                                 |
-| Крупный текст, от 24 px или 19 px жирным          | 3:1                                                   |
-| Контролы, линии графика, фокус, значки со смыслом | 3:1                                                   |
-| Отключённые элементы                              | Без нормы, но элемент должен читаться как отключённый |
+| What                                           | Minimum                                               |
+| ---------------------------------------------- | ----------------------------------------------------- |
+| Normal text                                    | 4.5:1                                                 |
+| Large text, from 24 px or 19 px bold           | 3:1                                                   |
+| Controls, chart lines, focus, meaningful icons | 3:1                                                   |
+| Disabled elements                              | No requirement, but the element must read as disabled |
 
-Считайте контраст на худшей поверхности темы, а не на основной: цвет, проходящий на белом, проваливается на сером холсте.
+Compute contrast on the theme's worst surface, not the main one: a color that passes on white fails on the gray canvas.
 
-Подпись на цветной заливке выбирается по большему контрасту с заливкой, а не по порогу яркости. Порог даёт белый текст там, где чёрный читается почти вдвое лучше.
+The label on a colored fill is chosen by higher contrast with the fill, not by a luminance threshold. A threshold gives white text where black reads almost twice as well.
 
-Один цвет не работает в обеих темах. Цвет текста и линий задаётся парой значений `light-dark(...)`, сдвинутых ровно настолько, чтобы пройти норму. Кнопка сохраняет точный цвет бренда: её читаемость держит подпись, а не контраст с фоном. Контролы без подписи на заливке используют подогнанный тон `--ag-accent-control`.
+One color does not work in both themes. Text and line colors are set as a `light-dark(...)` pair, shifted exactly enough to pass the requirement. A button keeps the exact brand color: its legibility comes from the label, not from contrast with the background. Unlabeled controls on a fill use the adjusted tone `--ag-accent-control`.
 
-Верхний предел тоже существует. Чистый белый на почти чёрном даёт 20:1 и утомляет при чтении, поэтому основной текст тёмной темы приглушён примерно до 15:1. Не возвращайте чистый белый: ни для текста, ни для инверсных поверхностей, ни для главной линии графика.
+There is an upper limit too. Pure white on near-black gives 20:1 and is tiring to read, so the main text of the dark theme is dimmed to about 15:1. Do not bring back pure white: not for text, not for inverse surfaces, not for the main chart line.
 
-## Тёмная тема
+## Dark theme
 
-- Глубину создают более светлые поверхности, тени там почти не работают.
-- Проверяйте контролы: рамка чекбокса и радио должна читаться.
-- Цветные значения в тёмной теме обычно светлее и менее насыщенны.
-- Светлая и тёмная равноправны. Если экран проверен только в одной, он не проверен.
+- Depth comes from lighter surfaces; shadows barely work there.
+- Check the controls: the border of a checkbox and radio must be legible.
+- Colored values in the dark theme are usually lighter and less saturated.
+- Light and dark are equal. If a screen was checked only in one, it was not checked.

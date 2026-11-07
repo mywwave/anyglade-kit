@@ -10,7 +10,9 @@ import { fileURLToPath } from "node:url";
 const SKILL = "anyglade-design-system";
 const INSTALLED = join("node_modules", "@anyglade", "kit");
 const SKILL_FOLDERS = [".claude/skills", ".agents/skills"];
-const STUB_MARK = "<!-- Создано @anyglade/kit";
+const STUB_MARK = "<!-- Created by @anyglade/kit";
+// Versions up to 0.4 wrote the same mark in Russian ("Created"). Those stubs are still ours to replace.
+const LEGACY_STUB_MARKS = ["<!-- \u0421\u043e\u0437\u0434\u0430\u043d\u043e @anyglade/kit"];
 const BLOCK_START = "<!-- anyglade-kit:start -->";
 const BLOCK_END = "<!-- anyglade-kit:end -->";
 
@@ -38,16 +40,18 @@ name: ${SKILL}
 description: ${description}
 ---
 
-${STUB_MARK}. Правила лежат в пакете и обновляются вместе с ним. -->
+${STUB_MARK}. The rules live in the package and update with it. -->
 
-Прочитайте \`${skillPath}\` и следуйте ему. Справочники, на которые он ссылается, лежат в той же папке.
+Read \`${skillPath}\` and follow it. The references it links to are in the same folder.
 `;
 }
+
+const isStub = (text) => [STUB_MARK, ...LEGACY_STUB_MARKS].some((mark) => text.includes(mark));
 
 function writeStub(project, folder, content) {
   const file = join(project, folder, SKILL, "SKILL.md");
   // A file without the mark was written by hand: it is not ours to replace.
-  if (existsSync(file) && !readFileSync(file, "utf8").includes(STUB_MARK)) {
+  if (existsSync(file) && !isStub(readFileSync(file, "utf8"))) {
     return;
   }
   mkdirSync(dirname(file), { recursive: true });
@@ -57,9 +61,9 @@ function writeStub(project, folder, content) {
 function writeAgentsBlock(project, skillPath) {
   const file = join(project, "AGENTS.md");
   const block = `${BLOCK_START}
-## Интерфейс
+## Interface
 
-Интерфейс этого проекта строится только из \`@anyglade/kit\`. Прежде чем создавать или менять экран, компонент, вёрстку, цвет или анимацию, прочитайте \`${skillPath}\` и следуйте ему.
+The interface of this project is built only from \`@anyglade/kit\`. Before you create or change a screen, component, layout, color or animation, read \`${skillPath}\` and follow it.
 ${BLOCK_END}`;
   const current = existsSync(file) ? readFileSync(file, "utf8") : "";
   const start = current.indexOf(BLOCK_START);
@@ -92,10 +96,10 @@ function connect(project) {
 function init() {
   if (connect(process.cwd())) {
     console.log(
-      "Агенты подключены к правилам @anyglade/kit: .claude/skills, .agents/skills, AGENTS.md",
+      "Agents are connected to the @anyglade/kit rules: .claude/skills, .agents/skills, AGENTS.md",
     );
   } else {
-    console.error("Сначала установите пакет: bun add @anyglade/kit");
+    console.error("Install the package first: bun add @anyglade/kit");
     process.exitCode = 1;
   }
 }
@@ -122,6 +126,6 @@ if (command === "init") {
 } else if (command === "postinstall") {
   postinstall();
 } else {
-  console.error("Команды: init");
+  console.error("Commands: init");
   process.exitCode = 1;
 }

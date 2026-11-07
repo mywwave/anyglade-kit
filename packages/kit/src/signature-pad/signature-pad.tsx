@@ -9,7 +9,7 @@ import { Text } from "../text/text.tsx";
 export interface SignaturePadProps {
   /** What is being signed, for a screen reader. */
   label: string;
-  /** Sits on the line until the first stroke: "Подпишите здесь". */
+  /** Sits on the line until the first stroke: "Sign here". */
   placeholder: string;
   clearLabel: string;
   /** A PNG data URL after every stroke, `null` once cleared. */

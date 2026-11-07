@@ -96,17 +96,17 @@ export function MemberStatus({ hasHand, isMuted, connection }: MemberStatusProps
     <>
       {hasHand ? (
         <Box as="span" display="inline-flex" color="text-accent">
-          <Hand aria-label="Подняли руку" />
+          <Hand aria-label="Hand raised" />
         </Box>
       ) : null}
       {connection === "weak" ? (
         <Box as="span" display="inline-flex" color="text-warning">
-          <Signal aria-label="Слабое соединение" />
+          <Signal aria-label="Weak connection" />
         </Box>
       ) : null}
       {isMuted ? (
         <Box as="span" display="inline-flex" color="text-danger">
-          <MicrophoneSlash aria-label="Микрофон выключен" />
+          <MicrophoneSlash aria-label="Microphone muted" />
         </Box>
       ) : null}
     </>
@@ -137,7 +137,7 @@ export function PersonMenuItems({ member, actions, showsPin = false }: PersonMen
   const { personId } = member;
   const isSelf = personId === ME;
   const isPinned = actions.focusId === personId;
-  const pinLabel = isPinned ? "Открепить" : "Закрепить на сцене";
+  const pinLabel = isPinned ? "Unpin" : "Pin to stage";
 
   return (
     <>
@@ -153,28 +153,28 @@ export function PersonMenuItems({ member, actions, showsPin = false }: PersonMen
       {isSelf ? null : (
         <Dropdown.Item
           id="volume"
-          textValue="Громкость для вас"
+          textValue="Volume for you"
           onAction={() => actions.onVolume(personId)}
         >
-          <Label>Громкость для вас</Label>
+          <Label>Volume for you</Label>
         </Dropdown.Item>
       )}
       {actions.canModerate && !isSelf && !member.isMuted ? (
         <Dropdown.Item
           id="mute"
-          textValue="Выключить микрофон"
+          textValue="Mute microphone"
           onAction={() => actions.onMute(personId)}
         >
-          <Label>Выключить микрофон</Label>
+          <Label>Mute microphone</Label>
         </Dropdown.Item>
       ) : null}
       {actions.canModerate && !isSelf && member.hasHand ? (
         <Dropdown.Item
           id="hand"
-          textValue="Опустить руку"
+          textValue="Lower hand"
           onAction={() => actions.onLowerHand(personId)}
         >
-          <Label>Опустить руку</Label>
+          <Label>Lower hand</Label>
         </Dropdown.Item>
       ) : null}
       {actions.canModerate && !isSelf
@@ -182,21 +182,21 @@ export function PersonMenuItems({ member, actions, showsPin = false }: PersonMen
             <Dropdown.Item
               key={channel.id}
               id={`move:${channel.id}`}
-              textValue={`Перенести в «${channel.name}»`}
+              textValue={`Move to ${channel.name}`}
               onAction={() => actions.onMove(personId, channel.id)}
             >
-              <Label>Перенести в «{channel.name}»</Label>
+              <Label>Move to {channel.name}</Label>
             </Dropdown.Item>
           ))
         : null}
       {actions.canModerate && !isSelf ? (
         <Dropdown.Item
           id="remove"
-          textValue="Убрать из канала"
+          textValue="Remove from channel"
           variant="danger"
           onAction={() => actions.onRemove(personId)}
         >
-          <Label>Убрать из канала</Label>
+          <Label>Remove from channel</Label>
         </Dropdown.Item>
       ) : null}
     </>
@@ -219,13 +219,13 @@ interface TileButtonsProps extends Pick<TileViewProps, "tile" | "isFocused" | "a
 }
 
 function TileButtons({ tile, isFocused, actions, onPin }: TileButtonsProps) {
-  const name = tile.kind === "person" ? personById(tile.member.personId).name : "экран";
+  const name = tile.kind === "person" ? personById(tile.member.personId).name : "screen";
 
   return (
     <>
       <Button
         isIconOnly
-        aria-label={isFocused ? `Открепить: ${name}` : `Закрепить: ${name}`}
+        aria-label={isFocused ? `Unpin ${name}` : `Pin ${name}`}
         aria-pressed={isFocused}
         size="sm"
         variant="secondary"
@@ -235,11 +235,11 @@ function TileButtons({ tile, isFocused, actions, onPin }: TileButtonsProps) {
       </Button>
       {tile.kind === "person" && tile.member.personId !== ME ? (
         <Dropdown>
-          <Button isIconOnly aria-label={`Действия: ${name}`} size="sm" variant="secondary">
+          <Button isIconOnly aria-label={`Actions for ${name}`} size="sm" variant="secondary">
             <EllipsisVertical />
           </Button>
           <Dropdown.Popover>
-            <Dropdown.Menu aria-label={`Действия: ${name}`}>
+            <Dropdown.Menu aria-label={`Actions for ${name}`}>
               <PersonMenuItems actions={actions} member={tile.member} />
             </Dropdown.Menu>
           </Dropdown.Popover>
@@ -255,7 +255,7 @@ export function TileView({ camera, screen, speakerId, onPin, ...shared }: TileVi
 
   if (tile.kind === "screen") {
     const isOwn = tile.ownerId === ME;
-    const name = isOwn ? "Ваш экран" : `Экран: ${firstName(tile.ownerId)}`;
+    const name = isOwn ? "Your screen" : `${firstName(tile.ownerId)}'s screen`;
 
     return (
       <MediaTile actions={buttons} fit="contain" name={name}>
@@ -271,7 +271,7 @@ export function TileView({ camera, screen, speakerId, onPin, ...shared }: TileVi
   const { member } = tile;
   const person = personById(member.personId);
   const isSelf = member.personId === ME;
-  const name = isSelf ? "Вы" : person.name;
+  const name = isSelf ? "You" : person.name;
 
   return (
     <MediaTile
@@ -287,7 +287,7 @@ export function TileView({ camera, screen, speakerId, onPin, ...shared }: TileVi
       }
     >
       {isSelf && camera.status === "on" ? (
-        <StreamVideo isMirrored label="Ваша камера" stream={camera.stream} />
+        <StreamVideo isMirrored label="Your camera" stream={camera.stream} />
       ) : !isSelf && member.hasCamera && person.photo ? (
         <img alt={person.name} src={person.photo} />
       ) : (

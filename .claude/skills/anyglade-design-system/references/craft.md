@@ -1,119 +1,119 @@
-# Проработка: креативность, детали, жест, сценарий
+# Craft: creativity, details, gesture, flow
 
-Читайте перед любым объектом, который должен запомниться: витрина, лендинг, онбординг, образец компонента, запрос «сделай креативнее». Раздел «Сценарий» обязателен и для рабочих экранов.
+Read this before any object that should be memorable: a showcase, a landing page, onboarding, a component sample, a request to "make it more creative". The "Flow" section is mandatory for work screens too.
 
-Аккуратный интерфейс из правильных компонентов ещё не проработан. Проработанность видна в том, о чём человек не просил, но заметит: вычисленная деталь, состояние, о котором подумали заранее, жест, который ведёт себя как настоящий.
+A neat interface made of the right components is not yet crafted. Craft shows in what the person did not ask for but will notice: a computed detail, a state thought of in advance, a gesture that behaves like the real thing.
 
-## Уровень креативности
+## Creativity level
 
-Сначала честно определите уровень. На поверхности убеждения (витрина, лендинг, вход, тарифы) сдаётся только третий. На рабочем экране объект и метафора не нужны: там проработанность это сценарий, точность и скорость, но первый уровень недопустим и там.
+First, honestly determine the level. On a persuasion surface (showcase, landing page, sign-in, pricing) only the third level is accepted. On a work surface no object or metaphor is needed: there, craft means flow, precision and speed, but the first level is unacceptable there too.
 
-| Уровень     | Как выглядит                                                                                          |
-| ----------- | ----------------------------------------------------------------------------------------------------- |
-| Шаблон      | «Нажми кнопку, появится текст». Карточка, заголовок, кнопка, тост                                     |
-| Аккуратно   | Правильные компоненты и токены, есть ожидание и успех. Объекта и идеи нет                             |
-| Проработано | Узнаваемый объект из мира продукта, свой жест, детали из данных, продуманы все состояния и путь назад |
+| Level    | What it looks like                                                                                                            |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| Template | "Press the button, text appears". A card, a heading, a button, a toast                                                        |
+| Neat     | The right components and tokens, there is a wait and a success. No object and no idea                                         |
+| Crafted  | A recognizable object from the product's world, its own gesture, details from data, all states and a way back thought through |
 
-Проверка: опишите блок одной фразой. Если она укладывается в «нажми кнопку, и появится X», блок на первом уровне.
+Check: describe the block in one phrase. If it fits "press the button and X appears", the block is at the first level.
 
-### Откуда берётся идея
+### Where the idea comes from
 
-Ищите не украшение, а объект или ритуал из предметной области, который человек уже знает руками. Его поведение подсказывает взаимодействие:
+Look not for decoration but for an object or ritual from the domain that the person already knows by hand. Its behavior suggests the interaction:
 
-- оплата: чек выходит из принтера построчно, его отрывают;
-- договор: подпись на линии, печать опускается, лист проседает под ней;
-- кошелёк: стопку карт перебирают, верхнюю смахивают;
-- перевод: бегунок тянут до конца, потому что случайное нажатие здесь опасно;
-- сверка: волна проходит по матрице платежей, расхождения остаются кольцами;
-- уведомление о платеже: остров на экране телефона раскрывается и сам схлопывается.
+- payment: a receipt comes out of the printer line by line, and it is torn off;
+- contract: a signature on the line, a stamp comes down, the sheet sags under it;
+- wallet: a stack of cards is flipped through, the top one is swiped away;
+- transfer: a handle is pulled all the way, because an accidental press is dangerous here;
+- reconciliation: a wave runs across the payment matrix, mismatches remain as rings;
+- payment notification: an island on the phone screen expands and collapses by itself.
 
-Метафора должна быть честной. Объект ведёт себя как настоящий и при этом делает настоящее дело: сумма складывается, запрос уходит, файл скачивается. Декорация без работы читается как макет.
+The metaphor must be honest. The object behaves like the real one and at the same time does real work: the sum adds up, the request goes out, the file downloads. Decoration without work reads as a mockup.
 
-## Детализация объекта
+## Object detail
 
-### Анатомия
+### Anatomy
 
-Перечислите, из чего состоит настоящий объект, и перенесите всё, что помогает узнаванию:
+List what the real object consists of and carry over everything that helps recognition:
 
-- у чека шапка заведения, адрес, дата, время, кассир, номер, позиции «кол-во × цена» с точечными лидерами, НДС, крупное ИТОГО, QR-код и «Спасибо!»;
-- у карты чип, знак бесконтактной оплаты, номер, держатель, срок и платёжная система.
+- a receipt has the store header, address, date, time, cashier, number, line items "qty × price" with dot leaders, VAT, a large TOTAL, a QR code and "Thank you!";
+- a card has a chip, the contactless symbol, number, holder, expiry and payment network.
 
-Чем меньше объект на экране, тем важнее контур, по которому его узнают за долю секунды.
+The smaller the object on screen, the more important the outline by which it is recognized in a fraction of a second.
 
-### Детали вычисляются, а не рисуются
+### Details are computed, not drawn
 
-Данные должны сходиться, тогда объект выдерживает внимательный взгляд:
+The data must add up; then the object withstands a close look:
 
-- сумма и НДС считаются из позиций, номер чека растёт от заказа к заказу;
-- QR строится из номера, поэтому у каждого чека он свой;
-- волна голосового строится из таймлайна речи: паузы между фразами видны провалами и совпадают с подсветкой слов;
-- номер карты проверяется по Луну, платёжная система определяется по первым цифрам;
-- копейки от округления остаются у того, кто платит, и суммы сходятся с итогом.
+- the total and VAT are computed from the line items, the receipt number grows from order to order;
+- the QR code is built from the number, so every receipt has its own;
+- the voice message waveform is built from the speech timeline: pauses between phrases show as dips and match the word highlighting;
+- the card number passes the Luhn check, the payment network is derived from the first digits;
+- rounding cents stay with the payer, and the amounts add up to the total.
 
-Нарисованная деталь, которая не сходится с соседней, разрушает доверие ко всему блоку.
+A drawn detail that does not match its neighbor destroys trust in the whole block.
 
-### У каждой детали есть состояние
+### Every detail has a state
 
-Мелкие сигналы делают объект живым: метка «Основная» на выбранной карте, точка «не прослушано», которая гаснет после первого воспроизведения, огонёк принтера, мигающий во время печати, зачёркнутая строка после возврата. Каждый такой сигнал отвечает на вопрос, который человек задал бы сам.
+Small signals make an object alive: a "Primary" mark on the selected card, an "unplayed" dot that goes out after the first playback, a printer light blinking during printing, a struck-through line after a refund. Each such signal answers a question the person would ask themselves.
 
-### Тексты и числа
+### Copy and numbers
 
-Склонения через правила множественного числа («1 платёж», «3 платежа», «14 платежей»), неразрывные пробелы в суммах, настоящее время и даты, правдоподобные имена, адреса и назначения платежей. Рисунки (чип, QR, волна, печать) делаются в svg цветом `currentColor`, тогда они следуют теме.
+Plurals through plural rules ("1 payment", "3 payments"), non-breaking spaces in amounts, the current time and dates, plausible names, addresses and payment descriptions. Drawings (chip, QR, waveform, stamp) are made in svg with `currentColor`, so they follow the theme.
 
-## Взаимодействие
+## Interaction
 
-### Главный жест
+### The main gesture
 
-Определите, какой жест подсказывает объект: тянуть, смахнуть, провести, расписаться, перемотать. Нажатие остаётся путём для клавиатуры и запасным путём, а не единственным.
+Determine which gesture the object suggests: pull, swipe, slide, sign, scrub. A press remains the keyboard path and a fallback, not the only path.
 
-### Физика жеста
+### Gesture physics
 
-- **Сопротивление до порога.** Бумага, которую держит принтер, идёт медленнее пальца. Так человек чувствует, что делает что-то необратимое.
-- **Порог.** Срабатывает по расстоянию или по скорости броска. До порога объект возвращается с лёгким перелётом, после порога улетает по направлению движения и растворяется.
-- **За пальцем без отставания.** После отрыва объект идёт 1:1. Наклон пропорционален смещению и сглаженной скорости. Сырая скорость между событиями скачет, и объект трясётся.
-- **Прерываемость.** Каждое движение начинается из текущего положения: бегущая анимация фиксируется и снимается, а не обрывается рывком.
-- **Без рендера на кадр.** Жест пишет `transform` прямо в элемент, сложное движение идёт через Web Animations.
-- **Отклик.** Короткая вибрация на телефоне в момент порога, курсор `grab` и `grabbing`, однократная подсказка после появления: объект слегка приседает, показывая, что его можно тянуть.
+- **Resistance up to the threshold.** Paper held by the printer moves slower than the finger. This way the person feels they are doing something irreversible.
+- **Threshold.** It triggers by distance or by throw velocity. Before the threshold the object returns with a slight overshoot; after it the object flies off in the direction of movement and fades.
+- **Follows the finger without lag.** After it breaks free the object moves 1:1. Tilt is proportional to offset and smoothed velocity. Raw velocity between events jumps around, and the object shakes.
+- **Interruptibility.** Every movement starts from the current position: a running animation is committed and removed, not cut off with a jerk.
+- **No render per frame.** The gesture writes `transform` straight into the element; complex motion goes through Web Animations.
+- **Response.** A short vibration on the phone at the threshold, the `grab` and `grabbing` cursors, a one-time hint after appearing: the object crouches slightly, showing that it can be pulled.
 
-### Не мешать соседям
+### Do not disturb neighbors
 
-- Горизонтальный жест не блокирует вертикальную прокрутку страницы.
-- Брошенный объект обрезается краем своей плитки и не налезает на соседей.
-- Высота блока не меняется между состояниями: место под будущее содержимое резервируется заранее.
-- Невидимые слои, отодвинутые за край, не принимают ввод: иначе они перекрывают кнопки.
+- A horizontal gesture does not block vertical page scrolling.
+- A thrown object is clipped by the edge of its tile and does not overlap neighbors.
+- The block height does not change between states: space for future content is reserved in advance.
+- Invisible layers moved past the edge do not accept input: otherwise they cover buttons.
 
-### Доступность жеста
+### Gesture accessibility
 
-Каждому жесту нужен путь с клавиатуры: кнопка («Оторвать чек», «Следующая карта») или Enter. Для перемотки подходит нативный `range`. При `prefers-reduced-motion` перемещения заменяются сменой прозрачности, а сам жест продолжает идти за пальцем.
+Every gesture needs a keyboard path: a button ("Tear off receipt", "Next card") or Enter. A native `range` suits scrubbing. Under `prefers-reduced-motion` movements are replaced by opacity changes, and the gesture itself keeps following the finger.
 
-## Сценарий
+## Flow
 
-До кода запишите сценарий цепочкой состояний: до, действие, ожидание, результат, путь дальше или назад. Потом добавьте то, что случается в жизни:
+Before code, write the flow as a chain of states: before, action, wait, result, a way forward or back. Then add what happens in real life:
 
-| Ситуация                      | Решение                                                                                                 |
-| ----------------------------- | ------------------------------------------------------------------------------------------------------- |
-| Данных ещё нет                | Кнопка отключена, рядом текстом причина: «Не все позиции отмечены», «Ждёт вашей подписи»                |
-| Ввод с ошибкой                | Ошибка у источника: поле или объект коротко встряхивается, текст на той же строке, раскладка не прыгает |
-| Ввод верный                   | Ускорьте путь: фокус сам переходит в следующее поле, пример данных вставляется одной кнопкой            |
-| Зачем это делать              | Покажите до действия: суммы кассы и банка видны до сверки, разница понятна заранее                      |
-| Опасное действие              | Два шага: «Вернуть», затем «Точно вернуть?». Обратимое применяется сразу и отменяется                   |
-| События идут подряд           | Очередь со счётчиком «ещё 2». Автоскрытие останавливается на наведении и фокусе                         |
-| Действие прервали на середине | Объект возвращается туда, откуда начал. Повторное действие начинает с нуля                              |
-| Результат                     | Объясните последствия: «Возврат оформлен, деньги придут за 1–3 дня», «Копия ушла на почту»              |
-| Конец                         | Не тупик: «Новый заказ», «Привязать другую», «Разделить заново», «Сверить снова»                        |
+| Situation                    | Solution                                                                                                                  |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| No data yet                  | The button is disabled, with the reason as text next to it: "Not all items are checked", "Awaiting your signature"        |
+| Invalid input                | The error at the source: the field or object shakes briefly, text on the same line, the layout does not jump              |
+| Valid input                  | Speed up the path: focus moves to the next field by itself, sample data is inserted with one button                       |
+| Why do this                  | Show it before the action: register and bank totals are visible before reconciliation, the difference is clear in advance |
+| Dangerous action             | Two steps: "Refund", then "Refund for sure?". A reversible one is applied at once and can be undone                       |
+| Events come in a row         | A queue with a "2 more" counter. Auto-hide pauses on hover and focus                                                      |
+| An action interrupted midway | The object returns to where it started. A repeated action starts from zero                                                |
+| Result                       | Explain the consequences: "Refund issued, the money will arrive in 1–3 days", "A copy was sent to your email"             |
+| End                          | Not a dead end: "New order", "Link another card", "Split again", "Reconcile again"                                        |
 
-Многошаговая работа показывает свой ход: бумага выходит ступенями, волна проходит по диагонали, перед вердиктом есть короткая пауза, чтобы готовую картину успели увидеть. Катится только одна короткая строка на действие, правила в [motion.md](motion.md).
+Multi-step work shows its progress: paper comes out in steps, a wave runs diagonally, and there is a short pause before the verdict so the finished picture can be seen. Only one short string rolls per action; the rules are in [motion.md](motion.md).
 
-## Проверка
+## Check
 
-Блок проработан, только если на все вопросы есть ответ:
+A block is crafted only if every question has an answer:
 
-1. Какой объект или ритуал из мира продукта он показывает?
-2. Какой главный жест и какой у него путь с клавиатуры?
-3. Какие детали вычисляются из данных и сходятся ли они между собой?
-4. Сколько состояний? Минимум: до, во время, успех, отказ или ошибка, путь назад.
-5. Что будет при повторе, двойном быстром действии, прерванном жесте, событии поверх события?
-6. Не прыгает ли раскладка и не мешает ли блок соседям?
-7. Как он выглядит в тёмной теме, на 300 px и на телефоне, с уменьшенным движением?
+1. What object or ritual from the product's world does it show?
+2. What is the main gesture and what is its keyboard path?
+3. Which details are computed from data, and do they agree with each other?
+4. How many states? At minimum: before, during, success, refusal or error, a way back.
+5. What happens on a repeat, a double quick action, an interrupted gesture, an event on top of an event?
+6. Does the layout jump, and does the block disturb its neighbors?
+7. How does it look in the dark theme, at 300 px and on a phone, with reduced motion?
 
-Если хоть один ответ «никак», блок ещё на втором уровне.
+If even one answer is "it doesn't", the block is still at the second level.

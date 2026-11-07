@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Использование: verify.sh [порт] [блоки через запятую для скриншотов]
+# Usage: verify.sh [port] [comma-separated blocks to screenshot]
 set -u
 
 PORT="${1:-5170}"
@@ -17,7 +17,7 @@ for candidate in \
   "$(command -v google-chrome chromium microsoft-edge 2> /dev/null | head -1)"; do
   if [ -n "$candidate" ] && [ -x "$candidate" ]; then BROWSER_BIN="$candidate"; break; fi
 done
-[ -n "${BROWSER_BIN:-}" ] || { echo "Браузер не найден, задайте BROWSER"; exit 1; }
+[ -n "${BROWSER_BIN:-}" ] || { echo "No browser found, set BROWSER"; exit 1; }
 
 (cd "$ROOT/apps/playground" && vp build 2>&1 | grep -E 'rror:|built in') || exit 1
 
@@ -52,7 +52,7 @@ dump() { sed -n "s#.*<pre id=\"$1\"[^>]*>\(.*\)</pre>.*#\1#p" | sed 's/&quot;/"/
 
 browser --window-size=1280,900 --virtual-time-budget=6000 --dump-dom "http://localhost:$PORT/?theme=dark" | dump probe > "$OUT/desktop.json"
 browser --window-size=700,900 --virtual-time-budget=9000 --dump-dom "http://localhost:$PORT/phone?theme=dark" | dump out > "$OUT/phone.json"
-[ -s "$OUT/desktop.json" ] && [ -s "$OUT/phone.json" ] || { echo "Браузер не вернул результат за 60 с"; exit 1; }
+[ -s "$OUT/desktop.json" ] && [ -s "$OUT/phone.json" ] || { echo "The browser returned no result within 60 s"; exit 1; }
 node "$(native "$SKILL/report.mjs")" "$(native "$OUT/desktop.json")" "$(native "$OUT/phone.json")"
 
 if [ -n "$IDS" ]; then
@@ -63,5 +63,5 @@ if [ -n "$IDS" ]; then
   browser --window-size=500,1500 --virtual-time-budget=9000 \
     --screenshot="$(native "$OUT/shots/phone-dark.png")" "http://localhost:$PORT/phone?theme=dark&only=$IDS" > /dev/null
   echo
-  echo "Скриншоты: $(native "$OUT/shots")"
+  echo "Screenshots: $(native "$OUT/shots")"
 fi

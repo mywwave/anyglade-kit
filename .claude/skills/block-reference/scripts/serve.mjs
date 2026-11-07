@@ -1,4 +1,4 @@
-// Статический сервер для verify.sh. Завершается сам, даже если скрипт оборвали.
+// Static server for verify.sh. Exits on its own, even if the script was interrupted.
 import { createReadStream, existsSync, statSync } from "node:fs";
 import { createServer } from "node:http";
 import { extname, join, normalize } from "node:path";

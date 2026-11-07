@@ -4,10 +4,10 @@ import type { Demo, DemoCategory } from "./demos.ts";
 
 /** Folders of `blocks/` are kinds of interaction. */
 const kindLabels: Record<string, string> = {
-  press: "Нажатие",
-  drag: "Перетаскивание",
-  type: "Ввод",
-  loading: "Ожидание",
+  press: "Press",
+  drag: "Drag",
+  type: "Type",
+  loading: "Loading",
 };
 
 interface Tile extends Demo {
@@ -38,7 +38,7 @@ export function BlockGallery({ categories: unordered }: { categories: readonly D
   const [kind, setKind] = useState("all");
   const categories = unordered.toSorted((a, b) => rank(a.id) - rank(b.id));
   const options = [
-    { id: "all", label: "Все" },
+    { id: "all", label: "All" },
     ...categories.map((category) => ({
       id: category.id,
       label: kindLabels[category.id] ?? category.label,
@@ -51,7 +51,7 @@ export function BlockGallery({ categories: unordered }: { categories: readonly D
   return (
     <Box flexDirection="column" alignItems="start" gap="xl">
       <SegmentedControl
-        label="Взаимодействие"
+        label="Interaction"
         options={options}
         value={kind}
         onChange={(next) => withTransition(() => setKind(next))}

@@ -9,7 +9,7 @@ import { Text } from "../text/text.tsx";
 import { durations, easings } from "../tokens.ts";
 
 export interface SlideToConfirmProps {
-  /** The action and its stake, short enough for one line: "Перевести 48 000 ₽". */
+  /** The action and its stake, short enough for one line: "Send $480". */
   label: string;
   /** Shown while `onConfirm` runs, with a shimmer. */
   pendingLabel: string;

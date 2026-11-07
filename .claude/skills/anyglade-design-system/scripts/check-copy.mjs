@@ -1,126 +1,186 @@
 #!/usr/bin/env node
 // Finds AI-writing tells in user-facing text. Usage:
 //   node scripts/check-copy.mjs <file...>
-// A hit means "reread this", not "must rewrite": see references/writing.md, «Ложные срабатывания».
+// A hit means "reread this", not "must rewrite": see references/writing.md, "False positives".
 // Exit code 1 when anything was found, so it can gate a script.
 
 import { readFileSync } from "node:fs";
 
-// Stems are matched at a word start, case-insensitive. Hints name the pattern
-// from references/writing.md.
+// Stems are matched at a word start, case-insensitive. Hints name the sign
+// from the slop table in references/writing.md.
+const AD = "advertising instead of fact";
+const SIGNIFICANCE = "inflated significance";
+const NOT_JUST = '"not just X, but Y"';
+const NEGATION = "trailing negation";
+const FILLER = "corporate filler";
+const TAIL = "participle tail";
+const OPENER = "rhetorical opener";
+const EXPLAINING = "explaining the interface";
+const RELEASE = "release anchoring";
+const SERVILITY = "servility";
+const AUTHORITY = "invented authority";
+const CALQUE = "calque";
+const AI_WORDS = "AI vocabulary";
+
 const RU = [
-  ["мощн", "1 реклама"],
-  ["удобн", "1 реклама"],
-  ["интуитивн", "1 реклама"],
-  ["бесшовн", "1 реклама"],
-  ["уникальн", "1 реклама"],
-  ["идеальн", "1 реклама"],
-  ["в один клик", "1 реклама"],
-  ["всё в одном месте", "1 реклама"],
-  ["все в одном месте", "1 реклама"],
-  ["легко и быстро", "1 реклама"],
-  ["быстро и легко", "1 реклама"],
-  ["без лишних хлопот", "1 реклама"],
-  ["полный контроль", "1 реклама"],
-  ["на новый уровень", "1 реклама"],
-  ["раскройте", "1 реклама"],
-  ["откройте для себя", "1 реклама"],
-  ["играет ключевую роль", "2 значимость"],
-  ["ключев", "2 значимость"],
-  ["настоящий прорыв", "2 значимость"],
-  ["открывает новые возможности", "2 значимость"],
-  ["меняет правила игры", "2 значимость"],
-  ["неотъемлем", "2 значимость"],
-  ["в современном мире", "2 значимость"],
-  ["не просто ", "3 «не просто X, а Y»"],
-  ["не только", "3 «не только…, но и»"],
-  ["никакой рутины", "3 хвостовое отрицание"],
-  ["без лишних кликов", "3 хвостовое отрицание"],
-  ["является", "4 канцелярит"],
-  ["являются", "4 канцелярит"],
-  ["осуществл", "4 канцелярит"],
-  ["производится", "4 канцелярит"],
-  ["данный", "4 канцелярит"],
-  ["данная", "4 канцелярит"],
-  ["данное", "4 канцелярит"],
-  ["в рамках", "4 канцелярит"],
-  ["с целью", "4 канцелярит"],
-  ["на данный момент", "4 канцелярит"],
-  ["обеспечива", "4 канцелярит / 5 хвост"],
-  ["предоставляет возможность", "4 канцелярит"],
-  ["позволяет", "4 «позволяет + инфинитив»"],
-  ["позволяют", "4 «позволяет + инфинитив»"],
-  ["посредством", "4 канцелярит"],
-  ["представьте", "9 риторический заход"],
-  ["знакомо?", "9 риторический заход"],
-  ["секрет прост", "9 риторический заход"],
-  ["давайте разбер", "9 анонс"],
-  ["в этой статье", "9 анонс"],
-  ["ниже вы найдёте", "9 анонс"],
-  ["важно отметить", "9 анонс"],
-  ["стоит отметить", "9 анонс"],
-  ["следует подчеркнуть", "9 анонс"],
-  ["в этом разделе вы можете", "10 объяснение интерфейса"],
-  ["нажмите на кнопку ниже", "10 объяснение интерфейса"],
-  ["здесь отображаются", "10 объяснение интерфейса"],
-  ["мы добавили", "10 привязка к релизу"],
-  ["новая функция", "10 привязка к релизу"],
-  ["отличный вопрос", "12 сервильность"],
-  ["надеемся, это", "12 сервильность"],
-  ["таким образом", "12 пустой вывод"],
-  ["в итоге вы получаете", "12 пустой вывод"],
-  ["ещё эффективнее", "12 пустой вывод"],
-  ["рады сообщить", "12 сервильность"],
-  ["отличные новости", "12 сервильность"],
-  ["потенциально", "13 перестраховка"],
-  ["многие компании", "13 выдуманная опора"],
-  ["эксперты", "13 выдуманная опора"],
-  ["это поможет вам", "14 калька"],
-  ["на ежедневной основе", "14 калька"],
-  ["в конце дня", "14 калька"],
-  ["имеет смысл", "14 калька"],
+  ["мощн", AD],
+  ["удобн", AD],
+  ["интуитивн", AD],
+  ["бесшовн", AD],
+  ["уникальн", AD],
+  ["идеальн", AD],
+  ["в один клик", AD],
+  ["всё в одном месте", AD],
+  ["все в одном месте", AD],
+  ["легко и быстро", AD],
+  ["быстро и легко", AD],
+  ["без лишних хлопот", AD],
+  ["полный контроль", AD],
+  ["на новый уровень", AD],
+  ["раскройте", AD],
+  ["откройте для себя", AD],
+  ["играет ключевую роль", SIGNIFICANCE],
+  ["ключев", SIGNIFICANCE],
+  ["настоящий прорыв", SIGNIFICANCE],
+  ["открывает новые возможности", SIGNIFICANCE],
+  ["меняет правила игры", SIGNIFICANCE],
+  ["неотъемлем", SIGNIFICANCE],
+  ["в современном мире", SIGNIFICANCE],
+  ["не просто ", NOT_JUST],
+  ["не только", NOT_JUST],
+  ["никакой рутины", NEGATION],
+  ["без лишних кликов", NEGATION],
+  ["является", FILLER],
+  ["являются", FILLER],
+  ["осуществл", FILLER],
+  ["производится", FILLER],
+  ["данный", FILLER],
+  ["данная", FILLER],
+  ["данное", FILLER],
+  ["в рамках", FILLER],
+  ["с целью", FILLER],
+  ["на данный момент", FILLER],
+  ["обеспечива", `${FILLER} / ${TAIL}`],
+  ["предоставляет возможность", FILLER],
+  ["позволяет", `${FILLER}: "позволяет + infinitive"`],
+  ["позволяют", `${FILLER}: "позволяет + infinitive"`],
+  ["посредством", FILLER],
+  ["представьте", OPENER],
+  ["знакомо?", OPENER],
+  ["секрет прост", OPENER],
+  ["давайте разбер", `${OPENER} (announcement)`],
+  ["в этой статье", `${OPENER} (announcement)`],
+  ["ниже вы найдёте", `${OPENER} (announcement)`],
+  ["важно отметить", `${OPENER} (announcement)`],
+  ["стоит отметить", `${OPENER} (announcement)`],
+  ["следует подчеркнуть", `${OPENER} (announcement)`],
+  ["в этом разделе вы можете", EXPLAINING],
+  ["нажмите на кнопку ниже", EXPLAINING],
+  ["здесь отображаются", EXPLAINING],
+  ["мы добавили", RELEASE],
+  ["новая функция", RELEASE],
+  ["отличный вопрос", SERVILITY],
+  ["надеемся, это", SERVILITY],
+  ["таким образом", `${SERVILITY} (empty conclusion)`],
+  ["в итоге вы получаете", `${SERVILITY} (empty conclusion)`],
+  ["ещё эффективнее", `${SERVILITY} (empty conclusion)`],
+  ["рады сообщить", SERVILITY],
+  ["отличные новости", SERVILITY],
+  ["потенциально", `${AUTHORITY} (hedging)`],
+  ["многие компании", AUTHORITY],
+  ["эксперты", AUTHORITY],
+  ["это поможет вам", CALQUE],
+  ["на ежедневной основе", CALQUE],
+  ["в конце дня", CALQUE],
+  ["имеет смысл", CALQUE],
 ];
 
 const EN = [
-  "delve",
-  "seamless",
-  "robust",
-  "leverag",
-  "empower",
-  "unlock",
-  "elevate",
-  "streamlin",
-  "tapestry",
-  "landscape",
-  "testament",
-  "pivotal",
-  "crucial",
-  "vibrant",
-  "showcas",
-  "foster",
-  "underscor",
-  "intricate",
-  "game-changer",
-  "game changer",
-  "cutting-edge",
-  "effortless",
-  "serves as",
-  "stands as",
-  "boasts",
-  "not just",
-  "not only",
-  "in today's",
-  "great question",
-  "i hope this helps",
-  "let's dive",
-  "here's the thing",
-  "honestly?",
-  "one click",
-  "all-in-one",
-  "powerful",
-  "next level",
-  "supercharge",
-].map((stem) => [stem, "EN AI vocabulary"]);
+  ["powerful", AD],
+  ["intuitive", AD],
+  ["seamless", AD],
+  ["effortless", AD],
+  ["one click", AD],
+  ["one-click", AD],
+  ["all-in-one", AD],
+  ["all in one place", AD],
+  ["quick and easy", AD],
+  ["fast and easy", AD],
+  ["hassle-free", AD],
+  ["full control", AD],
+  ["next level", AD],
+  ["supercharge", AD],
+  ["unlock", AD],
+  ["discover the", AD],
+  ["cutting-edge", AD],
+  ["plays a key role", SIGNIFICANCE],
+  ["plays a pivotal role", SIGNIFICANCE],
+  ["pivotal", SIGNIFICANCE],
+  ["crucial", SIGNIFICANCE],
+  ["game-changer", SIGNIFICANCE],
+  ["game changer", SIGNIFICANCE],
+  ["new possibilities", SIGNIFICANCE],
+  ["integral part", SIGNIFICANCE],
+  ["in today's", SIGNIFICANCE],
+  ["testament", SIGNIFICANCE],
+  ["not just", NOT_JUST],
+  ["not only", NOT_JUST],
+  ["no extra clicks", NEGATION],
+  ["no more busywork", NEGATION],
+  ["no busywork", NEGATION],
+  ["utiliz", FILLER],
+  ["facilitat", FILLER],
+  ["in order to", FILLER],
+  ["serves as", FILLER],
+  ["stands as", FILLER],
+  ["boasts", FILLER],
+  ["allows you to", FILLER],
+  ["enables you to", FILLER],
+  ["lets you", FILLER],
+  ["ensuring", TAIL],
+  ["imagine", OPENER],
+  ["sound familiar", OPENER],
+  ["here's the thing", OPENER],
+  ["let's dive", `${OPENER} (announcement)`],
+  ["in this article", `${OPENER} (announcement)`],
+  ["below you'll find", `${OPENER} (announcement)`],
+  ["it's worth noting", `${OPENER} (announcement)`],
+  ["it is worth noting", `${OPENER} (announcement)`],
+  ["it's important to note", `${OPENER} (announcement)`],
+  ["it is important to note", `${OPENER} (announcement)`],
+  ["honestly?", OPENER],
+  ["in this section you can", EXPLAINING],
+  ["here you can see", EXPLAINING],
+  ["click the button below", EXPLAINING],
+  ["we've added", RELEASE],
+  ["we added", RELEASE],
+  ["new feature", RELEASE],
+  ["now you can", RELEASE],
+  ["great question", SERVILITY],
+  ["i hope this helps", SERVILITY],
+  ["hope this helps", SERVILITY],
+  ["we're excited", SERVILITY],
+  ["great news", SERVILITY],
+  ["in conclusion", `${SERVILITY} (empty conclusion)`],
+  ["potentially", `${AUTHORITY} (hedging)`],
+  ["many companies", AUTHORITY],
+  ["experts", AUTHORITY],
+  ["at the end of the day", AI_WORDS],
+  ["on a daily basis", AI_WORDS],
+  ["delve", AI_WORDS],
+  ["robust", AI_WORDS],
+  ["leverag", AI_WORDS],
+  ["empower", AI_WORDS],
+  ["elevate", AI_WORDS],
+  ["streamlin", AI_WORDS],
+  ["tapestry", AI_WORDS],
+  ["landscape", AI_WORDS],
+  ["vibrant", AI_WORDS],
+  ["showcas", AI_WORDS],
+  ["foster", AI_WORDS],
+  ["underscor", AI_WORDS],
+  ["intricate", AI_WORDS],
+];
 
 const escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const toRegex = ([stem, hint]) => [new RegExp(`(?<!\\p{L})${escape(stem)}`, "iu"), stem, hint];
@@ -150,28 +210,32 @@ function check(path) {
 
       if (russian) {
         for (const [re, stem, hint] of RU_RULES) if (re.test(line)) at(`«${stem}» (${hint})`);
-        if ((line.match(/ — /g) || []).length >= 2) at("два тире в строке (7 тире ради паузы)");
-        if (/ — и /.test(line)) at("«— и» (7 тире ради паузы)");
+        if ((line.match(/ — /g) || []).length >= 2) at("two dashes in one line (dash for a pause)");
+        if (/ — и /.test(line)) at("«— и» (dash for a pause)");
+        if (/\p{L}!/u.test(line)) at("exclamation mark");
       }
       if (english) {
-        for (const [re, stem, hint] of EN_RULES) if (re.test(line)) at(`"${stem}" (${hint})`);
+        // Curly apostrophes are correct typography; match them like straight ones.
+        const plain = line.replaceAll("’", "'");
+        for (const [re, stem, hint] of EN_RULES) if (re.test(plain)) at(`"${stem}" (${hint})`);
         // An unspaced en dash in a range (Thu–Wed, 10–20) is correct typography.
-        if (/—|\s–\s/.test(line) && !russian) at("em/en dash в английском тексте");
+        if (/—|\s–\s/.test(line) && !russian) at("em/en dash in English text (dash for a pause)");
+        // A letter, then "!" and a word boundary: skips TS non-null assertions like x!.y.
+        if (!russian && /\p{L}!(?=\s|$|["'”’<)])/u.test(line)) at("exclamation mark");
       }
-      if (EMOJI.test(line)) at("эмодзи (15 оформление; допустимо только в контенте для фанатов)");
-      if (russian && /\p{L}!/u.test(line)) at("восклицательный знак");
+      if (EMOJI.test(line)) at("emoji (decoration; acceptable only in content for fans)");
     });
   return hits;
 }
 
 const files = process.argv.slice(2);
 if (files.length === 0) {
-  console.error("Usage: node check.mjs <file...>");
+  console.error("Usage: node check-copy.mjs <file...>");
   process.exit(2);
 }
 const hits = files.flatMap(check);
-console.log(hits.length ? hits.join("\n") : "Чисто: стоп-фраз не найдено.");
+console.log(hits.length ? hits.join("\n") : "Clean: no stop phrases found.");
 console.log(
-  `\n${hits.length} срабатываний. Каждое перечитать; ложные см. в references/writing.md.`,
+  `\n${hits.length} hits. Reread each one; for false positives see references/writing.md.`,
 );
 process.exit(hits.length ? 1 : 0);

@@ -3,11 +3,11 @@ import { CodeOutput, ToolCall, type AgentStatus } from "@anyglade/kit/ai";
 import { useState } from "react";
 
 const statusLabels = {
-  pending: "Ожидает",
-  running: "Выполняется",
-  waiting: "Нужен ответ",
-  done: "Готово",
-  failed: "Отменено",
+  pending: "Pending",
+  running: "Running",
+  waiting: "Needs input",
+  done: "Done",
+  failed: "Canceled",
 };
 
 export function ToolCallDemo() {
@@ -17,26 +17,26 @@ export function ToolCallDemo() {
     <Box flexDirection="column" gap="s" width="100%" maxWidth={480}>
       <ToolCall
         approval={{
-          question: "Отправить три письма клиентам?",
-          approveLabel: "Отправить",
-          rejectLabel: "Отменить",
+          question: "Send three emails to customers?",
+          approveLabel: "Send",
+          rejectLabel: "Cancel",
           onApprove: () => setStatus("done"),
           onReject: () => setStatus("failed"),
         }}
         name="send_email"
         status={status}
         statusLabels={statusLabels}
-        title="Отправляю письма"
+        title="Sending emails"
       >
         <CodeOutput
-          copiedLabel="Скопировано"
-          copyLabel="Скопировать"
+          copiedLabel="Copied"
+          copyLabel="Copy"
           output={`{ "recipients": 3 }`}
-          title="Вход"
+          title="Input"
         />
       </ToolCall>
       <Text variant="caption" color="muted">
-        Ответ пользователя меняет статус вызова.
+        The user's answer changes the call status.
       </Text>
     </Box>
   );

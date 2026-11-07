@@ -34,31 +34,31 @@ import { pluralize } from "../crm/format.ts";
 import { suggestions, type Part, type PlanStep } from "./scenarios.ts";
 import { useAgent, type Effort, type Turn } from "./use-agent.ts";
 
-type Model = "kasanie" | "kasanie-mini";
+type Model = "touch" | "touch-mini";
 
 const models: { id: Model; label: string }[] = [
-  { id: "kasanie", label: "Касание" },
-  { id: "kasanie-mini", label: "Касание мини" },
+  { id: "touch", label: "Touch" },
+  { id: "touch-mini", label: "Touch mini" },
 ];
 
 const efforts: { id: Effort; label: string }[] = [
-  { id: "fast", label: "Сразу" },
-  { id: "balanced", label: "Обычно" },
-  { id: "deep", label: "Глубоко" },
+  { id: "fast", label: "Fast" },
+  { id: "balanced", label: "Balanced" },
+  { id: "deep", label: "Deep" },
 ];
 
 const statusLabels: StatusLabels = {
-  pending: "Ожидает",
-  running: "Выполняется",
-  waiting: "Нужен ответ",
-  done: "Готово",
-  failed: "Ошибка",
+  pending: "Pending",
+  running: "Running",
+  waiting: "Needs input",
+  done: "Done",
+  failed: "Failed",
 };
 
 const CONTEXT_LIMIT = 200000;
 /** The navbar and a gap under it. */
 const TOP_INSET = 64;
-const copyLabels = { copyLabel: "Скопировать вывод", copiedLabel: "Вывод скопирован" };
+const copyLabels = { copyLabel: "Copy output", copiedLabel: "Output copied" };
 
 function toRunStep(step: PlanStep): RunStep {
   const { substeps, output } = step;
@@ -86,7 +86,7 @@ const PartView = memo(function PartView({ part, onAnswer }: PartViewProps) {
     case "plan":
       return (
         <Plan
-          formatProgress={(done, total) => `${done} из ${total} готово`}
+          formatProgress={(done, total) => `${done} of ${total} done`}
           statusLabels={statusLabels}
           steps={part.steps.map(toRunStep)}
           title={part.title}
@@ -108,8 +108,8 @@ const PartView = memo(function PartView({ part, onAnswer }: PartViewProps) {
             part.question
               ? {
                   question: part.question,
-                  approveLabel: "Отправить",
-                  rejectLabel: "Отменить",
+                  approveLabel: "Send",
+                  rejectLabel: "Cancel",
                   onApprove: () => onAnswer(part.id, true),
                   onReject: () => onAnswer(part.id, false),
                 }
@@ -120,10 +120,8 @@ const PartView = memo(function PartView({ part, onAnswer }: PartViewProps) {
           statusLabels={statusLabels}
           title={part.title}
         >
-          <CodeOutput {...copyLabels} output={part.input} title="Вход" />
-          {part.output ? (
-            <CodeOutput {...copyLabels} output={part.output} title="Результат" />
-          ) : null}
+          <CodeOutput {...copyLabels} output={part.input} title="Input" />
+          {part.output ? <CodeOutput {...copyLabels} output={part.output} title="Result" /> : null}
         </ToolCall>
       );
     case "code":
@@ -139,8 +137,8 @@ const PartView = memo(function PartView({ part, onAnswer }: PartViewProps) {
       return (
         <FileTree
           files={part.files}
-          label="Изменённые файлы"
-          onOpen={(path) => toast(`Открыт ${path}`)}
+          label="Changed files"
+          onOpen={(path) => toast(`Opened ${path}`)}
         />
       );
     case "text":
@@ -150,7 +148,7 @@ const PartView = memo(function PartView({ part, onAnswer }: PartViewProps) {
           {!part.isStreaming && part.sources.length > 0 ? (
             <Sources
               items={part.sources}
-              label={`${part.sources.length} ${pluralize(part.sources.length, "источник", "источника", "источников")}`}
+              label={`${part.sources.length} ${pluralize(part.sources.length, "source", "sources")}`}
             />
           ) : null}
         </Box>
@@ -187,8 +185,8 @@ const TurnView = memo(function TurnView({
       <Box flexDirection="column" gap="xl" minWidth={0}>
         {isFirst ? null : (
           <Checkpoint
-            label="Можно вернуться сюда"
-            restoreLabel="Вернуться"
+            label="You can return here"
+            restoreLabel="Return"
             onRestore={() => onRestore(turn)}
           />
         )}
@@ -206,16 +204,12 @@ const TurnView = memo(function TurnView({
             turn.state === "running" ? undefined : (
               <>
                 {text ? (
-                  <CopyButton
-                    copiedLabel="Ответ скопирован"
-                    label="Скопировать ответ"
-                    value={text}
-                  />
+                  <CopyButton copiedLabel="Answer copied" label="Copy answer" value={text} />
                 ) : null}
                 {isLast ? (
                   <Button
                     isIconOnly
-                    aria-label="Повторить"
+                    aria-label="Retry"
                     size="sm"
                     variant="ghost"
                     onPress={() => onRetry(turn)}
@@ -225,7 +219,7 @@ const TurnView = memo(function TurnView({
                 ) : null}
                 {turn.state === "stopped" ? (
                   <Text as="span" variant="caption" color="muted">
-                    Остановлено
+                    Stopped
                   </Text>
                 ) : null}
               </>
@@ -239,7 +233,7 @@ const TurnView = memo(function TurnView({
         {isLast && turn.state === "done" ? (
           <Suggestions
             items={suggestions.filter((item) => item !== turn.prompt)}
-            label="Подсказки"
+            label="Suggestions"
             onSelect={onSuggest}
           />
         ) : null}
@@ -274,33 +268,33 @@ const AssistantComposer = memo(function AssistantComposer({
   onStop,
   onSend,
 }: AssistantComposerProps) {
-  const [model, setModel] = useState<Model>("kasanie");
+  const [model, setModel] = useState<Model>("touch");
 
   return (
     <PromptComposer
-      attachLabel="Прикрепить файл"
+      attachLabel="Attach file"
       attachments={attachments}
       isRunning={isRunning}
-      label="Сообщение помощнику"
-      placeholder="Спросите о сделках или клиентах"
-      removeAttachmentLabel="Убрать"
-      stopLabel="Остановить"
-      submitLabel="Отправить"
+      label="Message the assistant"
+      placeholder="Ask about deals or customers"
+      removeAttachmentLabel="Remove"
+      stopLabel="Stop"
+      submitLabel="Send"
       toolbar={
         <>
           <ModelPicker
             effort={effort}
-            effortLabel="Глубина размышлений"
+            effortLabel="Reasoning depth"
             efforts={efforts}
             model={model}
-            modelLabel="Модель"
+            modelLabel="Model"
             models={models}
             onEffortChange={onEffortChange}
             onModelChange={setModel}
           />
           <ContextMeter
-            detail={`${usedTokens.toLocaleString("ru-RU")} из ${CONTEXT_LIMIT.toLocaleString("ru-RU")} токенов`}
-            label="Заполнение контекста"
+            detail={`${usedTokens.toLocaleString("en-US")} of ${CONTEXT_LIMIT.toLocaleString("en-US")} tokens`}
+            label="Context usage"
             limit={CONTEXT_LIMIT}
             used={usedTokens}
           />
@@ -397,8 +391,8 @@ export function AssistantApp() {
               />
             }
             followKey={lastTurn?.id}
-            label="Диалог с помощником"
-            scrollLabel="К последнему сообщению"
+            label="Conversation with the assistant"
+            scrollLabel="Jump to latest message"
             topInset={TOP_INSET}
           >
             {turns.length === 0 ? (
@@ -411,13 +405,13 @@ export function AssistantApp() {
               >
                 <Box display="block">
                   <Text as="h1" variant="heading-m">
-                    Чем помочь?
+                    How can I help?
                   </Text>
                   <Text as="p" variant="heading-m" color="muted">
-                    Я вижу сделки, клиентов и отчёты
+                    I can see your deals, customers and reports
                   </Text>
                 </Box>
-                <Suggestions items={suggestions} label="Подсказки" onSelect={send} />
+                <Suggestions items={suggestions} label="Suggestions" onSelect={send} />
               </Box>
             ) : null}
             {turns.map((turn, index) => (

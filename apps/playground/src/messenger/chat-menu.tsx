@@ -58,31 +58,31 @@ export function ChatMenuItems({ chat, actions, canOpenWindow }: ChatMenuItemsPro
   return (
     <>
       {canOpenWindow ? (
-        <Dropdown.Item textValue="Открыть в окне" onAction={() => actions.openWindow(chat.id)}>
-          <Label>Открыть в окне</Label>
+        <Dropdown.Item textValue="Open in window" onAction={() => actions.openWindow(chat.id)}>
+          <Label>Open in window</Label>
           <Box as="span" display="inline-flex" marginLeft="auto" paddingLeft="l">
             <Text as="span" variant="caption" color="muted">
-              Alt + клик
+              Alt + click
             </Text>
           </Box>
         </Dropdown.Item>
       ) : null}
       <Item
-        title={isUnread ? "Отметить прочитанным" : "Отметить непрочитанным"}
+        title={isUnread ? "Mark as read" : "Mark as unread"}
         onAction={() => (isUnread ? actions.markRead(chat.id) : actions.markUnread(chat.id))}
       />
       <Item
-        title={chat.isStarred ? "Убрать из избранных" : "В избранные"}
+        title={chat.isStarred ? "Remove from starred" : "Add to starred"}
         onAction={() => actions.toggleStar(chat)}
       />
-      <Item title="Карточка клиента" onAction={() => actions.openCard(chat.id)} />
+      <Item title="Client card" onAction={() => actions.openCard(chat.id)} />
       <Dropdown.SubmenuTrigger>
-        <Dropdown.Item textValue="Метка">
-          <Label>Метка</Label>
+        <Dropdown.Item textValue="Label">
+          <Label>Label</Label>
           <Dropdown.SubmenuIndicator />
         </Dropdown.Item>
         <Dropdown.Popover>
-          <Dropdown.Menu aria-label="Метка">
+          <Dropdown.Menu aria-label="Label">
             {labels.map(({ id, label }) => (
               <Dropdown.Item
                 key={id}
@@ -104,14 +104,14 @@ export function ChatMenuItems({ chat, actions, canOpenWindow }: ChatMenuItemsPro
       </Dropdown.SubmenuTrigger>
       <Separator />
       {chat.place === "inbox" ? (
-        <Item title="В архив" onAction={() => actions.archive(chat)} />
+        <Item title="Archive" onAction={() => actions.archive(chat)} />
       ) : (
-        <Item title="Вернуть в чаты" onAction={() => actions.restore(chat)} />
+        <Item title="Restore to chats" onAction={() => actions.restore(chat)} />
       )}
       {chat.place === "trash" ? (
-        <DangerItem title="Удалить навсегда" onAction={() => actions.askToRemove(chat.id)} />
+        <DangerItem title="Delete forever" onAction={() => actions.askToRemove(chat.id)} />
       ) : (
-        <DangerItem title="В корзину" onAction={() => actions.trash(chat)} />
+        <DangerItem title="Move to trash" onAction={() => actions.trash(chat)} />
       )}
     </>
   );

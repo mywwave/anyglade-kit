@@ -5,25 +5,25 @@ import { useState } from "react";
 const nodes = [
   {
     id: "sales",
-    label: "Продажи",
+    label: "Sales",
     isGroup: true,
     leading: <Folder />,
     children: [
       {
         id: "anna",
-        label: "Анна Смирнова",
+        label: "Anna Wright",
         trailing: (
           <Text as="span" variant="caption" color="success">
-            в сети
+            online
           </Text>
         ),
       },
       {
-        id: "ilya",
-        label: "Илья Воронов",
+        id: "ethan",
+        label: "Ethan Cole",
         trailing: (
           <Text as="span" variant="caption" color="muted">
-            отпуск
+            on vacation
           </Text>
         ),
       },
@@ -36,7 +36,7 @@ export function TreeNavDemo() {
 
   return (
     <Box display="block" width="100%" maxWidth={280}>
-      <TreeNav label="Команда" nodes={nodes} selectedId={selectedId} onSelect={setSelectedId} />
+      <TreeNav label="Team" nodes={nodes} selectedId={selectedId} onSelect={setSelectedId} />
     </Box>
   );
 }

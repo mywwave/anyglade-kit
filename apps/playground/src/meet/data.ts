@@ -1,4 +1,4 @@
-import { Briefcase, CircleRuble, Headphones, Palette, Persons } from "@anyglade/kit/icons";
+import { Briefcase, CircleDollar, Headphones, Palette, Persons } from "@anyglade/kit/icons";
 import type { ComponentType } from "react";
 
 const portrait = (id: string) =>
@@ -14,56 +14,56 @@ export interface Person {
 }
 
 export const people: Person[] = [
-  { id: ME, name: "Дмитрий Лебедев", role: "Руководитель продаж" },
+  { id: ME, name: "David Lee", role: "Head of sales" },
   {
     id: "maria",
-    name: "Мария Котова",
-    role: "Менеджер проектов",
+    name: "Maria Cole",
+    role: "Project manager",
     photo: portrait("1438761681033-6461ffad8d80"),
   },
   {
     id: "anna",
-    name: "Анна Смирнова",
-    role: "Отдел продаж",
+    name: "Anna Fisher",
+    role: "Sales",
     photo: portrait("1494790108377-be9c29b29330"),
   },
   {
     id: "ilya",
-    name: "Илья Воронов",
-    role: "Разработка",
+    name: "Ethan Brooks",
+    role: "Engineering",
     photo: portrait("1507003211169-0a1dd7228f2d"),
   },
   {
     id: "olga",
-    name: "Ольга Белова",
-    role: "Бухгалтерия",
+    name: "Olivia Bennett",
+    role: "Accounting",
     photo: portrait("1544005313-94ddf0286df2"),
   },
   {
     id: "sergey",
-    name: "Сергей Нестеров",
-    role: "Поддержка",
+    name: "Sam Nelson",
+    role: "Support",
     photo: portrait("1472099645785-5658abf4ff4e"),
   },
   {
     id: "pavel",
-    name: "Павел Орлов",
-    role: "Дизайн",
+    name: "Paul Harper",
+    role: "Design",
     photo: portrait("1500648767791-00dcc994a43e"),
   },
   {
     id: "elena",
-    name: "Елена Жукова",
-    role: "Дизайн",
+    name: "Ellen Parker",
+    role: "Design",
     photo: portrait("1534528741775-53994a69daeb"),
   },
   {
     id: "timur",
-    name: "Тимур Ахметов",
-    role: "Поддержка",
+    name: "Tom Archer",
+    role: "Support",
     photo: portrait("1506794778202-cad84cf45f1d"),
   },
-  { id: "vera", name: "Вера Ким", role: "Гость" },
+  { id: "vera", name: "Vera Kim", role: "Guest" },
 ];
 
 const peopleById = new Map(people.map((person) => [person.id, person]));
@@ -85,10 +85,10 @@ export interface Space {
 }
 
 export const seedSpaces: Space[] = [
-  { id: "sales", name: "Продажи", icon: Briefcase },
-  { id: "design", name: "Дизайн", icon: Palette },
-  { id: "support", name: "Поддержка", icon: Headphones },
-  { id: "finance", name: "Финансы", icon: CircleRuble },
+  { id: "sales", name: "Sales", icon: Briefcase },
+  { id: "design", name: "Design", icon: Palette },
+  { id: "support", name: "Support", icon: Headphones },
+  { id: "finance", name: "Finance", icon: CircleDollar },
 ];
 
 export const newSpaceIcon = Persons;
@@ -115,43 +115,43 @@ export interface VoiceChannel extends ChannelBase {
 export type Channel = TextChannel | VoiceChannel;
 
 export const seedChannels: Channel[] = [
-  { id: "general", spaceId: "sales", kind: "text", name: "общий", unread: 3 },
-  { id: "deals", spaceId: "sales", kind: "text", name: "сделки", unread: 0 },
+  { id: "general", spaceId: "sales", kind: "text", name: "general", unread: 3 },
+  { id: "deals", spaceId: "sales", kind: "text", name: "deals", unread: 0 },
   {
     id: "news",
     spaceId: "sales",
     kind: "text",
-    name: "объявления",
+    name: "announcements",
     unread: 0,
     isReadOnly: true,
   },
-  { id: "standup", spaceId: "sales", kind: "voice", name: "Планёрка", organizerId: ME },
-  { id: "client", spaceId: "sales", kind: "voice", name: "Созвон с клиентом", organizerId: ME },
+  { id: "standup", spaceId: "sales", kind: "voice", name: "Standup", organizerId: ME },
+  { id: "client", spaceId: "sales", kind: "voice", name: "Client call", organizerId: ME },
   {
     id: "board",
     spaceId: "sales",
     kind: "voice",
-    name: "Руководство",
+    name: "Leadership",
     organizerId: "maria",
     isLocked: true,
   },
-  { id: "review", spaceId: "design", kind: "text", name: "ревью", unread: 2 },
-  { id: "refs", spaceId: "design", kind: "text", name: "референсы", unread: 0 },
+  { id: "review", spaceId: "design", kind: "text", name: "review", unread: 2 },
+  { id: "refs", spaceId: "design", kind: "text", name: "references", unread: 0 },
   {
     id: "mockups",
     spaceId: "design",
     kind: "voice",
-    name: "Ревью макетов",
+    name: "Mockup review",
     organizerId: "pavel",
   },
-  { id: "tickets", spaceId: "support", kind: "text", name: "обращения", unread: 0 },
-  { id: "duty", spaceId: "support", kind: "voice", name: "Дежурные", organizerId: "timur" },
-  { id: "invoices", spaceId: "finance", kind: "text", name: "счета", unread: 0 },
+  { id: "tickets", spaceId: "support", kind: "text", name: "tickets", unread: 0 },
+  { id: "duty", spaceId: "support", kind: "voice", name: "On call", organizerId: "timur" },
+  { id: "invoices", spaceId: "finance", kind: "text", name: "invoices", unread: 0 },
   {
     id: "closing",
     spaceId: "finance",
     kind: "voice",
-    name: "Закрытие месяца",
+    name: "Month-end close",
     organizerId: "olga",
   },
 ];
@@ -210,44 +210,49 @@ const note = (id: string, authorId: string, minutes: number, text: string): Note
 
 export const seedNotes: Record<string, Note[]> = {
   general: [
-    note("g1", "maria", 1540, "Коллеги, с понедельника созвоны переносим на десять утра."),
-    note("g2", "anna", 1532, "Принято. Клиентам из Екатеринбурга тоже удобнее."),
-    note("g3", ME, 95, "Кто сегодня ведёт планёрку?"),
-    note("g4", "maria", 92, "Я веду. Начнём в полдень, повестка в закреплённом."),
-    note("g5", "anna", 41, "Договор с «Вектором» ушёл на подпись."),
-    note("g6", "ilya", 38, "Выкатил новую форму заявки, проверьте на своих клиентах."),
-    note("g7", "ilya", 37, "Если что-то сломалось, пишите сюда, а не в личку."),
-    note("g8", "olga", 12, "Счёт за октябрь оплачен, можно закрывать сделку."),
+    note("g1", "maria", 1540, "Team, starting Monday our calls move to 10 a.m."),
+    note("g2", "anna", 1532, "Got it. That works better for our Denver clients too."),
+    note("g3", ME, 95, "Who's running standup today?"),
+    note("g4", "maria", 92, "I am. We start at noon, the agenda is pinned."),
+    note("g5", "anna", 41, "The Vector Labs contract is out for signature."),
+    note("g6", "ilya", 38, "I shipped the new request form, try it with your clients."),
+    note("g7", "ilya", 37, "If something breaks, post here rather than in DMs."),
+    note("g8", "olga", 12, "The October invoice is paid, we can close the deal."),
   ],
   deals: [
-    note("d1", "anna", 620, "«Кампус» просит рассрочку на три месяца. Берём?"),
-    note("d2", ME, 610, "Берём, если первый платёж не меньше трети."),
+    note(
+      "d1",
+      "anna",
+      620,
+      "Campus School is asking for a three-month payment plan. Should we agree?",
+    ),
+    note("d2", ME, 610, "Yes, as long as the first payment is at least a third."),
   ],
   news: [
-    note("n1", "maria", 2880, "С ноября отчёты сдаём по пятницам до шести вечера."),
-    note("n2", "maria", 1440, "В декабре офис закрыт с 30-го по 8 января."),
+    note("n1", "maria", 2880, "Starting in November, reports are due Fridays by 6 p.m."),
+    note("n2", "maria", 1440, "The office is closed from December 30 to January 8."),
   ],
   review: [
-    note("r1", "pavel", 180, "Выложил второй вариант карточки сделки."),
-    note("r2", "elena", 16, "Кнопка «Оплатить» теряется на тёмной теме."),
-    note("r3", "pavel", 14, "Вижу. Обсудим на ревью, я покажу экран."),
+    note("r1", "pavel", 180, "Posted the second version of the deal card."),
+    note("r2", "elena", 16, "The Pay button gets lost in the dark theme."),
+    note("r3", "pavel", 14, "I see it. Let's discuss it at the review, I'll share my screen."),
   ],
-  tickets: [note("t1", "timur", 300, "За ночь закрыли 14 обращений, очередь пуста.")],
-  invoices: [note("i1", "olga", 1600, "Акты за сентябрь подписаны.")],
+  tickets: [note("t1", "timur", 300, "We closed 14 tickets overnight, the queue is empty.")],
+  invoices: [note("i1", "olga", 1600, "The September statements are signed.")],
 };
 
 export const replies = [
-  { authorId: "maria", text: "Хорошо, добавлю в повестку." },
-  { authorId: "anna", text: "Посмотрю после звонка и отпишусь." },
-  { authorId: "ilya", text: "Понял, беру в работу." },
+  { authorId: "maria", text: "Sure, I'll add it to the agenda." },
+  { authorId: "anna", text: "I'll look after the call and get back to you." },
+  { authorId: "ilya", text: "Got it, I'm on it." },
 ];
 
 export const incoming = [
-  { channelId: "general", authorId: "anna", text: "Клиент подтвердил встречу на четверг." },
-  { channelId: "review", authorId: "elena", text: "Обновила контраст кнопки, гляньте." },
-  { channelId: "tickets", authorId: "timur", text: "Новое обращение от «Севера», беру себе." },
-  { channelId: "general", authorId: "maria", text: "Повестку обновила, там два новых пункта." },
+  { channelId: "general", authorId: "anna", text: "The client confirmed the Thursday meeting." },
+  { channelId: "review", authorId: "elena", text: "Updated the button contrast, take a look." },
+  { channelId: "tickets", authorId: "timur", text: "New ticket from North Studio, I'll take it." },
+  { channelId: "general", authorId: "maria", text: "Updated the agenda, there are two new items." },
 ];
 
-export const microphones = ["Встроенный микрофон", "Гарнитура USB"];
-export const speakers = ["Встроенные динамики", "Гарнитура USB"];
+export const microphones = ["Built-in microphone", "USB headset"];
+export const speakers = ["Built-in speakers", "USB headset"];

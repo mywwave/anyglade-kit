@@ -1,50 +1,58 @@
-# Типографика
+# Typography
 
-Роли и размеры в [generated/tokens.md](generated/tokens.md). Шрифты: Inter для интерфейса, Geist Mono для чисел в коде и идентификаторов.
+Roles and sizes are in [generated/tokens.md](generated/tokens.md). Fonts: Inter for the interface, Geist Mono for numbers in code and identifiers.
 
-## Иерархия
+## Hierarchy
 
-На экране работают три-четыре размера, не больше. Иерархию строит сначала размер, потом цвет, и только потом вес.
+Three or four sizes work on a screen, no more. Hierarchy is built first by size, then by color, and only then by weight.
 
-| Роль                        | Для чего                                             |
-| --------------------------- | ---------------------------------------------------- |
-| `heading-2xl`, `heading-xl` | Главное утверждение или число на маркетинге          |
-| `heading-l`, `heading-m`    | Заголовки секций лендинга, большие заголовки экранов |
-| `heading-s`, `heading-xs`   | Заголовок рабочего экрана                            |
-| `heading-xxs`               | Заголовок секции внутри экрана                       |
-| `title`                     | Заголовок объекта, строки, карточки                  |
-| `body`                      | Длинный текст для чтения                             |
-| `default`                   | Интерфейсный текст, значение по умолчанию            |
-| `label`, `caption`          | Подписи, метаданные                                  |
+| Role                        | Used for                                           |
+| --------------------------- | -------------------------------------------------- |
+| `heading-2xl`, `heading-xl` | The main statement or number on marketing          |
+| `heading-l`, `heading-m`    | Landing page section headings, large screen titles |
+| `heading-s`, `heading-xs`   | Work screen title                                  |
+| `heading-xxs`               | Section heading inside a screen                    |
+| `title`                     | Title of an object, row, card                      |
+| `body`                      | Long text for reading                              |
+| `default`                   | Interface text, the default value                  |
+| `label`, `caption`          | Labels, metadata                                   |
 
-- Один `h1` на страницу, уровни не перескакивают. Смысловой уровень задаёт `as`, размер задаёт `variant`, они независимы.
-- Веса выше `strong` не используются: крупный жирный текст выглядит кричащим и в Inter, и в кириллице. Заголовки крупнее `heading-xxs` обычно обычного веса. Жирное внутри строки почти всегда лишнее.
-- Курсив запрещён. Отрицательный трекинг запрещён. Капс только у редких коротких меток, а лучше нигде.
-- Цвет текста три уровня: `default`, `muted`, `subtle`. Прозрачность для цвета не используется.
+- One `h1` per page, levels do not skip. The semantic level is set by `as`, the size by `variant`; they are independent.
+- Weights above `strong` are not used: large bold text looks loud in Inter, and in Cyrillic too. Headings larger than `heading-xxs` are usually regular weight. Bold inside a line is almost always unnecessary.
+- Italics are banned. Negative tracking is banned. All caps only on rare short labels, and better nowhere.
+- Text color has three levels: `default`, `muted`, `subtle`. Opacity is not used for color.
 
-## Чтение
+## Reading
 
-- Длина строки 45–75 знаков, это и есть причина ограничения ширины.
-- Длинный текст это роль `body`, интерлиньяж уже задан ролью.
-- Заголовки `wrap="balance"`, абзацы `wrap="pretty"`: у ролей это значение по умолчанию.
-- Обрезка `truncate` только там, где полный текст доступен иначе. Внутри flex родитель нужен с `minWidth={0}`.
+- Line length is 45–75 characters; this is the reason for limiting width.
+- Long text uses the `body` role; the line height is already set by the role.
+- Headings get `wrap="balance"`, paragraphs `wrap="pretty"`: this is the roles' default.
+- `truncate` only where the full text is available another way. Inside flex the parent needs `minWidth={0}`.
 
-## Числа
+## Numbers
 
-- `tabularNums` у всех чисел, которые сравнивают или которые меняются: суммы, таблицы, счётчики, таймеры. Иначе колонки не сходятся, а счётчик дёргается.
-- `monospace` только у настоящих идентификаторов: номер заказа, токен, имя инструмента, команда.
-- Суммы через `Intl.NumberFormat` с валютой, большие значения компактно. Единица измерения рядом, а не в заголовке колонки, если колонка не однородна.
-- Сравниваемые числа выравниваются по одной шкале, значения в колонке одной точности.
+- `tabularNums` on every number that is compared or that changes: amounts, tables, counters, timers. Otherwise columns do not line up and a counter jitters.
+- `monospace` only on real identifiers: an order number, a token, a tool name, a command.
+- Amounts through `Intl.NumberFormat` with a currency, large values in compact form. The unit goes next to the value, not in the column header, if the column is not uniform.
+- Compared numbers are aligned on one scale; values in a column have the same precision.
 
-## Русский текст
+## English text
 
-- Кавычки «ёлочки», длинное тире с пробелами, числовой диапазон через короткое тире.
-- Неразрывный пробел в числах и суммах, перед единицами и `₽`, после коротких предлогов в заголовках.
-- Склонения считайте функцией: 1 клиент, 2 клиента, 5 клиентов. Шаблон «клиентов: 2» читается как отписка.
-- Имя внутри фразы склоняется: «от имени Анны». Если падеж вычислить нельзя, храните нужную форму в данных или перестройте фразу.
-- Буква ё там, где она есть в слове.
-- Предложения с заглавной только в первом слове: «Новая задача», а не «Новая Задача».
+- Sentence case: only the first word and proper names are capitalized: "New task", not "New Task".
+- Curly quotes and apostrophes: “ ”, ’.
+- No em dashes in UI copy; a numeric range takes an unspaced en dash: 10–20.
+- A non-breaking space between a number and its unit: 10 MB, 5 min.
+- Plurals are a function: 1 customer, 2 customers. The template "customers: 2" reads as a brush-off.
 
-## Тексты
+## If the interface is in Russian
 
-Правила, шаблоны и признаки слопа в [writing.md](writing.md).
+- Guillemet quotes «», an em dash with spaces, a numeric range with an en dash.
+- A non-breaking space in numbers and amounts, before units and `₽`, after short prepositions in headings.
+- Plural forms are a function: 1 клиент, 2 клиента, 5 клиентов. The template «клиентов: 2» reads as a brush-off.
+- A name inside a phrase is inflected: «от имени Анны». If the case cannot be computed, store the needed form in the data or rebuild the phrase.
+- The letter ё wherever the word has it.
+- Sentence case: «Новая задача», not «Новая Задача».
+
+## Copy
+
+Rules, templates and slop signs are in [writing.md](writing.md).

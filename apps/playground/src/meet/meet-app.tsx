@@ -147,15 +147,15 @@ function NewSpaceModal({ isOpen, onOpenChange, onCreate }: NewSpaceModalProps) {
           <Modal.Dialog>
             <Modal.CloseTrigger />
             <Modal.Header>
-              <Modal.Heading>Новая беседа</Modal.Heading>
+              <Modal.Heading>New space</Modal.Heading>
             </Modal.Header>
             <Box as="form" flexDirection="column" gap="l" onSubmit={submit}>
               <Modal.Body>
                 <Input
                   ref={focusOnOpen}
-                  aria-label="Название беседы"
+                  aria-label="Space name"
                   fullWidth
-                  placeholder="Например, Маркетинг"
+                  placeholder="For example, Marketing"
                   value={name}
                   variant="secondary"
                   onChange={(event) => setName(event.target.value)}
@@ -163,10 +163,10 @@ function NewSpaceModal({ isOpen, onOpenChange, onCreate }: NewSpaceModalProps) {
               </Modal.Body>
               <Modal.Footer>
                 <Button slot="close" variant="tertiary">
-                  Отменить
+                  Cancel
                 </Button>
                 <Button isDisabled={!name.trim()} type="submit">
-                  Создать беседу
+                  Create space
                 </Button>
               </Modal.Footer>
             </Box>
@@ -359,9 +359,9 @@ export function MeetApp() {
   function moveMember(fromId: string, toId: string, personId: string) {
     meet.moveMember(fromId, toId, personId);
     const target = channels.find((channel) => channel.id === toId);
-    const toastId = toast(`${personById(personId).name}: теперь в «${target?.name}»`, {
+    const toastId = toast(`${personById(personId).name} moved to ${target?.name}`, {
       actionProps: {
-        children: "Вернуть",
+        children: "Undo",
         onPress: () => {
           meet.moveMember(toId, fromId, personId);
           toast.close(toastId);
@@ -379,9 +379,9 @@ export function MeetApp() {
   function resetInvite(channelId: string) {
     const previous = invites.invites[channelId];
     invites.reset(channelId);
-    const toastId = toast("Старая ссылка больше не работает", {
+    const toastId = toast("The old link no longer works", {
       actionProps: {
-        children: "Вернуть",
+        children: "Undo",
         onPress: () => {
           if (previous) {
             invites.restore(channelId, previous);
@@ -417,9 +417,9 @@ export function MeetApp() {
     setIsPeopleOpen(false);
 
     if (channel) {
-      const toastId = toast(`Вы отключились от канала «${channel.name}»`, {
+      const toastId = toast(`You left ${channel.name}`, {
         actionProps: {
-          children: "Вернуться",
+          children: "Rejoin",
           onPress: () => {
             toast.close(toastId);
             void connect(channel);
@@ -475,7 +475,7 @@ export function MeetApp() {
           <CallTimer startedAt={call.startedAt} />
         </Box>
         <Button size="sm" variant="secondary" onPress={returnToCall}>
-          К звонку
+          Back to call
         </Button>
       </Box>
     ) : null;
@@ -549,12 +549,12 @@ export function MeetApp() {
               <EmptyPanel
                 actions={
                   <Button size="sm" variant="secondary" onPress={() => setIsLinkExpired(false)}>
-                    Открыть каналы
+                    Open channels
                   </Button>
                 }
-                description="Срок ссылки вышел, или организатор её сбросил. Попросите новую."
+                description="The link expired or the organizer reset it. Ask for a new one."
                 icon={<LinkSlash />}
-                title="Ссылка больше не работает"
+                title="This link no longer works"
               />
             </Box>
           ) : null}
@@ -620,7 +620,7 @@ export function MeetApp() {
         {isDesktop && isPeopleOpen && people ? (
           <Box
             as="aside"
-            aria-label="Участники звонка"
+            aria-label="Call participants"
             flexDirection="column"
             flexShrink={0}
             width={280}
@@ -637,7 +637,7 @@ export function MeetApp() {
             onOpenChange={setIsPeopleOpen}
           >
             <Drawer.Content placement={isWide ? "right" : "bottom"}>
-              <Drawer.Dialog aria-label="Участники звонка">
+              <Drawer.Dialog aria-label="Call participants">
                 <Drawer.Body>
                   <Box flexDirection="column" minHeight="100%">
                     {people}
@@ -650,10 +650,10 @@ export function MeetApp() {
         {liveChannel && windowTile ? (
           <FloatingPanel
             isBodyFlush
-            closeLabel="Скрыть окно звонка"
+            closeLabel="Hide call window"
             isOpen={isWindowOpen}
-            moveLabel={`Переместить окно звонка: ${liveChannel.name}`}
-            resize={{ label: "Изменить размер окна звонка", defaultSize: WINDOW_SIZE }}
+            moveLabel={`Move call window: ${liveChannel.name}`}
+            resize={{ label: "Resize call window", defaultSize: WINDOW_SIZE }}
             title={liveChannel.name}
             onOpenChange={() => setIsWindowDismissed(true)}
           >
@@ -673,11 +673,11 @@ export function MeetApp() {
                 <SoundButton isOn={!self.isDeafened} size="sm" onToggle={meet.toggleDeafen} />
                 <Box display="block" flexGrow={1} />
                 <Button size="sm" variant="secondary" onPress={returnToCall}>
-                  К звонку
+                  Back to call
                 </Button>
                 <Button
                   isIconOnly
-                  aria-label="Отключиться"
+                  aria-label="Leave"
                   size="sm"
                   variant="danger-soft"
                   onPress={leave}

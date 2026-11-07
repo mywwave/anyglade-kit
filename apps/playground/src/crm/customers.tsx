@@ -21,25 +21,25 @@ import {
 } from "@anyglade/kit";
 import { ChevronRight } from "@anyglade/kit/icons";
 import { useMemo, useState } from "react";
-import { formatRubles } from "../blocks/format.ts";
+import { formatMoney } from "../blocks/format.ts";
 import { simulateRequest } from "../simulate.ts";
 import { customers, type Customer, type CustomerStatus } from "./data.ts";
 import { downloadCsv, pluralize } from "./format.ts";
 
 const statuses: Record<CustomerStatus, { label: string; color: "default" | "warning" | "muted" }> =
   {
-    active: { label: "Активен", color: "default" },
-    trial: { label: "Пробный период", color: "warning" },
-    churned: { label: "Ушёл", color: "muted" },
+    active: { label: "Active", color: "default" },
+    trial: { label: "Trial", color: "warning" },
+    churned: { label: "Churned", color: "muted" },
   };
 
 type StatusFilter = CustomerStatus | "all";
 
 const statusFilters: { id: StatusFilter; label: string }[] = [
-  { id: "all", label: "Все" },
-  { id: "active", label: "Активные" },
-  { id: "trial", label: "Пробные" },
-  { id: "churned", label: "Ушли" },
+  { id: "all", label: "All" },
+  { id: "active", label: "Active" },
+  { id: "trial", label: "Trial" },
+  { id: "churned", label: "Churned" },
 ];
 
 const sortAccessors: SortAccessors<Customer> = {
@@ -90,29 +90,29 @@ function CustomerDrawer({ customer, onClose }: { customer: Customer | null; onCl
               </Drawer.Header>
               <Drawer.Body>
                 <Box flexDirection="column" gap="xl">
-                  <Stat label="Выручка за всё время" value={formatRubles(customer.revenue)} />
+                  <Stat label="Lifetime revenue" value={formatMoney(customer.revenue)} />
                   <Box flexDirection="column" gap="m">
-                    <DetailRow label="Статус" value={statuses[customer.status].label} />
-                    <DetailRow label="Менеджер" value={customer.owner} />
+                    <DetailRow label="Status" value={statuses[customer.status].label} />
+                    <DetailRow label="Owner" value={customer.owner} />
                     <DetailRow
-                      label="Почта"
+                      label="Email"
                       value={customer.email}
                       action={
                         <CopyButton
-                          copiedLabel="Почта скопирована"
-                          label="Скопировать почту"
+                          copiedLabel="Email copied"
+                          label="Copy email"
                           value={customer.email}
                         />
                       }
                     />
-                    <DetailRow label="Последний контакт" value={customer.lastContact} />
-                    <DetailRow label="Телефон" />
+                    <DetailRow label="Last contact" value={customer.lastContact} />
+                    <DetailRow label="Phone" />
                   </Box>
                 </Box>
               </Drawer.Body>
               <Drawer.Footer>
                 <Button fullWidth variant="secondary" onPress={onClose}>
-                  Закрыть
+                  Close
                 </Button>
               </Drawer.Footer>
             </>
@@ -164,8 +164,8 @@ export function Customers() {
 
   async function exportChosen() {
     await simulateRequest();
-    downloadCsv("klienty.csv", [
-      ["Клиент", "Компания", "Почта", "Статус", "Выручка"],
+    downloadCsv("customers.csv", [
+      ["Customer", "Company", "Email", "Status", "Revenue"],
       ...chosen.map((customer) => [
         customer.name,
         customer.company,
@@ -175,7 +175,7 @@ export function Customers() {
       ]),
     ]);
     toast(
-      `${chosen.length} ${pluralize(chosen.length, "клиент выгружен", "клиента выгружено", "клиентов выгружено")}`,
+      `${chosen.length} ${pluralize(chosen.length, "customer exported", "customers exported")}`,
     );
     setSelected(new Set());
   }
@@ -189,18 +189,18 @@ export function Customers() {
         gap="m"
       >
         <Text as="h1" variant="heading-xs" weight="medium">
-          Клиенты
+          Customers
         </Text>
         <Box alignItems="center" gap="s">
           {chosen.length > 0 ? (
             <Button size="sm" variant="secondary" onPress={exportChosen}>
-              Выгрузить {chosen.length}
+              Export {chosen.length}
             </Button>
           ) : null}
           <Input
-            aria-label="Поиск по клиентам"
+            aria-label="Search customers"
             className="w-full md:w-64"
-            placeholder="Имя, компания или почта"
+            placeholder="Name, company or email"
             value={query}
             onChange={(event) => {
               setQuery(event.target.value);
@@ -211,7 +211,7 @@ export function Customers() {
       </Box>
       <Box display="block" overflowX="auto">
         <SegmentedControl
-          label="Статус клиента"
+          label="Customer status"
           options={statusFilters}
           value={status}
           onChange={filterByStatus}
@@ -219,16 +219,16 @@ export function Customers() {
       </Box>
       {found.length === 0 ? (
         <Box flexDirection="column" alignItems="center" gap="m" padding="3xl" textAlign="center">
-          <Text color="muted">Таких клиентов нет</Text>
+          <Text color="muted">No matching customers</Text>
           <Button size="sm" variant="secondary" onPress={reset}>
-            Сбросить фильтры
+            Reset filters
           </Button>
         </Box>
       ) : (
         <Table>
           <Table.ScrollContainer>
             <Table.Content
-              aria-label="Клиенты"
+              aria-label="Customers"
               className="min-w-180"
               selectedKeys={selected}
               selectionMode="multiple"
@@ -237,15 +237,15 @@ export function Customers() {
             >
               <Table.Header>
                 <Table.Column className="w-12">
-                  <SelectionCheckbox label="Выбрать всех" />
+                  <SelectionCheckbox label="Select all" />
                 </Table.Column>
                 <SortableColumn isRowHeader id="name">
-                  Клиент
+                  Customer
                 </SortableColumn>
-                <SortableColumn id="status">Статус</SortableColumn>
-                <SortableColumn id="revenue">Выручка</SortableColumn>
-                <SortableColumn id="contact">Контакт</SortableColumn>
-                <Table.Column aria-label="Действия">{""}</Table.Column>
+                <SortableColumn id="status">Status</SortableColumn>
+                <SortableColumn id="revenue">Revenue</SortableColumn>
+                <SortableColumn id="contact">Last contact</SortableColumn>
+                <Table.Column aria-label="Actions">{""}</Table.Column>
               </Table.Header>
               <Table.Body>
                 {visible.map((customer) => (
@@ -255,7 +255,7 @@ export function Customers() {
                     style={{ viewTransitionName: `customer-${customer.id}` }}
                   >
                     <Table.Cell>
-                      <SelectionCheckbox label={`Выбрать ${customer.name}`} />
+                      <SelectionCheckbox label={`Select ${customer.name}`} />
                     </Table.Cell>
                     <Table.Cell>
                       <Box flexDirection="column" minWidth={0}>
@@ -272,14 +272,14 @@ export function Customers() {
                     </Table.Cell>
                     <Table.Cell>
                       <Text as="span" tabularNums>
-                        {formatRubles(customer.revenue)}
+                        {formatMoney(customer.revenue)}
                       </Text>
                     </Table.Cell>
                     <Table.Cell>{customer.lastContact}</Table.Cell>
                     <Table.Cell>
                       <Button
                         isIconOnly
-                        aria-label={`Открыть ${customer.name}`}
+                        aria-label={`Open ${customer.name}`}
                         size="sm"
                         variant="ghost"
                         onPress={() => setOpened(customer)}
@@ -296,7 +296,7 @@ export function Customers() {
       )}
       <Box alignItems="center" justifyContent="between" gap="l" flexWrap="wrap">
         <Text color="muted">
-          {found.length} {pluralize(found.length, "клиент", "клиента", "клиентов")}
+          {found.length} {pluralize(found.length, "customer", "customers")}
         </Text>
         {pageCount > 1 ? (
           <Pagination className="w-auto">

@@ -12,24 +12,24 @@ export function ButtonLoadingDemo() {
 
   async function save() {
     await wait(1200);
-    toast("Сохранено");
+    toast("Saved");
   }
 
   return (
     <Box flexWrap="wrap" alignItems="center" gap="m">
-      <Button onPress={save}>Сохранить</Button>
+      <Button onPress={save}>Save</Button>
       <Button variant="secondary" onPress={() => wait(1200)}>
         <ArrowUpFromLine />
-        Выгрузить
+        Export
       </Button>
       <Button variant="danger-soft" onPress={() => wait(1200)}>
-        Удалить
+        Delete
       </Button>
       <Button onPress={() => wait(60)} variant="ghost">
-        Быстрое действие
+        Quick action
       </Button>
       <Button isPending={isPending} variant="outline" onPress={() => setIsPending(!isPending)}>
-        Через isPending
+        With isPending
       </Button>
     </Box>
   );

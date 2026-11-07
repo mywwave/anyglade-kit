@@ -3,8 +3,8 @@ import { Star, StarFill } from "@anyglade/kit/icons";
 import { useState } from "react";
 
 const items = [
-  { id: "1", title: "Итоги запуска", note: "Договорились о дате" },
-  { id: "2", title: "Счёт за ноябрь", note: "Оплатить до пятницы" },
+  { id: "1", title: "Launch recap", note: "We agreed on a date" },
+  { id: "2", title: "November invoice", note: "Due by Friday" },
 ];
 
 export function ItemListDemo() {
@@ -17,12 +17,12 @@ export function ItemListDemo() {
         currentId={currentId}
         getText={(item) => item.title}
         items={items}
-        label="Письма"
+        label="Emails"
         menu={{
-          label: "Действия с письмом",
+          label: "Email actions",
           renderItems: (item) => (
-            <Dropdown.Item textValue="Открыть" onAction={() => setCurrentId(item.id)}>
-              <Label>Открыть</Label>
+            <Dropdown.Item textValue="Open" onAction={() => setCurrentId(item.id)}>
+              <Label>Open</Label>
             </Dropdown.Item>
           ),
         }}
@@ -38,7 +38,7 @@ export function ItemListDemo() {
             </Box>
             <Button
               isIconOnly
-              aria-label={`Отметить ${item.title}`}
+              aria-label={`Mark ${item.title}`}
               size="sm"
               variant="ghost"
               onPress={() =>

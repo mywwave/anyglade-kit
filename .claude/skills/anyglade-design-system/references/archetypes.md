@@ -1,145 +1,145 @@
-# Архетипы экранов
+# Screen archetypes
 
-Большинство экранов продукта относится к одному из семи типов. Определите тип до вёрстки: у него есть проверенная структура. Схема это отправная точка, а не шаблон: композицию всё равно решает идея экрана.
+Most product screens belong to one of seven types. Determine the type before building: it has a proven structure. The scheme is a starting point, not a template: the screen's idea still decides the composition.
 
-| Архетип          | Плотно                                       | Спокойно                    | В две панели                 |
-| ---------------- | -------------------------------------------- | --------------------------- | ---------------------------- |
-| Сводка           | Главное число, показатели, график, лента     | Только показатели           | Настраиваемая сетка          |
-| Список объектов  | Показатели и насыщенные строки               | Плотные строки без карточек | База с переключением вида    |
-| Очередь работ    |                                              | Лента с живыми статусами    | Список и панель деталей      |
-| Карточка объекта | Плотная шапка и вкладки                      |                             | Содержимое и колонка свойств |
-| Настройки        |                                              |                             | Разделы слева и формы справа |
-| Сообщения        |                                              |                             | Список, диалог, контекст     |
-| Редактор         | Содержимое на всю ширину с плавающей панелью |                             |                              |
+| Archetype   | Dense                                      | Calm                     | Two panes                                |
+| ----------- | ------------------------------------------ | ------------------------ | ---------------------------------------- |
+| Overview    | Main number, metrics, chart, feed          | Metrics only             | Customizable grid                        |
+| Object list | Metrics and rich rows                      | Dense rows without cards | Database with view switching             |
+| Work queue  |                                            | Feed with live statuses  | List and details panel                   |
+| Object page | Dense header and tabs                      |                          | Content and a properties column          |
+| Settings    |                                            |                          | Sections on the left, forms on the right |
+| Messages    |                                            |                          | List, conversation, context              |
+| Editor      | Full-width content with a floating toolbar |                          |                                          |
 
-## Общий порядок страницы
+## Common page order
 
-Рабочие экраны одного продукта устроены одинаково, это сокращает обучение:
+Work screens of one product are built the same way, which cuts learning time:
 
-1. `PageHeader`: заголовок и главное действие справа.
-2. Показатели, если они есть.
-3. Фильтры и поиск.
-4. Область данных.
-5. Пагинация внизу области.
-6. Окна и панели рендерятся на уровне страницы, а не внутри `.map()`.
+1. `PageHeader`: the title and the main action on the right.
+2. Metrics, if there are any.
+3. Filters and search.
+4. The data area.
+5. Pagination at the bottom of the area.
+6. Modals and panels render at page level, not inside `.map()`.
 
-Пустое состояние заменяет область данных, а не стоит рядом с ней. Скелетон повторяет ту же раскладку.
+The empty state replaces the data area instead of standing next to it. The skeleton repeats the same layout.
 
-## Сводка
+## Overview
 
-Отвечает на вопрос «всё ли хорошо и куда смотреть». Заголовок может быть выводом: «3 сделки застряли».
-
-```
-Вывод одной фразой                        [Главное действие]
-Показатель   Показатель   Показатель   Показатель
-График во всю ширину или 2:1 с воронкой
-Задачи на сегодня         Источники
-```
-
-Компоненты: `Stat`, `Sparkline`, `LineChart`, `SegmentedControl` для периода. Иерархия не глубже трёх уровней: главное, показатели, детали.
-
-## Список объектов
+Answers the question "is everything fine and where should I look". The title can be a conclusion: "3 deals are stuck".
 
 ```
-Заголовок                                 [+ Добавить]
-[Статус] [Поиск]                          [Выгрузить 3]
-Таблица или плотные строки
-12 клиентов                               1 2 3
+Conclusion in one sentence                [Main action]
+Metric       Metric       Metric       Metric
+Full-width chart, or 2:1 with a funnel
+Tasks for today           Sources
 ```
 
-Компоненты: `Table`, `SortableColumn`, `SegmentedControl`, `SearchField`, `Pagination`, `Drawer` для деталей. Без карточки вокруг таблицы.
+Components: `Stat`, `Sparkline`, `LineChart`, `SegmentedControl` for the period. Hierarchy no deeper than three levels: the main thing, metrics, details.
 
-## Очередь работ
-
-Живые статусы важнее всего. Новое появляется сверху, строка статуса обновляется на месте.
+## Object list
 
 ```
-Задачи
-● Разбор #152     Идёт     │  Разбор
-● Загрузка #151   Идёт     │  Статус, прогресс
-○ Очередь #150    Ждёт     │  Журнал
-✓ Готово #149              │  > Получено 12 записей
-✗ Ошибка #148              │
+Title                                     [+ Add]
+[Status] [Search]                         [Export 3]
+Table or dense rows
+12 customers                              1 2 3
 ```
 
-Компоненты: `Run`, `CodeOutput`, `Shimmer`, `ProgressBar`. Ошибочная запись раскрыта сразу.
+Components: `Table`, `SortableColumn`, `SegmentedControl`, `SearchField`, `Pagination`, `Drawer` for details. No card around the table.
 
-## Карточка объекта
+## Work queue
 
-```
-← Клиенты / Анна Смирнова                 [Написать]
-Содержимое: история, заметки     │ Статус
-                                 │ Менеджер
-                                 │ Последний контакт
-```
-
-Компоненты: `Tabs`, `DetailRow`, `Stat`, `CopyButton`. Основное слева, свойства справа в узкой колонке, на телефоне свойства сверху.
-
-## Настройки
+Live statuses matter most. New items appear at the top; a status line updates in place.
 
 ```
-Настройки
-Организация    │  Заголовок раздела
-Уведомления    │  Поля в колонку
-Оплата         │              [Сохранить]
-Опасная зона   │
+Tasks
+● Parse #152      Running  │  Parse
+● Upload #151     Running  │  Status, progress
+○ Queue #150      Waiting  │  Log
+✓ Done #149                │  > Received 12 records
+✗ Failed #148              │
 ```
 
-Ширина форм ограничена. Опасные действия отдельным блоком внизу. На телефоне список разделов и отдельный экран раздела.
+Components: `Run`, `CodeOutput`, `Shimmer`, `ProgressBar`. A failed entry is expanded right away.
 
-## Сообщения
-
-```
-Диалоги    │  Переписка              │  Контекст
-Анна       │                         │  Клиент
-Илья       │  [Поле ввода]           │  Сделки
-```
-
-Каждая колонка скроллится сама: список не должен двигать открытый разговор. Шапка и поле ввода лежат вне прокрутки, а не прилипают внутри неё: новое сообщение физически не может сдвинуть поле. Лента прокручивается сама только после своей отправки: «печатает» и чужое сообщение её не двигают, человек дочитывает спокойно, а о новом говорит кнопка «вниз» со счётчиком. Прочитанным считается то, что человек увидел: открытый чат с новым сообщением ниже экрана остаётся непрочитанным, пока не долистали до конца. Чат с непрочитанным открывается на отметке «Новые сообщения», а не в конце. Счётчик в списке это `CountBadge`: непрочитанное требует действия, поэтому здесь бейдж оправдан. На телефоне одна панель за раз, разделы в `Drawer`, из разговора есть путь назад. Строки это `ItemList`, разговор это `Conversation` без `ConversationTurn`: новые сообщения прижимаются к низу, как в мессенджере, а не резервируют экран.
-
-Контекст собеседника не занимает постоянную колонку: это `FloatingPanel` у кнопки в шапке разговора. Закреплённая панель остаётся на экране и показывает открытый чат, а при смене чата меняет содержимое. `FloatingPanel` живёт на уровне страницы, а не в шапке, иначе исчезнет вместе с ней.
-
-Разговор занимает всю панель: шапка, сообщения и поле ввода идут от края до края, стороны собеседников прижаты к её краям. Длину строки ограничивает текст в пузыре, а не центральная колонка. Колонка уместна только в чате с агентом, где лента одна.
-
-Время стоит над группой сообщений одного автора, а не в каждом пузыре: подпись под пузырём двигала бы его, когда приходит следующий. На телефоне при входе открыт список, а не чат, иначе непрочитанное считается прочитанным без просмотра.
-
-Для чата с агентом см. [ai.md](ai.md).
-
-Разговор можно вынести в окно: пункт контекстного меню и Alt + клик по строке, это `FloatingPanel` без `triggerRef`. Окон может быть много, каждое живой чат с полем ввода, клик поднимает окно наверх, повторный вызов не плодит копию, а выводит то же окно вперёд с фокусом в поле. Пока чат открыт в окне, он считается прочитанным. На телефоне пункта нет: чат открывается обычным образом.
-
-Статус доставки стоит значком в углу пузыря каждого своего сообщения и в списке рядом со временем последнего. Слово появляется только в подсказке при наведении и меняется через TextSwap, если подсказка открыта.
-
-### Звонок
+## Object page
 
 ```
-Беседы │ Каналы         │ Сцена            │ Участники
-Продажи│ # общий        │ Плитки           │ Мария
-Дизайн │ Планёрка       │                  │ Анна
-       │    Мария, Анна │ [Панель звонка]  │
+← Customers / Anna Smirnova               [Message]
+Content: history, notes          │ Status
+                                 │ Manager
+                                 │ Last contact
 ```
 
-Беседы стоят узкой полосой значков, под ними каналы: текстовые и голосовые. У голосового канала прямо в списке видно, кто внутри, чтобы решить, заходить ли. Выбор канала открывает лобби с проверкой микрофона и камеры, а вход занимает одно нажатие.
+Components: `Tabs`, `DetailRow`, `Stat`, `CopyButton`. The main content on the left, properties on the right in a narrow column; on the phone properties go on top.
 
-Звонок не обрывается, когда человек уходит читать канал: он переезжает в окно `FloatingPanel`, а если окно закрыли, в блок внизу списка каналов. Блок появляется только тогда, когда не видно ни сцены, ни окна, иначе он дублирует панель звонка. На телефоне окна нет, вместо него строка над чатом.
+## Settings
 
-Участников организатор переносит между голосовыми каналами перетаскиванием и через меню. Закрытый канал перенос не принимает. Перенос сразу показывает тост с кнопкой «Вернуть». Себя можно перетащить тоже: это переход в другой канал.
+```
+Settings
+Organization   │  Section title
+Notifications  │  Fields in a column
+Billing        │              [Save]
+Danger zone    │
+```
 
-Приглашают кнопкой со словом, а не безымянной иконкой копирования. Окно приглашения показывает ссылку, срок и сброс. Просроченная ссылка ведёт на экран с причиной и выходом, а не в тупик.
+Form width is limited. Dangerous actions go in a separate block at the bottom. On the phone, a list of sections and a separate screen per section.
 
-## Редактор
+## Messages
 
-Содержимое на всю ширину, инструменты плавают рядом с выделением. Сохранение автоматическое и заметно: статус рядом с заголовком.
+```
+Conversations │  Thread                  │  Context
+Anna          │                          │  Customer
+Ilya          │  [Input field]           │  Deals
+```
 
-## Уровни зрелости
+Each column scrolls on its own: the list must not move the open conversation. The header and the input field sit outside the scroll area rather than sticking inside it: a new message physically cannot shift the field. The feed scrolls by itself only after your own send: "typing" and someone else's message do not move it, so the person finishes reading in peace, and a "down" button with a counter announces new messages. Read means what the person has seen: an open chat with a new message below the fold stays unread until they scroll to the end. A chat with unread messages opens at the "New messages" marker, not at the end. The counter in the list is a `CountBadge`: unread messages require action, so a badge is justified here. On the phone, one pane at a time, sections in a `Drawer`, and a way back from the conversation. Rows are `ItemList`, the conversation is `Conversation` without `ConversationTurn`: new messages stick to the bottom, as in a messenger, instead of reserving the screen.
 
-Планка, ниже которой экран выглядит устаревшим:
+The other person's context does not take a permanent column: it is a `FloatingPanel` at a button in the conversation header. A pinned panel stays on screen and shows the open chat, and changes its content when the chat changes. `FloatingPanel` lives at page level, not in the header, otherwise it disappears with it.
 
-- Одно главное на экране, размер равен важности.
-- Сначала данные, потом оформление.
-- Скелетоны и мгновенный отклик.
-- Пустые состояния объясняют и ведут дальше.
-- Компоненты kit вместо самодельных.
+The conversation fills the whole panel: the header, messages and input field run edge to edge, and each side of the conversation is pinned to its edge. Line length is limited by the text in the bubble, not by a central column. A column is appropriate only in a chat with an agent, where there is one feed.
 
-Что отличает дорогой продукт: прогрессивное раскрытие, разумные значения по умолчанию, микроанимации, недавнее и закреплённое.
+The time stands above a group of messages from one author, not in every bubble: a caption under a bubble would move it when the next one arrives. On the phone the list opens on entry, not the chat, otherwise unread messages count as read without being seen.
 
-Что отличает лучшие продукты: быстрая палитра команд, главное действие за один-два шага, редактирование на месте, оптимистичный интерфейс, отмена вместо подтверждения.
+For a chat with an agent, see [ai.md](ai.md).
+
+A conversation can be moved into a window: a context menu item and Alt + click on a row; this is a `FloatingPanel` without `triggerRef`. There can be many windows, each a live chat with an input field; a click raises a window to the top, and a repeated call does not spawn a copy but brings the same window forward with focus in the field. While a chat is open in a window, it counts as read. On the phone there is no such item: the chat opens the usual way.
+
+The delivery status is an icon in the corner of the bubble of each of your messages, and in the list next to the time of the last one. The word appears only in the tooltip on hover and changes through TextSwap if the tooltip is open.
+
+### Call
+
+```
+Spaces │ Channels        │ Stage            │ Participants
+Sales  │ # general       │ Tiles            │ Maria
+Design │ Standup         │                  │ Anna
+       │    Maria, Anna  │ [Call controls]  │
+```
+
+Spaces sit in a narrow strip of icons, with channels below them: text and voice. A voice channel shows who is inside right in the list, so the person can decide whether to join. Choosing a channel opens a lobby with a microphone and camera check, and joining takes one press.
+
+The call does not drop when the person leaves to read a channel: it moves into a `FloatingPanel` window, and if the window is closed, into a block at the bottom of the channel list. The block appears only when neither the stage nor the window is visible, otherwise it duplicates the call controls. On the phone there is no window; a bar above the chat replaces it.
+
+The organizer moves participants between voice channels by dragging and through the menu. A locked channel does not accept moves. A move immediately shows a toast with an "Undo" button. You can drag yourself too: that is switching to another channel.
+
+People are invited with a button that has a word, not a nameless copy icon. The invite modal shows the link, its expiry and a reset. An expired link leads to a screen with the reason and a way out, not to a dead end.
+
+## Editor
+
+Full-width content, tools float next to the selection. Saving is automatic and visible: a status next to the title.
+
+## Maturity levels
+
+The bar below which a screen looks dated:
+
+- One main thing per screen, size equals importance.
+- Data first, decoration second.
+- Skeletons and instant response.
+- Empty states explain and lead onward.
+- Kit components instead of homemade ones.
+
+What sets an expensive product apart: progressive disclosure, sensible defaults, micro-animations, recent and pinned items.
+
+What sets the best products apart: a fast command palette, the main action in one or two steps, inline editing, optimistic UI, undo instead of confirmation.

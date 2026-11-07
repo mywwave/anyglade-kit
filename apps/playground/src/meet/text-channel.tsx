@@ -35,7 +35,7 @@ const NoteRow = memo(function NoteRow({
           {dayLabel}
         </Text>
       ) : null}
-      {isFirstNew ? <ConversationNewMark label="Новые сообщения" /> : null}
+      {isFirstNew ? <ConversationNewMark label="New messages" /> : null}
       <Box gap="m" minWidth={0} motion={isHistory ? undefined : "enter"}>
         <Box display="block" flexShrink={0} width={32}>
           {isGrouped ? null : <PersonAvatar personId={note.authorId} />}
@@ -44,7 +44,7 @@ const NoteRow = memo(function NoteRow({
           {isGrouped ? null : (
             <Box alignItems="baseline" gap="s" minWidth={0}>
               <Text as="span" weight="medium" truncate>
-                {note.authorId === ME ? "Вы" : personById(note.authorId).name}
+                {note.authorId === ME ? "You" : personById(note.authorId).name}
               </Text>
               <Text as="span" variant="caption" color="subtle" tabularNums>
                 {formatMessageTime(note.at)}
@@ -82,8 +82,8 @@ function Notes({ channel, notes, typingId }: NotesProps) {
     <Box flexDirection="column" gap="l" marginTop="auto" minWidth={0}>
       {notes.length === 0 ? (
         <Box flexDirection="column" gap="xs" paddingVertical="xl">
-          <Text variant="title">Здесь пока тихо</Text>
-          <Text color="muted">Напишите первым, и канал оживёт.</Text>
+          <Text variant="title">Nothing here yet</Text>
+          <Text color="muted">Write the first message to get things going.</Text>
         </Box>
       ) : null}
       {notes.map((note, position) => {
@@ -103,7 +103,7 @@ function Notes({ channel, notes, typingId }: NotesProps) {
       {typingId ? (
         <Box display="block" motion="fade">
           <Text variant="caption" color="muted">
-            <Shimmer>{`${firstName(typingId)} печатает`}</Shimmer>
+            <Shimmer>{`${firstName(typingId)} is typing`}</Shimmer>
           </Text>
         </Box>
       ) : null}
@@ -124,15 +124,15 @@ function Composer({ channel, draft, inputRef, onDraft, onSend }: ComposerProps) 
 
   return (
     <PromptComposer
-      attachLabel="Прикрепить файл"
+      attachLabel="Attach file"
       attachments={attachments}
       inputRef={inputRef}
       isRunning={false}
-      label={`Сообщение в канал ${channel.name}`}
-      placeholder={`Написать в ${channel.name}`}
-      removeAttachmentLabel="Убрать"
-      stopLabel="Остановить"
-      submitLabel="Отправить"
+      label={`Message to ${channel.name}`}
+      placeholder={`Message ${channel.name}`}
+      removeAttachmentLabel="Remove"
+      stopLabel="Stop"
+      submitLabel="Send"
       value={draft}
       onAttach={(files) =>
         setAttachments((list) => [
@@ -186,7 +186,7 @@ export function TextChannelView({
         <Box display={{ base: "flex", md: "none" }}>
           <Button
             isIconOnly
-            aria-label="К списку каналов"
+            aria-label="Back to channels"
             size="sm"
             variant="ghost"
             onPress={onBack}
@@ -209,7 +209,7 @@ export function TextChannelView({
         footer={
           channel.isReadOnly ? (
             <Box justifyContent="center" padding="m">
-              <Text color="muted">Писать здесь могут только организаторы</Text>
+              <Text color="muted">Only organizers can post here</Text>
             </Box>
           ) : (
             <Composer
@@ -222,9 +222,9 @@ export function TextChannelView({
             />
           )
         }
-        label={`Сообщения канала ${channel.name}`}
+        label={`Messages in ${channel.name}`}
         newCount={channel.unread}
-        scrollLabel="К последнему сообщению"
+        scrollLabel="Jump to latest message"
         onReachEnd={onRead}
       >
         <Notes channel={channel} notes={notes} typingId={typingId} />

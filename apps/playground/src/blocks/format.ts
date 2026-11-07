@@ -1,7 +1,7 @@
-const rubles = new Intl.NumberFormat("ru-RU", {
+const money = new Intl.NumberFormat("en-US", {
   style: "currency",
-  currency: "RUB",
+  currency: "USD",
   maximumFractionDigits: 0,
 });
 
-export const formatRubles = (value: number) => rubles.format(value);
+export const formatMoney = (value: number) => money.format(value);

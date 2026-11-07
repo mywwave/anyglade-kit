@@ -87,7 +87,7 @@ interface ToggleProps {
 
 /** A muted microphone is the one state a person must not miss: they talk and nobody hears. */
 export function MicButton({ isOn, onToggle, size = "md", hotkey }: ToggleProps) {
-  const label = isOn ? "Выключить микрофон" : "Включить микрофон";
+  const label = isOn ? "Mute microphone" : "Unmute microphone";
 
   return (
     <Hint hotkey={hotkey} label={label}>
@@ -106,7 +106,7 @@ export function MicButton({ isOn, onToggle, size = "md", hotkey }: ToggleProps) 
 }
 
 export function SoundButton({ isOn, onToggle, size = "md" }: ToggleProps) {
-  const label = isOn ? "Выключить звук" : "Включить звук";
+  const label = isOn ? "Mute sound" : "Unmute sound";
 
   return (
     <Hint label={label}>
@@ -136,7 +136,7 @@ export function CameraButton({
   size = "md",
   hotkey,
 }: CameraButtonProps) {
-  const label = isOn ? "Выключить камеру" : "Включить камеру";
+  const label = isOn ? "Turn off camera" : "Turn on camera";
 
   return (
     <Hint hotkey={hotkey} label={label}>
@@ -183,19 +183,19 @@ interface AudioDevicesProps {
 function AudioDevices({ self, variant, onChange }: AudioDevicesProps) {
   return (
     <Dropdown>
-      <Button isIconOnly aria-label="Выбрать микрофон и динамики" variant={variant}>
+      <Button isIconOnly aria-label="Choose microphone and speakers" variant={variant}>
         <ChevronUp />
       </Button>
       <Dropdown.Popover>
         <Dropdown.Menu
-          aria-label="Микрофон и динамики"
+          aria-label="Microphone and speakers"
           onAction={(key) => {
             const [kind, value] = String(key).split(":");
             onChange(kind === "in" ? { microphone: value } : { speaker: value });
           }}
         >
-          <Dropdown.Section aria-label="Микрофон">
-            <Header>Микрофон</Header>
+          <Dropdown.Section aria-label="Microphone">
+            <Header>Microphone</Header>
             {microphones.map((name) => (
               <DeviceItem
                 key={name}
@@ -206,8 +206,8 @@ function AudioDevices({ self, variant, onChange }: AudioDevicesProps) {
             ))}
           </Dropdown.Section>
           <Separator />
-          <Dropdown.Section aria-label="Динамики">
-            <Header>Динамики</Header>
+          <Dropdown.Section aria-label="Speakers">
+            <Header>Speakers</Header>
             {speakers.map((name) => (
               <DeviceItem
                 key={name}
@@ -233,17 +233,17 @@ interface CameraDevicesProps {
 function CameraDevices({ cameras, cameraId, onSelect }: CameraDevicesProps) {
   return cameras.length > 1 ? (
     <Dropdown>
-      <Button isIconOnly aria-label="Выбрать камеру" variant="secondary">
+      <Button isIconOnly aria-label="Choose camera" variant="secondary">
         <ChevronUp />
       </Button>
       <Dropdown.Popover>
-        <Dropdown.Menu aria-label="Камера" onAction={(key) => onSelect(String(key))}>
+        <Dropdown.Menu aria-label="Camera" onAction={(key) => onSelect(String(key))}>
           {cameras.map((device, position) => (
             <DeviceItem
               key={device.deviceId}
               id={device.deviceId}
               isCurrent={device.deviceId === cameraId}
-              label={device.label || `Камера ${position + 1}`}
+              label={device.label || `Camera ${position + 1}`}
             />
           ))}
         </Dropdown.Menu>
@@ -274,13 +274,13 @@ export function CallBar({
   const { self } = meet;
   const isSharing = media.screen.status === "on";
   const isCameraOn = media.camera.status === "on";
-  const shareLabel = isSharing ? "Остановить показ" : "Показать экран";
-  const handLabel = self.hasHand ? "Опустить руку" : "Поднять руку";
+  const shareLabel = isSharing ? "Stop sharing" : "Share screen";
+  const handLabel = self.hasHand ? "Lower hand" : "Raise hand";
 
   return (
     <Box
       as="footer"
-      aria-label="Управление звонком"
+      aria-label="Call controls"
       alignItems="center"
       justifyContent="center"
       gap="s"
@@ -334,7 +334,7 @@ export function CallBar({
       </Hint>
       <Button
         aria-expanded={isPeopleOpen}
-        aria-label={`Участники: ${peopleCount}`}
+        aria-label={`Participants: ${peopleCount}`}
         variant={isPeopleOpen ? "secondary" : "ghost"}
         onPress={onTogglePeople}
       >
@@ -345,11 +345,11 @@ export function CallBar({
       </Button>
       <Box display={{ base: "none", md: "flex" }} marginLeft="l">
         <Button variant="danger" onPress={onLeave}>
-          Отключиться
+          Leave
         </Button>
       </Box>
       <Box display={{ base: "flex", md: "none" }}>
-        <Button isIconOnly aria-label="Отключиться" variant="danger" onPress={onLeave}>
+        <Button isIconOnly aria-label="Leave" variant="danger" onPress={onLeave}>
           <ArrowRightFromSquare />
         </Button>
       </Box>

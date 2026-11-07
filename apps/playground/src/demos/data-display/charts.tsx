@@ -2,11 +2,11 @@ import { Box } from "@anyglade/kit";
 import { AreaChart, BarChart, DonutChart, LineChart, Sparkline } from "@anyglade/kit/charts";
 
 const data = [
-  { month: "Июн", won: 12, lost: 4, plan: 14 },
-  { month: "Июл", won: 16, lost: 5, plan: 15 },
-  { month: "Авг", won: 14, lost: 7, plan: 16 },
-  { month: "Сен", won: 21, lost: 6, plan: 18 },
-  { month: "Окт", won: 24, lost: 5, plan: 20 },
+  { month: "Jun", won: 12, lost: 4, plan: 14 },
+  { month: "Jul", won: 16, lost: 5, plan: 15 },
+  { month: "Aug", won: 14, lost: 7, plan: 16 },
+  { month: "Sep", won: 21, lost: 6, plan: 18 },
+  { month: "Oct", won: 24, lost: 5, plan: 20 },
 ];
 
 export function ChartsDemo() {
@@ -17,40 +17,40 @@ export function ChartsDemo() {
       gap="2xl"
     >
       <LineChart
-        label="Сделки и план по месяцам"
+        label="Monthly deals vs. target"
         data={data}
         xKey="month"
         series={[
-          { dataKey: "won", label: "Выиграно" },
-          { dataKey: "plan", label: "План" },
+          { dataKey: "won", label: "Won" },
+          { dataKey: "plan", label: "Target" },
         ]}
       />
       <BarChart
         stacked
-        label="Выигранные и проигранные сделки"
+        label="Won and lost deals"
         data={data}
         xKey="month"
         series={[
-          { dataKey: "won", label: "Выиграно" },
-          { dataKey: "lost", label: "Проиграно" },
+          { dataKey: "won", label: "Won" },
+          { dataKey: "lost", label: "Lost" },
         ]}
       />
       <AreaChart
-        label="Выигранные сделки"
+        label="Won deals"
         data={data}
         xKey="month"
-        series={[{ dataKey: "won", label: "Выиграно" }]}
+        series={[{ dataKey: "won", label: "Won" }]}
       />
       <DonutChart
-        label="Источники сделок"
+        label="Deal sources"
         center="48%"
         data={[
-          { label: "Сайт", value: 48 },
-          { label: "Рекомендации", value: 32 },
-          { label: "Реклама", value: 20 },
+          { label: "Website", value: 48 },
+          { label: "Referrals", value: 32 },
+          { label: "Ads", value: 20 },
         ]}
       />
-      <Sparkline label="Тренд сделок" values={data.map((item) => item.won)} />
+      <Sparkline label="Deals trend" values={data.map((item) => item.won)} />
     </Box>
   );
 }

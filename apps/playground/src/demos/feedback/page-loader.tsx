@@ -1,15 +1,15 @@
 import { Box, Button, PageLoader, Text } from "@anyglade/kit";
 import { useEffect, useState } from "react";
 
-const LOGO = { src: "/logo.svg", width: 87, height: 48 };
+const LOGO = { src: `${import.meta.env.BASE_URL}logo.svg`, width: 87, height: 48 };
 const STEP_MS = 1100;
 const FAST_PAGE_MS = 250;
 
 const steps = [
-  { status: "Проверяем вход", value: 15 },
-  { status: "Загружаем рабочее пространство", value: 45 },
-  { status: "Подключаем каналы", value: 75 },
-  { status: "Почти готово", value: 95 },
+  { status: "Checking sign-in", value: 15 },
+  { status: "Loading your workspace", value: 45 },
+  { status: "Connecting channels", value: 75 },
+  { status: "Almost ready", value: 95 },
 ];
 
 export function PageLoaderDemo() {
@@ -44,24 +44,24 @@ export function PageLoaderDemo() {
   return (
     <Box alignItems="center" flexWrap="wrap" gap="s">
       <Button variant="secondary" onPress={() => start(true)}>
-        С процентом
+        With percentage
       </Button>
       <Button variant="secondary" onPress={() => start(false)}>
-        Без процента
+        Without percentage
       </Button>
       <Button variant="secondary" onPress={openFastPage}>
-        Быстрая страница
+        Fast page
       </Button>
       {hasFastPageOpened ? (
         <Text variant="caption" color="muted">
-          Открылась за {FAST_PAGE_MS} мс, лоадер не понадобился
+          Opened in {FAST_PAGE_MS} ms, no loader needed
         </Text>
       ) : null}
       <PageLoader
         isLoading={current !== undefined || isFastPageLoading}
-        label="Загрузка приложения"
+        label="Loading the app"
         logo={LOGO}
-        status={current?.status ?? "Готово"}
+        status={current?.status ?? "Ready"}
         value={hasPercent ? (current?.value ?? 100) : undefined}
       />
     </Box>

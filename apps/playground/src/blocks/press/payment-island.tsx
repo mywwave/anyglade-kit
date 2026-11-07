@@ -10,7 +10,7 @@ import {
   type KeyboardEvent,
 } from "react";
 import { simulateRequest } from "../../simulate.ts";
-import { formatRubles } from "../format.ts";
+import { formatMoney } from "../format.ts";
 
 interface Payer {
   name: string;
@@ -32,91 +32,91 @@ interface Payment extends Payer {
 
 const payers: readonly Payer[] = [
   {
-    name: "Анна Соколова",
-    initials: "АС",
+    name: "Anna Sawyer",
+    initials: "AS",
     photo: 47,
-    purpose: "Курс «Основы UI»",
-    amount: 12_900,
-    method: "Карта •• 4417",
-    email: "anna.sokolova@yandex.ru",
+    purpose: "UI Basics course",
+    amount: 129,
+    method: "Card •• 4417",
+    email: "anna.sawyer@gmail.com",
   },
   {
-    name: "Дмитрий Орлов",
-    initials: "ДО",
+    name: "David Ortiz",
+    initials: "DO",
     photo: 53,
-    purpose: "Консультация, 2 часа",
-    amount: 7000,
-    method: "СБП",
-    email: "d.orlov@mail.ru",
+    purpose: "Consultation, 2 hours",
+    amount: 180,
+    method: "Apple Pay",
+    email: "d.ortiz@outlook.com",
   },
   {
-    name: "Екатерина Белова",
-    initials: "ЕБ",
+    name: "Katherine Bell",
+    initials: "KB",
     photo: 32,
-    purpose: "Подписка на год",
-    amount: 9900,
-    method: "Карта •• 2291",
-    email: "belova.k@gmail.com",
+    purpose: "Annual subscription",
+    amount: 99,
+    method: "Card •• 2291",
+    email: "k.bell@gmail.com",
   },
   {
-    name: "Артём Захаров",
-    initials: "АЗ",
+    name: "Arthur Zane",
+    initials: "AZ",
     photo: 68,
-    purpose: "Предоплата 50 %",
-    amount: 18_500,
-    method: "СБП",
-    email: "zakharov@studio-sever.ru",
+    purpose: "50% deposit",
+    amount: 480,
+    method: "Apple Pay",
+    email: "zane@northstudio.co",
   },
   {
-    name: "Ольга Миронова",
-    initials: "ОМ",
+    name: "Olivia Moore",
+    initials: "OM",
     photo: 5,
-    purpose: "Курс «Основы UI»",
-    amount: 12_900,
-    method: "Карта •• 9032",
-    email: "mironova.olga@yandex.ru",
+    purpose: "UI Basics course",
+    amount: 129,
+    method: "Card •• 9032",
+    email: "olivia.moore@gmail.com",
   },
 ];
 
 const earlier: readonly Payment[] = [
   {
     id: 2186,
-    name: "Илья Воронов",
-    initials: "ИВ",
+    name: "Ethan Brooks",
+    initials: "EB",
     photo: 12,
-    purpose: "Консультация, 1 час",
-    amount: 3500,
-    method: "СБП",
-    email: "voronov@yandex.ru",
-    invoice: "№ 2186",
-    time: "9:38",
+    purpose: "Consultation, 1 hour",
+    amount: 90,
+    method: "Apple Pay",
+    email: "ethan.brooks@outlook.com",
+    invoice: "#2186",
+    time: "9:38 AM",
     isLive: false,
     isRefunded: false,
   },
   {
     id: 2185,
-    name: "Мария Ким",
-    initials: "МК",
+    name: "Maria Kim",
+    initials: "MK",
     photo: 45,
-    purpose: "Подписка на год",
-    amount: 9900,
-    method: "Карта •• 1185",
+    purpose: "Annual subscription",
+    amount: 99,
+    method: "Card •• 1185",
     email: "maria.kim@gmail.com",
-    invoice: "№ 2185",
-    time: "9:12",
+    invoice: "#2185",
+    time: "9:12 AM",
     isLive: false,
     isRefunded: false,
   },
   {
     id: 2184,
-    name: "Студия «Север»",
-    initials: "СС",
-    purpose: "Счёт № 2184",
-    amount: 24_000,
-    method: "Счёт",
-    email: "hello@studio-sever.ru",
-    invoice: "№ 2184",
-    time: "8:55",
+    name: "North Studio",
+    initials: "NS",
+    purpose: "Invoice #2184",
+    amount: 600,
+    method: "Invoice",
+    email: "hello@northstudio.co",
+    invoice: "#2184",
+    time: "8:55 AM",
     isLive: false,
     isRefunded: false,
   },
@@ -129,19 +129,11 @@ const isReduced = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 const SHOWN_FOR = ms(tokens.durations.drift) * 1.5;
 const VISIBLE_ROWS = 3;
 
-const plural = new Intl.PluralRules("ru-RU");
-const paymentWords: Partial<Record<Intl.LDMLPluralRule, string>> = {
-  one: "платёж",
-  few: "платежа",
-  many: "платежей",
-};
-const refundWords: Partial<Record<Intl.LDMLPluralRule, string>> = {
-  one: "возврат",
-  few: "возврата",
-  many: "возвратов",
-};
+const plural = new Intl.PluralRules("en-US");
+const paymentWords = { one: "payment", other: "payments" };
+const refundWords = { one: "refund", other: "refunds" };
 const counted = (count: number, words: typeof paymentWords) =>
-  `${count} ${words[plural.select(count)] ?? words.few}`;
+  `${count} ${plural.select(count) === "one" ? words.one : words.other}`;
 
 /**
  * A rounded rectangle built from four circles and two bars. Circles scale evenly and bars
@@ -326,7 +318,7 @@ function StatusIcons() {
 function Amount({ payment }: { payment: Payment }) {
   return (
     <Text variant="title" tabularNums wrap="nowrap" lineThrough={payment.isRefunded}>
-      +{formatRubles(payment.amount)}
+      +{formatMoney(payment.amount)}
     </Text>
   );
 }
@@ -382,7 +374,7 @@ function Countdown({ onExpire }: { onExpire: () => void }) {
 export function PaymentIslandBlock() {
   const [island, dispatch] = useReducer(reduce, { mode: "rest", current: null, queue: [] });
   const [history, setHistory] = useState<readonly Payment[]>(earlier);
-  const [total, setTotal] = useState(86_400);
+  const [total, setTotal] = useState(2_160);
   const [count, setCount] = useState(14);
   const [refunds, setRefunds] = useState(0);
   const [isConfirming, setIsConfirming] = useState(false);
@@ -487,8 +479,8 @@ export function PaymentIslandBlock() {
     const payment: Payment = {
       ...payer,
       id,
-      invoice: `№ ${id}`,
-      time: "9:41",
+      invoice: `#${id}`,
+      time: "9:41 AM",
       isLive: true,
       isRefunded: false,
     };
@@ -503,7 +495,7 @@ export function PaymentIslandBlock() {
   }
 
   function sendReceipt(payment: Payment) {
-    toast(`Чек ${payment.invoice} отправлен на ${payment.email}`);
+    toast(`Receipt ${payment.invoice} sent to ${payment.email}`);
     leave();
   }
 
@@ -528,7 +520,7 @@ export function PaymentIslandBlock() {
     }
   }
 
-  const waiting = queue.length > 0 ? `ещё ${queue.length}` : null;
+  const waiting = queue.length > 0 ? `${queue.length} more` : null;
 
   return (
     <Box flexDirection="column" alignItems="center" gap="xl" width="100%" maxWidth={300}>
@@ -594,7 +586,7 @@ export function PaymentIslandBlock() {
               <Box key={contentKey} ref={content} data-banner position="relative" display="block">
                 <button
                   aria-expanded={false}
-                  aria-label={`${current.name}, +${formatRubles(current.amount)}. Подробнее`}
+                  aria-label={`${current.name}, +${formatMoney(current.amount)}. Details`}
                   className="w-full"
                   type="button"
                   onClick={open}
@@ -664,9 +656,9 @@ export function PaymentIslandBlock() {
 
                 <Box flexDirection="column" gap="2xs">
                   {[
-                    ["Счёт", current.invoice],
-                    ["Оплата", current.method],
-                    ["Время", `Сегодня, ${current.time}`],
+                    ["Invoice", current.invoice],
+                    ["Paid with", current.method],
+                    ["Time", `Today, ${current.time}`],
                   ].map(([label, value]) => (
                     <Box key={label} justifyContent="between" gap="m">
                       <Text variant="caption">{label}</Text>
@@ -681,11 +673,11 @@ export function PaymentIslandBlock() {
                   <Box alignItems="center" gap="s" minHeight={32} motion="enter">
                     <ArrowUturnCcwLeft aria-hidden />
                     <Box flexDirection="column" minWidth={0}>
-                      <Text variant="title">Возврат оформлен</Text>
+                      <Text variant="title">Refund issued</Text>
                       <Text variant="caption">
-                        {current.method === "СБП"
-                          ? "Деньги придут сразу"
-                          : "Деньги придут за 1–3 дня"}
+                        {current.method === "Apple Pay"
+                          ? "The money arrives instantly"
+                          : "The money arrives in 1–3 days"}
                       </Text>
                     </Box>
                   </Box>
@@ -697,7 +689,7 @@ export function PaymentIslandBlock() {
                       variant="secondary"
                       onPress={() => sendReceipt(current)}
                     >
-                      Чек
+                      Send receipt
                     </Button>
                     <Button
                       className="w-full"
@@ -705,7 +697,7 @@ export function PaymentIslandBlock() {
                       variant={isConfirming ? "danger" : "secondary"}
                       onPress={() => refund(current)}
                     >
-                      <TextSwap text={isConfirming ? "Точно вернуть?" : "Вернуть"} />
+                      <TextSwap text={isConfirming ? "Confirm refund" : "Refund"} />
                     </Button>
                   </Box>
                 )}
@@ -716,10 +708,10 @@ export function PaymentIslandBlock() {
 
         <Box flexDirection="column" gap="2xs" paddingTop="xl" paddingHorizontal="xs">
           <Text variant="caption" color="muted">
-            Сегодня
+            Today
           </Text>
           <Text variant="heading-m" tabularNums wrap="nowrap">
-            <TextSwap text={formatRubles(total)} />
+            <TextSwap text={formatMoney(total)} />
           </Text>
           <Text variant="caption" color="muted" tabularNums>
             {counted(count, paymentWords)}
@@ -764,7 +756,7 @@ export function PaymentIslandBlock() {
                 color={payment.isRefunded ? "muted" : "default"}
                 lineThrough={payment.isRefunded}
               >
-                +{formatRubles(payment.amount)}
+                +{formatMoney(payment.amount)}
               </Text>
             </Box>
           ))}
@@ -772,10 +764,10 @@ export function PaymentIslandBlock() {
       </Box>
 
       <Button size="sm" variant="secondary" onPress={receive}>
-        Провести тестовый платёж
+        Run a test payment
       </Button>
     </Box>
   );
 }
 
-PaymentIslandBlock.displayName = "Остров платежей";
+PaymentIslandBlock.displayName = "Payment island";

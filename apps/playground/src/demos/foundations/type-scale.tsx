@@ -11,7 +11,7 @@ export function TypeScaleDemo() {
             {variant}
           </Text>
           <Text as="p" variant={variant}>
-            Съешь ещё булок
+            The quick brown fox
           </Text>
         </Box>
       ))}

@@ -1,55 +1,55 @@
-# Вёрстка и композиция
+# Layout and composition
 
-Значения шкал в [generated/tokens.md](generated/tokens.md).
+Scale values are in [generated/tokens.md](generated/tokens.md).
 
-Ограничение ширины относится к содержимому, а не к панели приложения. Панель, которая и так занимает своё место в раскладке, заполняется целиком: колонка внутри неё на широком экране оставляет пустые поля с обеих сторон. Каркас проверяется и на широком окне, от 1920 px.
+The width limit applies to content, not to the app panel. A panel that already occupies its place in the layout is filled entirely: a column inside it leaves empty margins on both sides on a wide screen. Check the shell on a wide window too, from 1920 px.
 
-## Ритм отступов
+## Spacing rhythm
 
-Близость это группировка. Человек понимает, что связано, по расстоянию, поэтому линии обычно не нужны.
+Proximity is grouping. People understand what belongs together by distance, so lines are usually unnecessary.
 
-| Отношение                                             | Шаг                 |
-| ----------------------------------------------------- | ------------------- |
-| Внутри контрола: иконка и подпись                     | `2xs`, `xs`         |
-| Внутри единицы: подпись и значение, заголовок и текст | `xs`, `s`           |
-| Связанные элементы: поля формы, строки списка         | `m`, `l`            |
-| Группы внутри секции                                  | `xl`, `2xl`         |
-| Секции экрана                                         | `2xl`, `3xl`        |
-| Секции лендинга                                       | `3xl`, `4xl`, `5xl` |
+| Relationship                                     | Step                |
+| ------------------------------------------------ | ------------------- |
+| Inside a control: icon and label                 | `2xs`, `xs`         |
+| Inside a unit: label and value, heading and text | `xs`, `s`           |
+| Related elements: form fields, list rows         | `m`, `l`            |
+| Groups inside a section                          | `xl`, `2xl`         |
+| Screen sections                                  | `2xl`, `3xl`        |
+| Landing page sections                            | `3xl`, `4xl`, `5xl` |
 
-Внешний отступ всегда больше внутреннего, иначе группа разваливается. Над заголовком отступ больше, чем под ним: заголовок принадлежит тому, что идёт после. Плотные списки: строка одной высоты, шаг `xs`. Шаг 60 px на строку в 21 px превращает список в россыпь.
+Outer spacing is always larger than inner spacing, otherwise the group falls apart. The space above a heading is larger than below it: a heading belongs to what follows. Dense lists: rows of one height, step `xs`. A 60 px step on a 21 px row turns a list into scattered pieces.
 
-## Ширина
+## Width
 
-Содержимое не растягивается на всю доступную область.
+Content does not stretch across the whole available area.
 
-| Содержимое                   | Ширина                                     |
-| ---------------------------- | ------------------------------------------ |
-| Форма, вход, чекаут          | `tokens.widths.form`                       |
-| Чтение, настройки, чат       | `tokens.widths.content`                    |
-| Смешанный контент            | `tokens.widths.wide`                       |
-| Таблицы, дашборды, маркетинг | Вся ширина с разумным пределом, около 1180 |
+| Content                       | Width                                         |
+| ----------------------------- | --------------------------------------------- |
+| Form, sign-in, checkout       | `tokens.widths.form`                          |
+| Reading, settings, chat       | `tokens.widths.content`                       |
+| Mixed content                 | `tokens.widths.wide`                          |
+| Tables, dashboards, marketing | Full width with a sensible limit, around 1180 |
 
-Поле шире 480 px почти всегда ошибка: длина поля подсказывает длину ответа. `NumberField` и `InputOTP` держат ширину по содержимому.
+A field wider than 480 px is almost always a mistake: the length of a field hints at the length of the answer. `NumberField` and `InputOTP` keep their width to their content.
 
 ```tsx
 <Box width="100%" maxWidth={tokens.widths.content} marginHorizontal="auto" padding={{ base: "l", md: "2xl" }}>
 ```
 
-## Каркас приложения
+## App shell
 
-- Шапка: `position="sticky"`, `top={0}`, фон холста, `zIndex`. Около 48 px.
-- Боковая панель: 224 px, на телефоне `Drawer`, открывается кнопкой с `aria-label`.
-- Контент: панель `background-panel` на холсте `background-canvas`, `borderRadius="l"`, отступы `l` на телефоне и `2xl` на компьютере.
-- Навигация: активный пункт это `secondary`, остальные `ghost`, активный отмечен `aria-current="page"`.
+- Header: `position="sticky"`, `top={0}`, canvas background, `zIndex`. About 48 px.
+- Sidebar: 224 px, a `Drawer` on the phone, opened by a button with `aria-label`.
+- Content: a `background-panel` panel on the `background-canvas` canvas, `borderRadius="l"`, padding `l` on the phone and `2xl` on desktop.
+- Navigation: the active item is `secondary`, the rest are `ghost`, the active one is marked with `aria-current="page"`.
 
-Скроллится страница целиком, а не отдельные колонки. Внутренний скролл появляется, только если у области свой смысл: таблица, код, список в панели. Иначе скроллбар в середине экрана выглядит как ошибка и сбивает ширину при появлении.
+The whole page scrolls, not individual columns. Inner scrolling appears only if the area has its own meaning: a table, code, a list in a panel. Otherwise a scrollbar in the middle of the screen looks like a bug and shifts the width when it appears.
 
-Страница с прокруткой резервирует место под скроллбар через `scrollbar-gutter: stable`, иначе содержимое сдвигается, как только текст перестаёт влезать. Если под прилипшим футером есть отступ, футер будет съезжать на эту величину при стыковке, поэтому под ним отступа быть не должно.
+A scrolling page reserves room for the scrollbar with `scrollbar-gutter: stable`, otherwise the content shifts as soon as the text stops fitting. If a sticky footer has spacing below it, the footer will slide by that amount when it docks, so there must be no spacing below it.
 
-## Сетки
+## Grids
 
-Колонки всегда через `minmax(0, 1fr)`, иначе длинный контент распирает колонку.
+Columns always use `minmax(0, 1fr)`, otherwise long content pushes the column wider.
 
 ```tsx
 <Box
@@ -59,68 +59,68 @@
 />
 ```
 
-- Предпочитайте асимметрию: 1:2, 2:3, 5:7. Равные колонки это обычно отсутствие решения.
-- Ряд полей: `repeat(2, minmax(0, 1fr))`.
-- Элементы внутри flex получают `minWidth={0}`, иначе `truncate` не сработает.
+- Prefer asymmetry: 1:2, 2:3, 5:7. Equal columns usually mean no decision was made.
+- A row of fields: `repeat(2, minmax(0, 1fr))`.
+- Elements inside flex get `minWidth={0}`, otherwise `truncate` will not work.
 
-## Поверхности
+## Surfaces
 
-Глубина строится контрастом поверхностей, а не тенями и рамками. Холст, панель, карточка. Один уровень вложенности: карточка на панели допустима, карточка в карточке нет. Рамка только у полей ввода и объектов коллекции.
+Depth comes from surface contrast, not from shadows and borders. Canvas, panel, card. One level of nesting: a card on a panel is fine, a card in a card is not. Borders only on input fields and collection items.
 
-Концентрические радиусы: внешний равен внутреннему плюс отступ. Иначе углы выглядят чужими.
+Concentric radii: the outer radius equals the inner one plus the padding. Otherwise the corners look foreign.
 
-## Адаптивность
+## Responsiveness
 
-Значения задаются объектом: `padding={{ base: "l", md: "2xl" }}`. Базовое значение для телефона.
+Values are given as an object: `padding={{ base: "l", md: "2xl" }}`. The base value is for the phone.
 
-- На ширине 390 px нет горизонтальной прокрутки страницы.
-- Строка действий переносится или становится колонкой.
-- Таблица скроллится в своём контейнере.
-- Наведение на телефоне не существует: ничего важного за ним не прячьте.
-- Строки текста стоят на целых пикселях. Высота, полученная как сумма лишней инлайновой коробки, даёт дробные координаты, и буквы дрожат.
+- At 390 px there is no horizontal page scroll.
+- An action row wraps or becomes a column.
+- A table scrolls in its own container.
+- Hover does not exist on the phone: hide nothing important behind it.
+- Text lines sit on whole pixels. A height made up of an extra inline box produces fractional coordinates, and the letters shimmer.
 
-## Композиция
+## Composition
 
-Первый приходящий в голову вариант считайте шаблонным. Для заметного экрана придумайте три концепта с разными ходами и выберите самый сильный по идее. Идея плоха, если её можно приложить к любому продукту.
+Treat the first option that comes to mind as a template. For a prominent screen, come up with three concepts with different moves and pick the one with the strongest idea. An idea is bad if it could be applied to any product.
 
-Ходы:
+Moves:
 
-- **Продукт вместо иллюстрации.** Настоящий рабочий кусок интерфейса на настоящих данных.
-- **Масштаб как иерархия.** Одно число или фраза огромным размером, всё остальное подчинено.
-- **Контраст плотности.** Много воздуха рядом с плотным блоком данных.
-- **Асимметрия.** Смещённая ось вместо центрирования.
-- **Инверсия.** Один участок на `background-inverse` как единственный акцент экрана.
-- **Двухтоновый заголовок.** Утверждение основным цветом, пояснение `muted`, одним потоком.
-- **Табличная типографика.** Числа и моноширинный шрифт выстраивают композицию вместо декора.
-- **Сквозное взаимодействие.** Ползунок или переключатель меняет весь блок.
-- **Срез вместо целого.** Один живой момент: списание прошло, статус сменился.
-- **Текст как интерфейс.** Сильная формулировка вместо карточек преимуществ.
+- **Product instead of illustration.** A real working piece of the interface on real data.
+- **Scale as hierarchy.** One number or phrase at a huge size, everything else subordinate.
+- **Density contrast.** Lots of air next to a dense block of data.
+- **Asymmetry.** An offset axis instead of centering.
+- **Inversion.** One area on `background-inverse` as the screen's only accent.
+- **Two-tone heading.** The statement in the main color, the explanation in `muted`, in one flow.
+- **Tabular typography.** Numbers and the monospace font build the composition instead of decoration.
+- **End-to-end interaction.** A slider or toggle changes the whole block.
+- **A slice instead of the whole.** One live moment: the charge went through, the status changed.
+- **Text as interface.** A strong statement instead of benefit cards.
 
-Запрещённые стартовые композиции: центрированный заголовок над тремя одинаковыми карточками, сетка «иконка, заголовок, текст», герой с заголовком слева и картинкой справа без идеи.
+Banned starting compositions: a centered heading above three identical cards, an "icon, heading, text" grid, a hero with a heading on the left and a picture on the right with no idea.
 
-## Браузерные поверхности
+## Browser surfaces
 
-То, что вы не рисовали, тоже часть дизайна: выделение текста, каретка, полосы прокрутки, кольцо фокуса, подчёркивание ссылок, автозаполнение полей. Проверьте их в обеих темах, а не оставляйте значения браузера.
+What you did not draw is still part of the design: text selection, the caret, scrollbars, the focus ring, link underlines, field autofill. Check them in both themes instead of leaving the browser defaults.
 
-## Индикаторы шаблонного дизайна
+## Signs of template design
 
-Любой из них требует удаления или конкретного ответа, какую информацию он несёт.
+Each of them requires removal or a concrete answer about what information it carries.
 
-| Индикатор                     | Как надо                                                                                                         |
-| ----------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| Теги                          | `Chip` и `Badge` только для редкого состояния, требующего действия. Без eyebrow над заголовками и пилюль «Новое» |
-| Курсив                        | Акцент делается формулировкой или контрастом `muted`                                                             |
-| Serif и отрицательный трекинг | Только Inter и Geist Mono, трекинг токенный                                                                      |
-| Перегруженный UI              | Только то, что нужно для решения на этом экране, остальное по действию                                           |
-| Разделители                   | Структуру создают `gap`, размер и вес. `Separator` только между группами разной природы                          |
-| Зоопарк оттенков              | Три уровня текста, поверхности из токенов, `opacity` для цвета запрещена                                         |
-| Контейнеры с рамками          | Один уровень поверхности                                                                                         |
-| Диаграммы ради диаграмм       | Одна линия, без осей и легенды, если мысль выражается числом                                                     |
-| Хлебные крошки кода           | Никаких путей файлов и моно-капса как украшения                                                                  |
-| Шаблон с большим числом       | Большое число, подпись, ряд мелких показателей и акцент как структура без идеи                                   |
-| Градиенты и стекло            | Градиентный текст, размытие как декор. Важность задают размер и вес                                              |
-| Цветная полоса сбоку          | Полоса слева у карточек и уведомлений. Значение передаёт текст                                                   |
-| Эмодзи вместо иконок          | Иконки из одного набора                                                                                          |
-| Рамка вместе с тенью          | Глубина задаётся одним способом                                                                                  |
-| Лишнее окно                   | Модальное окно для задачи, которая не требует прерывания                                                         |
-| Нумерация разделов            | Номера только у настоящей последовательности действий                                                            |
+| Sign                          | Instead                                                                                                      |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| Tags                          | `Chip` and `Badge` only for a rare state that requires action. No eyebrows above headings and no "New" pills |
+| Italics                       | Emphasis comes from wording or `muted` contrast                                                              |
+| Serif and negative tracking   | Only Inter and Geist Mono, tracking from tokens                                                              |
+| Overloaded UI                 | Only what is needed for the decision on this screen, the rest behind an action                               |
+| Dividers                      | Structure comes from `gap`, size and weight. `Separator` only between groups of a different nature           |
+| A zoo of shades               | Three text levels, surfaces from tokens, `opacity` for color is banned                                       |
+| Bordered containers           | One surface level                                                                                            |
+| Charts for the sake of charts | One line, no axes and no legend, if the point can be expressed as a number                                   |
+| Code breadcrumbs              | No file paths and no monospace caps as decoration                                                            |
+| The big-number template       | A big number, a caption, a row of small metrics and an accent as structure with no idea                      |
+| Gradients and glass           | Gradient text, blur as decoration. Importance comes from size and weight                                     |
+| A colored side stripe         | A stripe on the left of cards and notifications. The text carries the meaning                                |
+| Emoji instead of icons        | Icons from one set                                                                                           |
+| Border together with shadow   | Depth is set one way                                                                                         |
+| An unnecessary modal          | A modal for a task that does not require interruption                                                        |
+| Section numbering             | Numbers only on a real sequence of actions                                                                   |

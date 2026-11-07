@@ -1,76 +1,109 @@
-# Тексты
+# Copy
 
-Текст это самая читаемая часть интерфейса. Слоп узнают за секунду: после фразы «мощный инструмент, который позволяет легко и быстро» читатель перестаёт верить остальному.
+Text is the most-read part of an interface. Slop is recognized in a second: after the phrase "a powerful tool that lets you quickly and easily", the reader stops believing the rest.
 
-После правки текстов запустите проверку. Срабатывание означает «перечитай», а не «обязательно перепиши»:
+After editing copy, run the check. A hit means "reread this", not "you must rewrite":
 
 ```bash
-node <папка скилла>/scripts/check-copy.mjs <файлы>
+node <skill folder>/scripts/check-copy.mjs <files>
 ```
 
-Как писать: сначала назовите факт. Что происходит, что человек получит, что ему сделать. Числа, названия и сроки берите из продукта. Затем спросите себя, что здесь выдаёт ИИ.
+How to write: name the fact first. What is happening, what the person gets, what they need to do. Take numbers, names and deadlines from the product. Then ask yourself what here gives away an AI.
 
-## Правила интерфейса
+The kit's examples are in English. If the product's interface is in Russian, also apply [If the interface is in Russian](#if-the-interface-is-in-russian).
 
-- Обращение на «вы» с маленькой буквы.
-- Заголовок до семи слов, пояснение одно-два предложения.
-- Без жаргона: «синхронизация», а не «sync», «данные», а не «payload». Одно понятие называется одним словом во всём продукте.
-- Кнопка это глагол и объект: «Выгрузить 3 клиента». Никогда «ОК», «Да», «Подтвердить», «Отправить данные».
-- Заголовок экрана может быть выводом: «3 сделки застряли» сильнее, чем «Обзор».
-- Ошибка говорит, как исправить: «Укажите число от 0 до 100», а не «Неверное значение».
-- Последствия называются прямо и с цифрами: «История за 2 года удалится без возможности восстановить».
-- Сокращения в подписях и заголовках колонок запрещены: «Вал.», «Кол-во». Нет места, значит, короткое слово и полное название в подсказке.
-- Без восклицательных знаков, капса и эмодзи.
-- Подзаголовок не повторяет заголовок. Если заголовок всё говорит, подзаголовка нет.
-- Никакого lorem ipsum, «Test», «Item 1». Данные правдоподобные, в том числе длинные.
-- Никаких выдуманных обещаний: «на 40 % быстрее» без источника это ложь.
+## Interface rules
 
-## Шаблоны
+- Address the person as "you".
+- Sentence case everywhere: titles, buttons, tabs, menu items, column headers. Only the first word and proper names are capitalized: "New task", not "New Task". Title Case reads as marketing and slows scanning.
+- A title is up to seven words, an explanation one or two sentences.
+- Plain words over jargon: "data", not "payload"; "sign in", not "authenticate". One concept is called by one word across the whole product.
+- A button is a verb and an object that name the result: "Export 3 customers". Never "OK", "Yes", "Confirm", "Submit".
+- A screen title can be a conclusion: "3 deals are stuck" is stronger than "Overview".
+- An error says how to fix it: "Enter a number from 0 to 100", not "Invalid value".
+- Consequences are named directly and with numbers: "2 years of history will be deleted permanently."
+- Abbreviations in labels and column headers are banned: "Curr.", "Qty". No room means a short word, with the full name in a tooltip.
+- No exclamation marks, all caps or emoji.
+- A subtitle does not repeat the title. If the title says everything, there is no subtitle.
+- No lorem ipsum, "Test", "Item 1". Data is plausible, including long values.
+- No invented promises: "40% faster" without a source is a lie.
 
-| Ситуация             | Заголовок            | Текст                                                   | Кнопка           |
-| -------------------- | -------------------- | ------------------------------------------------------- | ---------------- |
-| Ещё ничего нет       | Пока нет рассылок    | Рассылка пишет всем клиентам сразу                      | Создать рассылку |
-| Нужно подключить     | Подключите кассу     | Платежи начнут считаться сразу после подключения        | Подключить кассу |
-| Ещё не пришло        | Продаж пока нет      | Появятся после первой синхронизации, обычно до 10 минут | Нет              |
-| Пусто из-за фильтров | Ничего не нашли      | По этим фильтрам заказов нет                            | Сбросить фильтры |
-| Всё сделано          | Все задачи выполнены | Новые появятся здесь                                    | Нет              |
-| Удаление             | Удалить {имя}?       | {Что пропадёт, с цифрами}. Восстановить не получится    | Удалить {объект} |
-| Тост успеха          | Сохранено            | Настройки уведомлений обновлены                         | Нет              |
-| Тост с отменой       | Рассылка в архиве    | Её можно вернуть в течение 30 дней                      | Отменить         |
-| Тост ошибки          | Не удалось сохранить | Нет связи с сервером. Проверьте интернет                | Повторить        |
-| Поиск без результата | Нет                  | Никого не нашли. Проверьте написание                    | Нет              |
+## Punctuation and numbers
 
-## Подсказка у термина
+- Curly quotes and apostrophes: “Archive”, can’t. Straight quotes look like code.
+- No em dashes in UI copy: use a comma or a period. A numeric range takes an unspaced en dash: 10–20, Mon–Fri.
+- A non-breaking space between a number and its unit: 10 MB, 5 min. Percent and currency follow English convention: 40%, $1,200.
+- Numbers that are compared or that change get tabular figures, see [typography.md](typography.md).
+- Plurals are a function: 1 customer, 2 customers. The template "customers: 2" reads as a brush-off.
 
-Иконка с подсказкой стоит только у неочевидного термина, сокращения или счёта. У понятного слова она шум, а «на всякий случай» обесценивает все остальные подсказки.
+## Templates
 
-Формат: название и одно-два предложения, что это и как считается. Без «Данный показатель отображает».
+| Situation                | Title                 | Text                                                        | Button           |
+| ------------------------ | --------------------- | ----------------------------------------------------------- | ---------------- |
+| Nothing yet              | No campaigns yet      | A campaign writes to all your customers at once             | Create campaign  |
+| Needs connecting         | Connect your register | Payments start counting as soon as it’s connected           | Connect register |
+| Not arrived yet          | No sales yet          | They appear after the first sync, usually within 10 minutes | None             |
+| Empty because of filters | Nothing found         | No orders match these filters                               | Reset filters    |
+| All done                 | All tasks done        | New ones will appear here                                   | None             |
+| Deletion                 | Delete {name}?        | {What disappears, with numbers}. This can’t be undone       | Delete {object}  |
+| Success toast            | Saved                 | Notification settings updated                               | None             |
+| Toast with undo          | Campaign archived     | You can restore it within 30 days                           | Undo             |
+| Error toast              | Couldn’t save         | No connection to the server. Check your internet            | Retry            |
+| Search with no results   | None                  | No one found. Check the spelling                            | None             |
 
-> **Средний чек.** Доход, делённый на число продаж. Показывает, сколько в среднем приносит одна покупка.
+## A hint on a term
 
-## Признаки слопа
+An icon with a tooltip goes only on a non-obvious term, an abbreviation or a calculation. On an obvious word it is noise, and adding one "just in case" devalues every other hint.
 
-| Признак               | Пример                                               | Как надо                                               |
-| --------------------- | ---------------------------------------------------- | ------------------------------------------------------ |
-| Реклама вместо факта  | Мощный, удобный, интуитивный, бесшовный, в один клик | Факт, по которому читатель сам сделает вывод           |
-| Раздутая значимость   | Играет ключевую роль, открывает новые возможности    | Что конкретно происходит                               |
-| «Не просто X, а Y»    | Не просто подсказки, а настоящий помощник            | Два простых утверждения                                |
-| Хвостовое отрицание   | Без лишних кликов, никакой рутины                    | Убрать                                                 |
-| Канцелярит            | Является, осуществляет, данный, в рамках, позволяет  | Глагол прямо, действующее лицо видно                   |
-| Деепричастный хвост   | ..., обеспечивая прозрачность                        | Отрезать или сделать отдельным фактом                  |
-| Тройки по привычке    | Быстро, удобно и надёжно                             | Столько пунктов, сколько есть на самом деле            |
-| Тире ради паузы       | Подключите кассу — и всё заработает                  | Запятая или точка, не больше одного тире в предложении |
-| Стаккато              | Без шаблонов. Без рутины. Только результат           | Обычное предложение                                    |
-| Риторический заход    | Представьте, Знакомо?, Секрет прост                  | Сразу сказать то, что собирались анонсировать          |
-| Объяснение интерфейса | В этом разделе вы можете, Здесь отображаются         | Убрать: экран и так это показывает                     |
-| Привязка к релизу     | Теперь можно, Мы добавили                            | Постоянный текст не знает, что было до релиза          |
-| Синонимная карусель   | Клиент, заказчик, покупатель об одном                | Одно слово на понятие                                  |
-| Сервильность          | Отличный вопрос, Надеемся, это было полезно          | Закончить на последнем полезном факте                  |
-| Выдуманная опора      | Эксперты считают, многие компании уже                | Источник или убрать                                    |
-| Кальки                | Это поможет вам, на ежедневной основе, имеет смысл   | По-русски                                              |
+Format: the name and one or two sentences on what it is and how it is calculated. No "This metric displays".
 
-В английском дополнительно: delve, seamless, robust, leverage, empower, unlock, elevate, pivotal, crucial, а также serves as вместо is, Title Case в заголовках и длинное тире вместо запятой.
+> **Average order value.** Revenue divided by the number of sales. Shows how much one purchase brings in on average.
 
-## Ложные срабатывания
+## Slop signs
 
-Скрипт ищет шаблоны и не понимает смысл. Цитаты, юридические тексты, названия функций и случаи, где слово употреблено буквально, переписывать не нужно. Тире между подлежащим и сказуемым законно: «Комиссия — 20 %».
+| Sign                        | Example                                                    | Instead                                                   |
+| --------------------------- | ---------------------------------------------------------- | --------------------------------------------------------- |
+| Advertising instead of fact | Powerful, intuitive, seamless, effortless, one-click       | A fact from which the reader draws their own conclusion   |
+| Inflated significance       | Plays a pivotal role, opens up new possibilities           | What concretely happens                                   |
+| "Not just X, but Y"         | Not just hints, but a real assistant                       | Two simple statements                                     |
+| Trailing negation           | No extra clicks, no more busywork                          | Remove                                                    |
+| Corporate filler            | Utilize, facilitate, in order to, serves as, allows you to | The verb directly, with a visible actor                   |
+| Participle tail             | ..., ensuring transparency                                 | Cut it or make it a separate fact                         |
+| Habitual triples            | Fast, simple and reliable                                  | As many items as there really are                         |
+| Dash for a pause            | Connect your register — and everything works               | A comma or a period                                       |
+| Staccato                    | No templates. No busywork. Just results                    | An ordinary sentence                                      |
+| Rhetorical opener           | Imagine, Sound familiar?, Here’s the thing                 | Say right away what you were about to announce            |
+| Explaining the interface    | In this section you can, Here you can see                  | Remove: the screen already shows it                       |
+| Release anchoring           | Now you can, We’ve added, New feature                      | Permanent text does not know what came before the release |
+| Synonym carousel            | Client, customer, buyer for the same thing                 | One word per concept                                      |
+| Servility                   | Great question, Hope this helps                            | End on the last useful fact                               |
+| Invented authority          | Experts agree, many companies already                      | A source, or remove it                                    |
+| AI vocabulary               | Delve, leverage, robust, empower, unlock, elevate, crucial | Plain words                                               |
+| Title Case                  | Manage Your Team Settings                                  | Sentence case                                             |
+
+## If the interface is in Russian
+
+- Address the person as «вы» in lowercase.
+- Typography: guillemets «», ё, non-breaking spaces in numbers, plural forms and name inflection, see [typography.md](typography.md#if-the-interface-is-in-russian).
+- Button and template rules are the same: «Выгрузить 3 клиента», never «ОК», «Да», «Подтвердить», «Отправить данные». Jargon: «синхронизация», not «sync»; «данные», not «payload».
+- Russian slop, by the same signs:
+
+| Sign                        | Russian example                                                              |
+| --------------------------- | ---------------------------------------------------------------------------- |
+| Advertising instead of fact | Мощный, удобный, интуитивный, бесшовный, в один клик                         |
+| Inflated significance       | Играет ключевую роль, открывает новые возможности                            |
+| "Not just X, but Y"         | Не просто подсказки, а настоящий помощник                                    |
+| Trailing negation           | Без лишних кликов, никакой рутины                                            |
+| Corporate filler            | Является, осуществляет, данный, в рамках, позволяет                          |
+| Participle tail             | ..., обеспечивая прозрачность                                                |
+| Dash for a pause            | Подключите кассу — и всё заработает (no more than one dash per sentence)     |
+| Rhetorical opener           | Представьте, Знакомо?, Секрет прост                                          |
+| Explaining the interface    | В этом разделе вы можете, Здесь отображаются                                 |
+| Release anchoring           | Теперь можно, Мы добавили                                                    |
+| Servility                   | Отличный вопрос, Надеемся, это было полезно                                  |
+| Invented authority          | Эксперты считают, многие компании уже                                        |
+| Calques                     | Это поможет вам, на ежедневной основе, имеет смысл: write it the Russian way |
+
+## False positives
+
+The script looks for patterns and does not understand meaning. Quotes, legal text, feature names and cases where a word is used literally do not need rewriting. An unspaced en dash in a range (Mon–Fri, 10–20) is correct. In Russian, a dash between subject and predicate is legitimate: «Комиссия — 20 %».

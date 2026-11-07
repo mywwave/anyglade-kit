@@ -25,14 +25,14 @@ const stopStep = (step: PlanStep): PlanStep => ({
 function settle(part: Part): Part {
   switch (part.type) {
     case "reasoning":
-      return { ...part, label: "Остановлено", isStreaming: false };
+      return { ...part, label: "Stopped", isStreaming: false };
     case "run":
-      return { ...part, summary: "Остановлено", steps: part.steps.map(stopStep) };
+      return { ...part, summary: "Stopped", steps: part.steps.map(stopStep) };
     case "plan":
       return { ...part, steps: part.steps.map(stopStep) };
     case "tool":
       return part.status === "running" || part.status === "waiting"
-        ? { ...part, status: "failed", output: `{ "reason": "остановлено" }` }
+        ? { ...part, status: "failed", output: `{ "reason": "stopped" }` }
         : part;
     case "code":
     case "text":

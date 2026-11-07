@@ -10,15 +10,15 @@ import {
 } from "@anyglade/kit";
 import { AreaChart, BarChart } from "@anyglade/kit/charts";
 import { useState } from "react";
-import { formatRubles } from "../blocks/format.ts";
+import { formatMoney } from "../blocks/format.ts";
 import { activityByWeekday, dealsByMonth, managers, pipelineByWeek, weekdays } from "./data.ts";
 
 type Manager = (typeof managers)[number];
 type Period = "quarter" | "half";
 
 const periods: { id: Period; label: string }[] = [
-  { id: "quarter", label: "3 месяца" },
-  { id: "half", label: "6 месяцев" },
+  { id: "quarter", label: "3 months" },
+  { id: "half", label: "6 months" },
 ];
 
 const managerAccessors: SortAccessors<Manager> = {
@@ -47,36 +47,36 @@ export function Analytics() {
     <Box flexDirection="column" gap="3xl">
       <Box alignItems="center" justifyContent="between" flexWrap="wrap" gap="m">
         <Text as="h1" variant="heading-xs" weight="medium">
-          Аналитика
+          Analytics
         </Text>
-        <SegmentedControl label="Период" options={periods} value={period} onChange={setPeriod} />
+        <SegmentedControl label="Period" options={periods} value={period} onChange={setPeriod} />
       </Box>
       <Box display="grid" gridTemplateColumns={twoColumns} gap="2xl">
         <Box flexDirection="column" gap="l" minWidth={0}>
           <Text as="h2" variant="heading-xxs">
-            Исход сделок
+            Deal outcomes
           </Text>
           <BarChart
             stacked
             data={dealsByMonth.slice(span)}
-            label="Выигранные и проигранные сделки по месяцам"
+            label="Won and lost deals by month"
             series={[
-              { dataKey: "won", label: "Выиграно" },
-              { dataKey: "lost", label: "Проиграно" },
+              { dataKey: "won", label: "Won" },
+              { dataKey: "lost", label: "Lost" },
             ]}
             xKey="month"
           />
         </Box>
         <Box flexDirection="column" gap="l" minWidth={0}>
           <Text as="h2" variant="heading-xxs">
-            Входящие заявки
+            Inbound leads
           </Text>
           <AreaChart
             data={pipelineByWeek.slice(span)}
-            label="Входящие и квалифицированные заявки по неделям"
+            label="Inbound and qualified leads by week"
             series={[
-              { dataKey: "qualified", label: "Квалифицировано" },
-              { dataKey: "incoming", label: "Остальные" },
+              { dataKey: "qualified", label: "Qualified" },
+              { dataKey: "incoming", label: "Other" },
             ]}
             xKey="week"
           />
@@ -85,21 +85,17 @@ export function Analytics() {
       <Box display="grid" gridTemplateColumns={twoColumns} gap="2xl">
         <Box flexDirection="column" gap="l" minWidth={0}>
           <Text as="h2" variant="heading-xxs">
-            Менеджеры
+            Sales reps
           </Text>
           <Table>
             <Table.ScrollContainer>
-              <Table.Content
-                aria-label="Результаты менеджеров"
-                className="min-w-100"
-                {...tableProps}
-              >
+              <Table.Content aria-label="Sales rep results" className="min-w-100" {...tableProps}>
                 <Table.Header>
                   <SortableColumn isRowHeader id="name">
-                    Менеджер
+                    Rep
                   </SortableColumn>
-                  <SortableColumn id="won">Выиграно</SortableColumn>
-                  <SortableColumn id="conversion">Конверсия</SortableColumn>
+                  <SortableColumn id="won">Won</SortableColumn>
+                  <SortableColumn id="conversion">Conversion</SortableColumn>
                 </Table.Header>
                 <Table.Body>
                   {sorted.map((manager) => (
@@ -119,7 +115,7 @@ export function Analytics() {
                       </Table.Cell>
                       <Table.Cell>
                         <Text as="span" tabularNums>
-                          {formatRubles(manager.won)}
+                          {formatMoney(manager.won)}
                         </Text>
                       </Table.Cell>
                       <Table.Cell>
@@ -136,12 +132,12 @@ export function Analytics() {
         </Box>
         <Box flexDirection="column" gap="l" minWidth={0}>
           <Text as="h2" variant="heading-xxs">
-            Активность команды
+            Team activity
           </Text>
           <Box
             as="figure"
             margin="none"
-            aria-label="Активность команды по дням недели за шесть недель"
+            aria-label="Team activity by weekday over six weeks"
             display="grid"
             gridTemplateColumns="repeat(7, minmax(0, 1fr))"
             gap="xs"

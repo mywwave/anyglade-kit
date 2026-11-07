@@ -1,30 +1,26 @@
 import { Box, Masonry, MasonryTile, Stat, Text } from "@anyglade/kit";
-import { formatRubles } from "../../blocks/format.ts";
+import { formatMoney } from "../../blocks/format.ts";
 
 export function MasonryDemo() {
   return (
     <Box display="block" width="100%">
       <Masonry>
-        <MasonryTile note="Неделя" title="Выручка">
-          <Stat
-            label="За 7 дней"
-            value={formatRubles(438200)}
-            note={"На 4 % больше прошлой недели"}
-          />
+        <MasonryTile note="Week" title="Revenue">
+          <Stat label="Last 7 days" value={formatMoney(43820)} note="Up 4% from last week" />
         </MasonryTile>
-        <MasonryTile title="Короткая плитка">
-          <Text color="muted">Высота плитки идёт за содержимым</Text>
+        <MasonryTile title="Short tile">
+          <Text color="muted">Tile height follows its content</Text>
         </MasonryTile>
-        <MasonryTile note="Сегодня" title="Новые клиенты">
+        <MasonryTile note="Today" title="New customers">
           <Box flexDirection="column" alignItems="center" gap="xs">
             <Text as="p" variant="heading-xl" tabularNums>
               24
             </Text>
-            <Text color="muted">из них 9 по рекомендации</Text>
+            <Text color="muted">9 of them from referrals</Text>
           </Box>
         </MasonryTile>
-        <MasonryTile title="Без подписи справа">
-          <Text color="muted">Колонки заполняются сверху вниз</Text>
+        <MasonryTile title="No side note">
+          <Text color="muted">Columns fill from top to bottom</Text>
         </MasonryTile>
       </Masonry>
     </Box>

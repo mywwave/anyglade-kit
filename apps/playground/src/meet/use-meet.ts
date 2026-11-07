@@ -207,9 +207,9 @@ export function useMeet() {
       ...all,
       [channelId]: (all[channelId] ?? []).map((member) => ({ ...member, isMuted: true })),
     }));
-    const toastId = toast("Микрофоны выключены у всех", {
+    const toastId = toast("Everyone is muted", {
       actionProps: {
-        children: "Вернуть",
+        children: "Undo",
         onPress: () => {
           setMembers((all) => ({ ...all, [channelId]: before }));
           toast.close(toastId);
@@ -244,7 +244,7 @@ export function useMeet() {
 
   function requestAccess(channelId: string) {
     setRequested((list) => [...list, channelId]);
-    toast("Запрос отправлен организатору");
+    toast("Request sent to the organizer");
   }
 
   function createSpace(name: string) {
@@ -253,13 +253,13 @@ export function useMeet() {
       id: crypto.randomUUID(),
       spaceId: id,
       kind: "voice",
-      name: "Созвон",
+      name: "Call",
       organizerId: ME,
     };
     setSpaces((list) => [...list, { id, name, icon: newSpaceIcon }]);
     setChannels((list) => [
       ...list,
-      { id: crypto.randomUUID(), spaceId: id, kind: "text", name: "общий", unread: 0 },
+      { id: crypto.randomUUID(), spaceId: id, kind: "text", name: "general", unread: 0 },
       voice,
     ]);
     return { spaceId: id, channelId: voice.id };

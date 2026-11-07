@@ -17,27 +17,27 @@ interface Card {
 const CARDS: readonly Card[] = [
   {
     id: "salary",
-    name: "Зарплатная",
+    name: "Payroll",
     last: "4417",
-    holder: "VERA SOKOLOVA",
+    holder: "VERA COLE",
     expires: "12/29",
-    network: "МИР",
+    network: "Mastercard",
     surface: "inverse",
   },
   {
     id: "business",
-    name: "Бизнес",
+    name: "Business",
     last: "1185",
-    holder: "VERA SOKOLOVA",
+    holder: "VERA COLE",
     expires: "10/28",
-    network: "МИР",
+    network: "VISA",
     surface: "emphasis",
   },
   {
     id: "credit",
-    name: "Кредитная",
+    name: "Credit",
     last: "9032",
-    holder: "VERA SOKOLOVA",
+    holder: "VERA COLE",
     expires: "11/30",
     network: "VISA",
     surface: "panel",
@@ -162,7 +162,7 @@ function CardFace({ card, isPrimary }: { card: Card; isPrimary: boolean }) {
         {isPrimary ? (
           <Box alignItems="center" gap="xs" motion="pop">
             <Check height={12} width={12} />
-            <Text variant="label">Основная</Text>
+            <Text variant="label">Primary</Text>
           </Box>
         ) : null}
       </Box>
@@ -471,7 +471,7 @@ export function CardStackBlock() {
         <Box alignItems="center" gap="xs">
           <Button
             isIconOnly
-            aria-label="Предыдущая"
+            aria-label="Previous card"
             size="sm"
             variant="ghost"
             onPress={() => bringFromBack(-1)}
@@ -484,11 +484,11 @@ export function CardStackBlock() {
             variant="secondary"
             onPress={() => setPrimaryId(front.id)}
           >
-            Сделать основной
+            Make primary
           </Button>
           <Button
             isIconOnly
-            aria-label="Следующая"
+            aria-label="Next card"
             size="sm"
             variant="ghost"
             onPress={() => sendToBack(-1, LEAVE)}
@@ -497,11 +497,11 @@ export function CardStackBlock() {
           </Button>
         </Box>
         <Text variant="caption" color="muted" tabularNums>
-          Списывать с <TextSwap text={`•• ${primary.last}`} />
+          Pay with <TextSwap text={`•• ${primary.last}`} />
         </Text>
       </Box>
     </Box>
   );
 }
 
-CardStackBlock.displayName = "Карты";
+CardStackBlock.displayName = "Cards";

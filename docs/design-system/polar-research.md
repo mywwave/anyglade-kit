@@ -1,128 +1,128 @@
-# Исследование Polar
+# Polar research
 
-Источники: polar.sh (браузер, вычисленные стили, JS-чанки) и открытый репозиторий polarsource/polar, лицензия Apache-2.0.
+Sources: polar.sh (browser, computed styles, JS chunks) and the open repository polarsource/polar, Apache-2.0 license.
 
-## Правовые границы
+## Legal boundaries
 
-- Код и токены Orbit можно использовать с сохранением уведомления Apache-2.0.
-- PP Neue Montreal — коммерческий шрифт Pangram Pangram. Не копировать, даже если файл лежит в их репозитории.
-- Логотип, название и фирменный стиль Polar не использовать.
+- Orbit code and tokens can be used as long as the Apache-2.0 notice is kept.
+- PP Neue Montreal is a commercial font by Pangram Pangram. Do not copy it, even if the file sits in their repository.
+- Do not use the Polar logo, name or brand identity.
 
-## Архитектура
+## Architecture
 
-- Next.js + Turbopack, тёмная тема по умолчанию (`html.dark`, `color-scheme: dark`).
-- Orbit: `clients/packages/orbit`, документация `clients/apps/orbit`. StyleX, Radix, MUI Icons + lucide, motion.
-- Параллельно живут Tailwind v4 и shadcn-токены (`--background`, `--primary`…) как легаси.
-- ADR-0004: UI пишется через `<Box>` и `<Text>` с типизированными токенами. Сырой `<div>` с Tailwind запрещён.
-- Правила закреплены кастомными oxlint-правилами в CI: `no-classname-box`, `no-style-box`, `no-classname-text`.
+- Next.js + Turbopack, dark theme by default (`html.dark`, `color-scheme: dark`).
+- Orbit: `clients/packages/orbit`, documentation in `clients/apps/orbit`. StyleX, Radix, MUI Icons + lucide, motion.
+- Tailwind v4 and shadcn tokens (`--background`, `--primary`…) live alongside as legacy.
+- ADR-0004: UI is written with `<Box>` and `<Text>` with typed tokens. A raw `<div>` with Tailwind is forbidden.
+- The rules are enforced by custom oxlint rules in CI: `no-classname-box`, `no-style-box`, `no-classname-text`.
 
-## Принципы (по приоритету)
+## Principles (by priority)
 
-1. Design by subtraction. Убирать, пока не останется необходимое, затем убрать ещё одно.
-2. Derived, not decorated. Всё выводится из правила, а не из вкуса.
-3. Precision as respect. Неточность читается как непонимание мира пользователя.
+1. Design by subtraction. Remove until only what is necessary remains, then remove one more thing.
+2. Derived, not decorated. Everything follows from a rule, not from taste.
+3. Precision as respect. Imprecision reads as not understanding the user's world.
 
-Продукт: данные и есть дизайн, плотность с ясностью, все состояния первичны, скорость как ценность.
+Product: the data is the design, density with clarity, all states are first-class, speed as a value.
 
-Движение: подчиняется физике, ничего не пружинит. Элементы собираются, линии рисуются, числа считаются.
+Motion: obeys physics, nothing springs. Elements assemble, lines draw, numbers count.
 
-## Токены
+## Tokens
 
-Два уровня: Tier 1 — значения (`value.stylex.ts`), Tier 2 — решения (`semantics.stylex.ts`). Компоненты используют только Tier 2.
+Two tiers: Tier 1 holds values (`value.stylex.ts`), Tier 2 holds decisions (`semantics.stylex.ts`). Components use only Tier 2.
 
-Нейтрали тёмной темы (`polar`): 50 `#d9d9d9`, 100 `#c9c9c9`, 200 `#adadad`, 300 `#9e9e9e`, 400 `#858585`, 500 `#757575`, 600 `#292929`, 700 `#212121`, 800 `#181818`, 900 `#111`, 950 `#090909`. Шкала чисто серая, с разрывом между 500 и 600: нет средних серых.
+Dark theme neutrals (`polar`): 50 `#d9d9d9`, 100 `#c9c9c9`, 200 `#adadad`, 300 `#9e9e9e`, 400 `#858585`, 500 `#757575`, 600 `#292929`, 700 `#212121`, 800 `#181818`, 900 `#111`, 950 `#090909`. The scale is pure gray, with a gap between 500 and 600: there are no mid grays.
 
-Фон: `background-primary` white/polar950, `background-secondary` gray50/polar900, `background-card` gray100/polar800, `background-inverse` gray900/white.
+Background: `background-primary` white/polar950, `background-secondary` gray50/polar900, `background-card` gray100/polar800, `background-inverse` gray900/white.
 
-Текст: `text-primary` black/white, `text-secondary` gray500/polar400, `text-tertiary` gray400/polar500, `text-disabled` gray300/polar600.
+Text: `text-primary` black/white, `text-secondary` gray500/polar400, `text-tertiary` gray400/polar500, `text-disabled` gray300/polar600.
 
-Границы: `border-primary` gray200/polar700, `border-secondary` gray100/polar800.
+Borders: `border-primary` gray200/polar700, `border-secondary` gray100/polar800.
 
-Статусы: emerald, red, amber, indigo (шкала Tailwind в oklch).
+Statuses: emerald, red, amber, indigo (the Tailwind scale in oklch).
 
-Отступы: none 0, xs 4, s 8, m 12, l 16, xl 24, 2xl 32, 3xl 48, 4xl 64, 5xl 96.
+Spacing: none 0, xs 4, s 8, m 12, l 16, xl 24, 2xl 32, 3xl 48, 4xl 64, 5xl 96.
 
-Радиусы: none 0, s 8, m 12, l 16, xl 32, full.
+Radii: none 0, s 8, m 12, l 16, xl 32, full.
 
-Шрифт: 12, 14, 16, 18, 20, 24, 30, 36, 48, 60, 72, 96. Веса 300, 350, 400, 500, 600. Высота строки 1, 1.25, 1.375, 1.5, 1.625. Трекинг -0.02em, 0, 0.025em.
+Font: 12, 14, 16, 18, 20, 24, 30, 36, 48, 60, 72, 96. Weights 300, 350, 400, 500, 600. Line height 1, 1.25, 1.375, 1.5, 1.625. Tracking -0.02em, 0, 0.025em.
 
-Роли текста: `default` 14, `title` 14/500, `body` 16, `label` 12/500, `caption` 12, `heading-xxs` 18→20, `heading-xs` 20→24, `heading-s` 24→30, `heading-m` 30→36, `heading-l` 36→48, `heading-xl` 48→72, `heading-2xl` 60→96. Заголовки веса 400.
+Text roles: `default` 14, `title` 14/500, `body` 16, `label` 12/500, `caption` 12, `heading-xxs` 18→20, `heading-xs` 20→24, `heading-s` 24→30, `heading-m` 30→36, `heading-l` 36→48, `heading-xl` 48→72, `heading-2xl` 60→96. Headings use weight 400.
 
-Тени: s `0 1px 2px #0000000d`, m/l/xl — мягкое свечение без смещения (`0 0 15px #0000000a, 0 0 2px #0000000f`).
+Shadows: s `0 1px 2px #0000000d`, m/l/xl are a soft glow without offset (`0 0 15px #0000000a, 0 0 2px #0000000f`).
 
-Движение: длительности 0, 120, 200, 320, 480 мс. Кривые: standard `(0.2, 0, 0, 1)`, decelerate `(0, 0, 0, 1)`, accelerate `(0.3, 0, 1, 1)`, spring `(0.5, 1.25, 0.4, 1)`. Пресеты: slide на 12px за 300 мс, fade 200/150, scale от 0.95.
+Motion: durations 0, 120, 200, 320, 480 ms. Curves: standard `(0.2, 0, 0, 1)`, decelerate `(0, 0, 0, 1)`, accelerate `(0.3, 0, 1, 1)`, spring `(0.5, 1.25, 0.4, 1)`. Presets: slide by 12px over 300 ms, fade 200/150, scale from 0.95.
 
-Брейкпоинты: 640, 768, 1024, 1280.
+Breakpoints: 640, 768, 1024, 1280.
 
-## Методология Orbit
+## Orbit methodology
 
-- Токен называет решение, а не значение: `background-card`, а не `gray-100`. Значение — следствие решения.
-- «Docs are a suggestion. CI is a contract.» Правило, не закреплённое в линтере, считается несуществующим.
-- Закрытая стилизация: у `Alert`, `Status` нет `className`. Вариант сам выбирает иконку и цвет.
-- `Box`: полиморфный, `display: flex` по умолчанию, пропсы принимают только имена токенов, объект `{ base, md, hover }` для адаптива и состояний.
-- `Text`: роль определяет размер, шрифт и тег. Перенос встроен: заголовки `balance`, текст `pretty`. Есть `formatter`, `tabularNums`, `truncate`, `loading` со скелетоном.
-- Иконки только через одну точку входа. Страница документации считает использование каждой иконки.
-- Документация — приложение с живыми примерами и ссылками на исходник: Foundations (Colors, Spacing, Radius, Shadows, Motion, Typography, Icons) и 22 компонента.
-- Осознанные слабые места: `Button`, `Input`, `Pill` всё ещё на Tailwind с `dark:`; `spring` в токенах противоречит принципу «ничего не пружинит».
+- A token names a decision, not a value: `background-card`, not `gray-100`. The value follows from the decision.
+- "Docs are a suggestion. CI is a contract." A rule not enforced by the linter is treated as nonexistent.
+- Closed styling: `Alert` and `Status` have no `className`. The variant picks the icon and color itself.
+- `Box`: polymorphic, `display: flex` by default, props accept only token names, a `{ base, md, hover }` object for responsiveness and states.
+- `Text`: the role sets size, font and tag. Wrapping is built in: headings `balance`, text `pretty`. It has `formatter`, `tabularNums`, `truncate`, `loading` with a skeleton.
+- Icons come through a single entry point only. The documentation page counts the usage of every icon.
+- The documentation is an app with live examples and links to the source: Foundations (Colors, Spacing, Radius, Shadows, Motion, Typography, Icons) and 22 components.
+- Known weak spots: `Button`, `Input`, `Pill` are still on Tailwind with `dark:`; `spring` in the tokens contradicts the "nothing springs" principle.
 
-## Спецификации компонентов
+## Component specifications
 
-- Button: пилюля, `font-display`, вес 550, трекинг 0.01em. Размеры sm h-32 px-12 12px, default h-40 px-20 14px, lg h-48 px-20 14px, icon квадрат. Варианты default (инверсия, hover opacity .85 за 100 мс), secondary, outline, ghost, underline, link, destructive. `loading` сохраняет ширину: контент невидим, спиннер по центру.
-- Input: h-40, радиус 12, фокус рамкой blue-300 и кольцом 3px, слоты pre/post, base на мобильном и sm на десктопе против зума iOS.
-- Pill: пилюля, px-6 py-2, 12px/500, цвет обязателен.
-- Status: радиус 0.5em, отступы в em, закрытая стилизация.
-- SegmentedControl: контейнер-пилюля p-4, активный сегмент на приподнятой поверхности с тенью, варианты default и tabs.
-- Modal: появление scale .99 → 1 за 100 мс, внешний радиус 24 с отступом 4, внутренний 20, подложка black/70.
-- Alert: сетка `auto 1fr auto`, радиус 12, фон secondary, цветная только иконка.
-- ListGroup: рамка-кольцо радиус 16, элементы через border-top, p-20.
+- Button: pill, `font-display`, weight 550, tracking 0.01em. Sizes sm h-32 px-12 12px, default h-40 px-20 14px, lg h-48 px-20 14px, icon square. Variants default (inverse, hover opacity .85 over 100 ms), secondary, outline, ghost, underline, link, destructive. `loading` keeps the width: the content is invisible, the spinner is centered.
+- Input: h-40, radius 12, focus shown by a blue-300 border and a 3px ring, pre/post slots, base on mobile and sm on desktop against iOS zoom.
+- Pill: pill, px-6 py-2, 12px/500, color is required.
+- Status: radius 0.5em, padding in em, closed styling.
+- SegmentedControl: pill container p-4, the active segment on a raised surface with a shadow, default and tabs variants.
+- Modal: appears with scale .99 → 1 over 100 ms, outer radius 24 with 4 padding, inner 20, backdrop black/70.
+- Alert: `auto 1fr auto` grid, radius 12, secondary background, only the icon is colored.
+- ListGroup: ring frame radius 16, items separated by border-top, p-20.
 
-## Реальное использование во фронтенде Polar
+## Real usage in the Polar frontend
 
-Статистика по 1138 файлам `clients/apps/web`, `packages/ui`, `packages/checkout`.
+Statistics over 1138 files in `clients/apps/web`, `packages/ui`, `packages/checkout`.
 
-Компоненты Orbit по частоте импорта: Box 380, Text 313, Button 302, иконки 266, Input 93, Grid 58, Select 53, Alert 47, InlineModal 42, Status 42, DataTable 41, Avatar 38, Tooltip 26, Modal 22, Switch 19, List 18, Spinner 17, Pill 16, TextArea 15, Checkbox 14, SegmentedControl 11, Tabs 10.
+Orbit components by import frequency: Box 380, Text 313, Button 302, icons 266, Input 93, Grid 58, Select 53, Alert 47, InlineModal 42, Status 42, DataTable 41, Avatar 38, Tooltip 26, Modal 22, Switch 19, List 18, Spinner 17, Pill 16, TextArea 15, Checkbox 14, SegmentedControl 11, Tabs 10.
 
-Из `@polar-sh/ui`: form 110 (react-hook-form), FormattedDateTime 59, dropdown-menu 27, ShadowBox 20, CopyToClipboardInput 14, popover 11, CountryPicker 10, MoneyInput 8, Combobox 6, DateTimePicker 5.
+From `@polar-sh/ui`: form 110 (react-hook-form), FormattedDateTime 59, dropdown-menu 27, ShadowBox 20, CopyToClipboardInput 14, popover 11, CountryPicker 10, MoneyInput 8, Combobox 6, DateTimePicker 5.
 
-Частота значений:
+Value frequency:
 
-- `gap`: s 274, l 244, m 190, xs 176, xl 96, 2xl 65, 3xl 44. Рабочий диапазон 4–24.
+- `gap`: s 274, l 244, m 190, xs 176, xl 96, 2xl 65, 3xl 44. Working range 4–24.
 - `padding`: xl 99, l 68, m 41, s 31, 2xl 31.
-- Фон: card 48, secondary 31, inverse 10, primary 9.
-- Граница: primary 124, secondary 18.
-- Радиус: l 54, full 26, s 26, m 25.
-- `boxShadow` в Box: 0. Тени почти не используются, глубина создаётся поверхностями.
-- Button: `secondary` 189, `ghost` 97, `destructive` 12, `outline` 7. Размер `sm` 122, `icon` 76, `lg` 33. Основная кнопка дашборда — `secondary sm`.
-- Text: `caption` 259, `body` 118, `heading-xxs` 83, `heading-xs` 62, `title` 49. Цвет `muted` 523.
-- Миграция на Box наполовину: 1642 Box против 1684 `div`.
+- Background: card 48, secondary 31, inverse 10, primary 9.
+- Border: primary 124, secondary 18.
+- Radius: l 54, full 26, s 26, m 25.
+- `boxShadow` in Box: 0. Shadows are almost unused, depth comes from surfaces.
+- Button: `secondary` 189, `ghost` 97, `destructive` 12, `outline` 7. Size `sm` 122, `icon` 76, `lg` 33. The main dashboard button is `secondary sm`.
+- Text: `caption` 259, `body` 118, `heading-xxs` 83, `heading-xs` 62, `title` 49. Color `muted` 523.
+- The migration to Box is halfway: 1642 Box against 1684 `div`.
 
-Выводы для kit: дефолтная плотность дашборда — мелкий текст, кнопки `sm`, отступы 8–16. Шкала шире реального использования, и это нормально: крупные шаги нужны маркетингу.
+Takeaways for the kit: the default dashboard density is small text, `sm` buttons, spacing 8–16. The scale is wider than real usage, and that is fine: the large steps are needed for marketing.
 
-## Паттерны экранов
+## Screen patterns
 
-- Каркас дашборда: холст gray-100/polar-950 с отступом 8. Сайдбар лежит на холсте без фона. Контент — панель с радиусом 16, границей и зазором 8 до контекстной панели.
-- Активный пункт сайдбара: поверхность панели, граница и `shadow-xs`, иконка без цвета. Неактивный — `muted`, при наведении текст темнеет.
-- Заголовок страницы: `text-2xl font-medium`, ширина контента до 1280, `pt-8`, зазор 32.
-- Master-detail: список 300–320 px и деталь, обе панели с радиусом 16, зазор 8. На мобильном одна колонка.
-- InlineModal (42 использования, вдвое чаще Modal): боковая панель 540 px справа, вход 320 мс `decelerate` со сдвигом 100%, выход 200 мс `accelerate`, подложка black/50. Правка в панели, а не в центральной модалке.
-- Section: `gap-8 p-6 md:p-12`, компактный вариант `gap-6 p-6 md:p-8`, заголовок `text-lg font-medium`, описание `muted`.
-- DetailRow: подпись `muted` и значение в двух равных колонках, пустое значение показывается как `—`, действие появляется при наведении, на мобильном колонка.
-- StatisticCard: подпись `muted`, значение `font-mono`, размеры sm и lg.
-- EmptyState: рамка `border-primary`, радиус 12, `padding 3xl`, иконка, заголовок `body`, описание `muted`, действия. Пустой результат фильтра проще: без рамки, кнопка `secondary sm` «Clear filters».
-- DataTable: рамка радиус 16, шапка на фоне secondary, `table-fixed`, ручные сортировка и пагинация, зазор 24 до пагинации, выделение строк чекбоксом, загрузка отдельной строкой.
-- Формы: react-hook-form, `space-y-2` внутри поля, ошибка `text-destructive text-sm font-medium`, связка через `aria-describedby`.
-- Графики: Recharts, синхронизация курсора между графиками одной группы.
-- Правка контента на странице через `ShadowBox`: фон gray-50/polar-900, радиус 12, на больших экранах 32, `p-8`.
-- Форматирование: `FormattedDateTime` и деньги — отдельные компоненты, а не утилиты.
+- Dashboard shell: a gray-100/polar-950 canvas with 8 padding. The sidebar sits on the canvas without a background. The content is a panel with radius 16, a border and an 8 gap to the context panel.
+- Active sidebar item: the panel surface, a border and `shadow-xs`, the icon without color. Inactive items are `muted`, the text darkens on hover.
+- Page header: `text-2xl font-medium`, content width up to 1280, `pt-8`, gap 32.
+- Master-detail: a 300–320 px list and a detail view, both panels with radius 16, gap 8. One column on mobile.
+- InlineModal (42 uses, twice as often as Modal): a 540 px side panel on the right, enters over 320 ms with `decelerate` and a 100% shift, exits over 200 ms with `accelerate`, backdrop black/50. Editing happens in a panel, not in a centered modal.
+- Section: `gap-8 p-6 md:p-12`, compact variant `gap-6 p-6 md:p-8`, heading `text-lg font-medium`, description `muted`.
+- DetailRow: a `muted` label and a value in two equal columns, an empty value shows as `—`, the action appears on hover, a column on mobile.
+- StatisticCard: a `muted` label, a `font-mono` value, sizes sm and lg.
+- EmptyState: a `border-primary` frame, radius 12, `padding 3xl`, an icon, a `body` heading, a `muted` description, actions. An empty filter result is simpler: no frame, a `secondary sm` button "Clear filters".
+- DataTable: a frame with radius 16, the header on the secondary background, `table-fixed`, manual sorting and pagination, a 24 gap before pagination, row selection with a checkbox, loading as a separate row.
+- Forms: react-hook-form, `space-y-2` inside a field, error `text-destructive text-sm font-medium`, linked through `aria-describedby`.
+- Charts: Recharts, cursor sync between charts of one group.
+- In-page content editing through `ShadowBox`: gray-50/polar-900 background, radius 12, 32 on large screens, `p-8`.
+- Formatting: `FormattedDateTime` and money are separate components, not utilities.
 
-## Наблюдения на странице
+## Observations on the page
 
-- Вложенная рамка: внешний контейнер с границей и полосой заголовка, отступ 4, внутри плитки на другой поверхности. Единый приём для карточек продукта, тарифов и модалок.
-- Глубина строится контрастом поверхностей, тени на тёмной теме почти не используются.
+- Nested frame: an outer container with a border and a header strip, 4 padding, tiles on another surface inside. One technique for product cards, pricing plans and modals.
+- Depth is built by surface contrast, shadows are almost unused in the dark theme.
 
-- Основной вес текста 450, кнопки 550, заголовки 400.
-- Двухтоновые заголовки: первая часть белая, вторая серая.
-- Цифры: `font-feature-settings: "liga" 0, "ss07", "ss08"`, Geist Mono для технических значений.
-- Радиусы: 12 и 16 у карточек, пилюля у кнопок и инпутов.
-- Границы 1px `#212121` и `#181818`, разделители вместо теней.
-- Основные переходы 120 мс ease, смена состояния 75–150 мс.
+- The main text weight is 450, buttons 550, headings 400.
+- Two-tone headings: the first part white, the second gray.
+- Numbers: `font-feature-settings: "liga" 0, "ss07", "ss08"`, Geist Mono for technical values.
+- Radii: 12 and 16 on cards, pill on buttons and inputs.
+- 1px borders `#212121` and `#181818`, dividers instead of shadows.
+- Main transitions 120 ms ease, state changes 75–150 ms.

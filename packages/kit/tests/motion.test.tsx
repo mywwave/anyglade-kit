@@ -11,15 +11,15 @@ import {
 } from "../src/index.ts";
 
 test("Button stays free of a loader until work has run long enough", () => {
-  const html = renderToStaticMarkup(<Button isPending>Сохранить</Button>);
+  const html = renderToStaticMarkup(<Button isPending>Save</Button>);
 
-  expect(html).toContain("Сохранить");
+  expect(html).toContain("Save");
   expect(html).toContain('data-pending="true"');
   expect(html).not.toContain("data-loading");
 });
 
 test("Button keeps the compound API of HeroUI", () => {
-  expect(renderToStaticMarkup(<Button.Root>Открыть</Button.Root>)).toContain("Открыть");
+  expect(renderToStaticMarkup(<Button.Root>Open</Button.Root>)).toContain("Open");
 });
 
 test("Loadable waits before showing the skeleton and fades the content in", () => {
@@ -40,33 +40,31 @@ test("Loadable waits before showing the skeleton and fades the content in", () =
 });
 
 test("CopyButton hides its label unless asked and always names itself", () => {
-  const icon = renderToStaticMarkup(
-    <CopyButton copiedLabel="Готово" label="Копировать" value="a" />,
-  );
+  const icon = renderToStaticMarkup(<CopyButton copiedLabel="Copied" label="Copy" value="a" />);
   const labelled = renderToStaticMarkup(
-    <CopyButton isLabelVisible copiedLabel="Готово" label="Копировать" value="a" />,
+    <CopyButton isLabelVisible copiedLabel="Copied" label="Copy" value="a" />,
   );
 
-  expect(icon).toContain('aria-label="Копировать"');
-  expect(icon).not.toContain(">Копировать<");
-  expect(labelled).toContain("Копировать");
+  expect(icon).toContain('aria-label="Copy"');
+  expect(icon).not.toContain(">Copy<");
+  expect(labelled).toContain("Copy");
 });
 
 test("SegmentedControl renders every option and the current value", () => {
   const html = renderToStaticMarkup(
     <SegmentedControl
-      label="Период"
+      label="Period"
       options={[
-        { id: "week", label: "Неделя" },
-        { id: "year", label: "Год" },
+        { id: "week", label: "Week" },
+        { id: "year", label: "Year" },
       ]}
       value="year"
       onChange={() => undefined}
     />,
   );
 
-  expect(html).toContain("Неделя");
-  expect(html).toContain('aria-label="Период"');
+  expect(html).toContain("Week");
+  expect(html).toContain('aria-label="Period"');
   expect(html).toContain('data-selected="true"');
 });
 
@@ -75,8 +73,8 @@ const accessors = {
   total: (row: { name: string; total: number }) => row.total,
 };
 const rows = [
-  { name: "Б", total: 2 },
-  { name: "А", total: 10 },
+  { name: "B", total: 2 },
+  { name: "A", total: 10 },
 ];
 
 function SortedNames({ column, descending }: { column: string; descending: boolean }) {
@@ -88,9 +86,9 @@ function SortedNames({ column, descending }: { column: string; descending: boole
 }
 
 test("useTableSort orders text and numbers and keeps unknown columns as they are", () => {
-  expect(renderToStaticMarkup(<SortedNames column="name" descending={false} />)).toBe("АБ");
-  expect(renderToStaticMarkup(<SortedNames column="total" descending />)).toBe("АБ");
-  expect(renderToStaticMarkup(<SortedNames column="missing" descending />)).toBe("БА");
+  expect(renderToStaticMarkup(<SortedNames column="name" descending={false} />)).toBe("AB");
+  expect(renderToStaticMarkup(<SortedNames column="total" descending />)).toBe("AB");
+  expect(renderToStaticMarkup(<SortedNames column="missing" descending />)).toBe("BA");
 });
 
 test("Box maps motion presets to generated classes", () => {

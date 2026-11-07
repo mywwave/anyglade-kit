@@ -1,195 +1,195 @@
 ---
 name: block-reference
-description: Использовать ВСЕГДА, когда просят блок, секцию, экран, референс, эталон или пример для UI kit: «сделай блок», «добавь секцию», «нужен эталон экрана», «придумай лендинг / дашборд / чекаут», «переделай блоки», «сделай креативнее», «поправь Pricing». Также при оценке существующих блоков и при переносе блока в продукт. Определяет режимы, креативный шаг, файлы в apps/playground/src/blocks, законы kit, запреты шаблонного дизайна и обязательную проверку в браузере.
-argument-hint: "[блок или раздел, например «Pricing» или «новый hero для чекаута»]"
+description: Use ALWAYS when asked for a block, section, screen, reference or example for the UI kit: "make a block", "add a section", "I need a reference screen", "come up with a landing page / dashboard / checkout", "redo the blocks", "make it more creative", "fix Pricing", and the Russian phrasings «сделай блок», «добавь секцию», «нужен эталон экрана», «переделай блоки», «сделай креативнее». Also when reviewing existing blocks and when moving a block into a product. Defines the modes, the creative step, the files in apps/playground/src/blocks, the kit laws, the bans on template design and the mandatory browser check.
+argument-hint: '[block or section, for example "Pricing" or "a new hero for checkout"]'
 ---
 
-# Блоки UI kit
+# UI kit blocks
 
-Блок — живой образец в галерее `apps/playground/src/blocks`, как плитки bencho.dev. Это витрина kit: один глубоко проработанный объект (чек, карта, договор, телефон) с жестом, финальными текстами, правдоподобными данными и всеми состояниями в светлой и тёмной теме и на телефоне.
+A block is a live sample in the `apps/playground/src/blocks` gallery, like the bencho.dev tiles. It is the kit's showcase: one deeply crafted object (a receipt, a card, a contract, a phone) with a gesture, final copy, plausible data and every state in the light and dark themes and on a phone.
 
-Блок ценен, только если его не спутать с шаблоном. «Нажми кнопку, появится текст» не блок. Нужны детали объекта, многошаговое взаимодействие, приятное движение и путь назад из каждого состояния.
+A block is worth something only if it cannot be mistaken for a template. "Press the button, text appears" is not a block. It needs the details of the object, a multi-step interaction, pleasant motion and a way back from every state.
 
-Перед работой прочитайте:
+Before you start, read:
 
-- `docs/design-system/decisions.md` — принятые решения;
-- `docs/design-system/polar-research.md` — эталонные значения и паттерны;
-- `packages/kit/src/tokens.ts` и `packages/kit/README.md` — токены и API;
-- соседние файлы в `apps/playground/src/blocks` — чтобы не повторяться.
-- `.claude/skills/anyglade-design-system/references/craft.md` — уровень креативности, детализация, жест и сценарий. Блок сдаётся только на уровне «Проработано».
+- `docs/design-system/decisions.md`: decisions already made;
+- `docs/design-system/polar-research.md`: reference values and patterns;
+- `packages/kit/src/tokens.ts` and `packages/kit/README.md`: tokens and API;
+- the neighbouring files in `apps/playground/src/blocks`, so you do not repeat them;
+- `.claude/skills/anyglade-design-system/references/craft.md`: creativity level, detail, gesture and scenario. A block is handed in only at the "Crafted" level.
 
-Загрузите скилл `anti-slop`. Для маркетинга дополнительно `design-taste-frontend`, для движения `transitions-dev`.
+Load the `anti-slop` skill. For marketing also load `design-taste-frontend`, for motion `transitions-dev`.
 
-## 1. Режим
+## 1. Mode
 
-| Режим              | Когда                               | Что делать                                                                    |
-| ------------------ | ----------------------------------- | ----------------------------------------------------------------------------- |
-| A. Новый           | Блока нет                           | Создать с нуля                                                                |
-| B. Пересмотр       | «Переделай», «креативнее», «с нуля» | Писать заново, а не править старый. Функции сохранить. История остаётся в git |
-| C. Точечная правка | Назван конкретный элемент           | Менять только его, идентичность блока сохранить                               |
+| Mode            | When                                       | What to do                                                                          |
+| --------------- | ------------------------------------------ | ----------------------------------------------------------------------------------- |
+| A. New          | The block does not exist                   | Build it from scratch                                                               |
+| B. Rethink      | "Redo it", "more creative", "from scratch" | Write it anew instead of patching the old one. Keep the features. Git keeps history |
+| C. Targeted fix | A specific element is named                | Change only that, keep the block's identity                                         |
 
-Если режим неясен, спросите один раз: «пересмотреть полностью или поправить X?». На всё, на что отвечает код, отвечайте сами.
+If the mode is unclear, ask once: "rethink it fully or fix X?". Answer everything the code can answer yourself.
 
-Определите характер поверхности, он задаёт смелость:
+Decide the character of the surface, it sets how bold to be:
 
-- **Убеждение** (маркетинг, вход, тарифы): блок сам и есть дизайн. Нужна одна сильная идея, смелый масштаб, характер.
-- **Работа** (дашборд, настройки, таблицы, чекаут): смелость выражается точностью, плотностью и скоростью чтения. Эффектность здесь мешает.
+- **Persuasion** (marketing, sign-in, pricing): the block itself is the design. It needs one strong idea, bold scale, character.
+- **Work** (dashboard, settings, tables, checkout): boldness shows as precision, density and reading speed. Showiness gets in the way here.
 
-## 2. Креативный шаг (режимы A и B)
+## 2. Creative step (modes A and B)
 
-Код пишется только после этого шага.
+Code is written only after this step.
 
-1. **Зачем.** Кто смотрит, какое решение принимает, что сделает дальше. Одна фраза.
-2. **Идея.** Одна мысль, которую блок передаёт без чтения мелкого текста. Если её можно приложить к любому продукту, она слабая.
-3. **Три разных концепта.** Опишите одной строкой каждый, используя разные композиционные ходы. Первый приходящий в голову вариант считайте шаблонным и отбросьте.
-4. **Выбор.** Возьмите концепт с самой сильной идеей и скажите пользователю в одной строке, почему.
+1. **Why.** Who looks, what decision they make, what they do next. One sentence.
+2. **Idea.** One thought the block conveys without reading the small print. If it fits any product, it is weak.
+3. **Three different concepts.** One line each, using different composition moves. Treat the first option that comes to mind as a template and drop it.
+4. **Choice.** Take the concept with the strongest idea and tell the user in one line why.
 
-Композиционные ходы, из которых строится концепт:
+Composition moves a concept is built from:
 
-- **Продукт вместо иллюстрации.** Настоящий рабочий кусок интерфейса на настоящих данных занимает главное место.
-- **Масштаб как иерархия.** Одно число или фраза на `heading-2xl`, всё остальное подчинено.
-- **Контраст плотности.** Огромный воздух рядом с плотным блоком данных.
-- **Асимметрия.** Сетки 1:2, 2:3, 5:7 вместо равных колонок. Смещённая ось вместо центрирования.
-- **Инверсия.** Один участок на `background-inverse` как единственный акцент экрана.
-- **Двухтоновый заголовок.** Утверждение основным цветом, пояснение `muted`, в одном потоке.
-- **Табличная типографика.** Числа и `monospace` выстраивают композицию вместо декора.
-- **Сквозное взаимодействие.** Переключатель или ползунок меняет весь блок: цену, расчёт, график.
-- **Срез вместо целого.** Показан один живой момент: списание прошло, статус сменился, число выросло.
-- **Текст как интерфейс.** Сильная формулировка заменяет карточки преимуществ.
+- **Product instead of illustration.** A real working piece of interface on real data takes the main place.
+- **Scale as hierarchy.** One number or phrase in `heading-2xl`, everything else is subordinate.
+- **Density contrast.** Lots of air next to a dense block of data.
+- **Asymmetry.** 1:2, 2:3, 5:7 grids instead of equal columns. An offset axis instead of centring.
+- **Inversion.** One area on `background-inverse` as the only accent on the screen.
+- **Two-tone heading.** The statement in the main color, the explanation in `muted`, in one run.
+- **Tabular typography.** Numbers and `monospace` build the composition instead of decoration.
+- **End-to-end interaction.** A switch or slider changes the whole block: price, calculation, chart.
+- **A slice instead of the whole.** One live moment is shown: the charge went through, the status changed, the number grew.
+- **Text as interface.** A strong phrase replaces feature cards.
 
-Запрещённые стартовые композиции: центрированный заголовок над тремя одинаковыми карточками, сетка иконка-заголовок-текст, герой с заголовком слева и картинкой справа без идеи. Два блока подряд не должны использовать один и тот же главный ход.
+Banned starting compositions: a centred heading over three identical cards, an icon-heading-text grid, a hero with a heading on the left and a picture on the right with no idea. Two blocks in a row must not use the same main move.
 
-## 3. Индикаторы шаблонного дизайна
+## 3. Template design indicators
 
-Любой из них требует либо удаления, либо конкретного ответа, какую информацию он несёт.
+Each of them must either be removed or come with a concrete answer about what information it carries.
 
-| Индикатор                          | Правило в kit                                                                                                                                                                                    |
-| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Теги                               | `Chip` и `Badge` только для редкого состояния, требующего действия. Статус по умолчанию это текст с цветом роли. Никаких eyebrow над заголовками и пилюль «Новое»                                |
-| Слова курсивом                     | Запрещено. Акцент делается формулировкой или `muted`-контрастом                                                                                                                                  |
-| Serif и отрицательный трекинг      | Только Inter и Geist Mono. Трекинг токенный, отрицательный запрещён                                                                                                                              |
-| Чрезмерно детализированный UI      | Только то, что нужно для решения на этом экране. Иконка не у каждой подписи, нет лишних метаданных в строке. Остальное по действию                                                               |
-| Разделители                        | Структуру создают `gap`, размер и вес. `Separator` допустим только между группами разной природы в меню и в плотных таблицах                                                                     |
-| Множество оттенков и прозрачностей | Три уровня текста: `default`, `muted`, `subtle`. Поверхности только из токенов. `opacity` для цвета запрещена                                                                                    |
-| Контейнеры с границами             | Один уровень поверхности. Рамка только у полей ввода и объектов коллекции. Никаких карточек в карточках. `Frame` не больше одного на блок и только как витрина продукта                          |
-| Акцент как украшение               | Одна основная кнопка на блок, остальным `variant` указывается явно. Акцентом не красятся текст, иконки, числа, рамки и поверхности. Полные правила в разделе «Акцент» в `packages/kit/README.md` |
-| Диаграммы                          | Чем детальнее, тем хуже. Одна линия, без осей, сетки и легенды. Если мысль выражается числом или предложением, диаграмма не нужна                                                                |
-| Хлебные крошки кода                | Никаких путей файлов, `~/project $`, `01 / FEATURES` и моно-капса как украшения. `monospace` только для настоящих идентификаторов                                                                |
-| Нумерация разделов                 | Никаких «01 — Возможности». Номера только у настоящей последовательности действий                                                                                                                |
+| Indicator                   | Kit rule                                                                                                                                                                                         |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Tags                        | `Chip` and `Badge` only for a rare state that needs action. A status is text in its role color by default. No eyebrows over headings and no "New" pills                                          |
+| Italic words                | Banned. Emphasis comes from wording or `muted` contrast                                                                                                                                          |
+| Serif and negative tracking | Only Inter and Geist Mono. Tracking comes from tokens, negative tracking is banned                                                                                                               |
+| Over-detailed UI            | Only what this screen's decision needs. Not every label gets an icon, no extra metadata in a row. The rest on demand                                                                             |
+| Separators                  | Structure comes from `gap`, size and weight. `Separator` is allowed only between groups of different nature in menus and in dense tables                                                         |
+| Many shades and opacities   | Three text levels: `default`, `muted`, `subtle`. Surfaces only from tokens. `opacity` for color is banned                                                                                        |
+| Bordered containers         | One surface level. A border only on inputs and collection items. No cards in cards. At most one `Frame` per block and only as a product showcase                                                 |
+| Accent as decoration        | One primary button per block, the others set `variant` explicitly. Accent never colors text, icons, numbers, borders or surfaces. Full rules in the "Accent" section of `packages/kit/README.md` |
+| Charts                      | The more detail, the worse. One line, no axes, grid or legend. If the thought fits a number or a sentence, no chart is needed                                                                    |
+| Code breadcrumbs            | No file paths, `~/project $`, `01 / FEATURES` or mono caps as decoration. `monospace` only for real identifiers                                                                                  |
+| Section numbering           | No "01 — Features". Numbers only on a real sequence of actions                                                                                                                                   |
 
-Исключение одно: правило уступает, если элемент реально передаёт смысл, который иначе потеряется. Причину назовите пользователю.
+There is one exception: a rule gives way if the element really carries meaning that would otherwise be lost. Tell the user why.
 
-## 4. Законы kit
+## 4. Kit laws
 
-Блок состоит только из kit.
+A block is made only of the kit.
 
-- Вёрстка через `Box`, текст через `Text`. Сырых `div`, `p`, `h1` нет, их поймает линт.
-- Импорты только из `@anyglade/kit` и `@anyglade/kit/icons`. Иконку `Box` импортируйте как `Box as BoxIcon`.
-- Только токены. Новое значение добавляется в `packages/kit/src/tokens.ts`, затем `bun run generate` в `packages/kit`. CSS внутри блоков нет.
-- Новый компонент создаётся только по разделу 5.
-- Правки компонентов HeroUI только в `packages/kit/styles/components.css`. Анимации HeroUI, особенно тактильное нажатие, не отключаются.
-- Новое решение системы записывается в `docs/design-system/decisions.md`.
+- Layout with `Box`, text with `Text`. No raw `div`, `p`, `h1`, the linter catches them.
+- Imports only from `@anyglade/kit` and `@anyglade/kit/icons`. Import the `Box` icon as `Box as BoxIcon`.
+- Tokens only. A new value is added to `packages/kit/src/tokens.ts`, then `bun run generate` in `packages/kit`. No CSS inside blocks.
+- A new component is created only following section 5.
+- HeroUI component changes go only into `packages/kit/styles/components.css`. HeroUI animations, especially the tactile press, are never turned off.
+- A new system decision is recorded in `docs/design-system/decisions.md`.
 
-Размер: блок стоит в центре сцены `MasonryTile`, ширина содержимого около 300 px на компьютере и 330 на телефоне.
+Size: a block sits in the centre of a `MasonryTile` stage, content about 300 px wide on desktop and 330 on a phone.
 
-- Блок обязан выглядеть законченным в 300 px: центрируйте его через `width="100%"` и `maxWidth`.
-- Высота плитки не меняется при смене состояния, иначе прыгают соседние колонки. Место под будущее содержимое резервируйте заранее.
-- Подпись и значение должны читаться как пара. Поле ввода шире 480 px считается дефектом.
-- Жест пишет `transform` прямо в элемент через `ref`, сложное движение идёт через Web Animations. У каждого жеста есть путь с клавиатуры.
+- A block must look finished at 300 px: centre it with `width="100%"` and `maxWidth`.
+- The tile height does not change between states, otherwise neighbouring columns jump. Reserve space for future content in advance.
+- A label and its value must read as a pair. An input wider than 480 px is a defect.
+- A gesture writes `transform` straight into the element through a `ref`, complex motion goes through Web Animations. Every gesture has a keyboard path.
 
-Ловушки, на которых уже обжигались:
+Traps we have already fallen into:
 
-- `Box` по умолчанию `flex`, поэтому для обычного потока нужен `display="block"`.
-- Ряд полей строится сеткой `repeat(2, minmax(0, 1fr))`, иначе инпуты переполнят контейнер на телефоне.
-- У `Text` нет отступов, отступы задаёт родительский `Box`.
-- У `Text` цвет наследуется. Для контраста внутри `Box` используйте `color`.
-- Сетки нужно задавать через `minmax(0, 1fr)`, иначе длинный контент распирает колонку.
-- `action` у формы сбрасывает её после завершения, а `TextField` откатывает контролируемое значение. Такие формы пишутся через `onSubmit`, `useTransition` и `isPending`.
-- Концентрические радиусы: внешний равен внутреннему плюс отступ.
-- У компонентов HeroUI высокая специфичность и `min-height`. Проверяйте реальный селектор в `@heroui/styles/dist/components`.
+- `Box` is `flex` by default, so normal flow needs `display="block"`.
+- A row of fields is a `repeat(2, minmax(0, 1fr))` grid, otherwise inputs overflow the container on a phone.
+- `Text` has no margins, the parent `Box` sets spacing.
+- `Text` inherits color. For contrast inside a `Box` use `color`.
+- Grids must use `minmax(0, 1fr)`, otherwise long content stretches the column.
+- A form `action` resets the form when done, and `TextField` rolls back its controlled value. Such forms use `onSubmit`, `useTransition` and `isPending`.
+- Concentric radii: the outer one equals the inner one plus the padding.
+- HeroUI components have high specificity and `min-height`. Check the real selector in `@heroui/styles/dist/components`.
 
-## 5. Новый компонент
+## 5. New component
 
-Если идею нельзя собрать из существующего, создавайте компонент. Обходные пути запрещены: сложная вёрстка внутри блока, копипаст между блоками, стили в обход токенов.
+If the idea cannot be built from what exists, create a component. Workarounds are banned: complex layout inside a block, copy-paste between blocks, styles that bypass tokens.
 
-Сначала проверьте по порядку, что уже есть:
+First check, in order, what already exists:
 
-1. Компоненты HeroUI и их варианты в разделе «Компоненты» playground.
-2. Паттерны kit: `Frame`, `Stat`, `DetailRow`, `EmptyPanel`, `PageHeader`.
-3. Новый токен или правка в `styles/components.css`, если меняется только внешний вид.
+1. HeroUI components and their variants in the playground's Components tab.
+2. Kit patterns: `Frame`, `Stat`, `DetailRow`, `EmptyPanel`, `PageHeader`.
+3. A new token or a change in `styles/components.css`, if only the look changes.
 
-Создание нового компонента:
+Creating a new component:
 
-1. **Файл.** `packages/kit/src/<name>/<name>.tsx`, собран из `Box`, `Text` и компонентов HeroUI.
-2. **Поведение и доступность.** Интерактивность строится на HeroUI или React Aria. Клавиатура, фокус и роли не пишутся вручную.
-3. **Закрытый API.** Нет `className` и `style`. Внешний вид задают смысловые пропсы: вариант выбирает цвет и иконку, а вызывающий код не принимает визуальных решений. Названия по смыслу, а не по значению.
-4. **Состояния невозможно собрать неправильно.** Несовместимые комбинации пропсов исключаются типами.
-5. **Значения только из токенов.** Пустые слоты не рендерятся. Значение по умолчанию выбирается самое частое.
-6. **Серверные компоненты.** Без хуков и обработчиков событий компонент остаётся серверным. С ними в первой строке нужен `"use client"`.
-7. **Экспорт.** Компонент и тип пропсов экспортируются из `packages/kit/src/index.ts`. Имя не перекрывает экспорт HeroUI: проверьте это заранее, как было с `EmptyState`.
-8. **Тест.** `packages/kit/tests`: разметка, пустые слоты, ветвление по пропсам.
-9. **Демо.** `apps/playground/src/demos/<раздел>/<name>.tsx` с вариантами и состояниями.
-10. **Документация.** Строка в разделе «Паттерны» в `packages/kit/README.md`. Если появилось новое решение, запись в `docs/design-system/decisions.md`.
+1. **File.** `packages/kit/src/<name>/<name>.tsx`, built from `Box`, `Text` and HeroUI components.
+2. **Behaviour and accessibility.** Interactivity is built on HeroUI or React Aria. Keyboard, focus and roles are not written by hand.
+3. **Closed API.** No `className` and no `style`. The look comes from meaningful props: a variant picks the color and the icon, and the calling code makes no visual decisions. Names describe meaning, not value.
+4. **States cannot be assembled wrong.** Incompatible prop combinations are ruled out by types.
+5. **Values only from tokens.** Empty slots are not rendered. The default is the most common value.
+6. **Server components.** Without hooks and event handlers a component stays a server component. With them, the first line needs `"use client"`.
+7. **Export.** The component and its props type are exported from `packages/kit/src/index.ts`. The name must not shadow a HeroUI export: check it in advance, as happened with `EmptyState`.
+8. **Test.** `packages/kit/tests`: markup, empty slots, branching on props.
+9. **Demo.** `apps/playground/src/demos/<section>/<name>.tsx` with variants and states.
+10. **Docs.** A line in the "Patterns" section of `packages/kit/README.md`. If a new decision appeared, an entry in `docs/design-system/decisions.md`.
 
-Правило выноса: логика только для одного блока остаётся в его файле как внутренняя функция. Компонент kit появляется, когда он нужен минимум двум блокам или явно пригодится в продуктах.
+Extraction rule: logic for a single block stays in its file as an internal function. A kit component appears when at least two blocks need it or it will clearly be useful in products.
 
-В ответе назовите новый компонент и почему существующих не хватило.
+In your answer, name the new component and why the existing ones were not enough.
 
-## 6. Файлы
+## 6. Files
 
-- Блок: `apps/playground/src/blocks/<вид>/<имя>.tsx`, один экспорт `export function <Имя>Block()` и `<Имя>Block.displayName = "Русское название"`: оно станет подписью плитки. Регистрация не нужна, `import.meta.glob` подхватит файл сам.
-- Папка задаёт вид взаимодействия и фильтр галереи: `press` нажатие, `drag` перетаскивание, `type` ввод, `loading` ожидание. Новый вид добавляется папкой и подписью в `block-gallery.tsx`.
-- Общие помощники и данные лежат в корне `blocks/`, например `format.ts`.
+- Block: `apps/playground/src/blocks/<kind>/<name>.tsx`, a single export `export function <Name>Block()` and `<Name>Block.displayName = "English title"`: it becomes the tile caption. No registration needed, `import.meta.glob` picks the file up.
+- The folder sets the kind of interaction and the gallery filter: `press` Press, `drag` Drag, `type` Type, `loading` Loading. A new kind is added as a folder and a label in `block-gallery.tsx`.
+- Shared helpers and data live at the root of `blocks/`, for example `format.ts`.
 
-## 7. Содержание
+## 7. Content
 
-- Тексты финальные и на русском. Кнопка это глагол-результат. Заголовок до семи слов.
-- Данные правдоподобные: русские имена, настоящие суммы через `formatRubles`, неразрывные пробелы в числах, табличные цифры.
-- Никакого lorem ipsum, «Test», «Item 1», выдуманных отзывов и обещаний «на 40% больше».
-- Иконки и изображения можно брать из интернета. Сначала Gravity Icons из `@anyglade/kit/icons`, для фото и картинок прямой URL. Перед использованием проверьте ответ через `curl`, у аватара всегда есть `Avatar.Fallback`, у содержательной картинки есть `alt`.
-- Логотипы сторонних сервисов только по назначению, например на кнопках входа или способах оплаты. Бренд продукта в блоке всегда свой.
-- Без тупиков: из каждого состояния есть путь дальше.
-- Всё интерактивное работает: кнопки, поля, переключатели, вкладки, фильтры, сортировка, пагинация, выгрузка. Кнопка без действия считается дефектом. Если настоящего действия нет, блок показывает результат: состояние, тост, файл.
-- Сортируются все колонки, где порядок имеет смысл, по значению, а не по подписи: дата сортируется как дата. Используйте `SortableColumn` и `useTableSort`.
-- Фильтры сочетаются с поиском, сбрасывают страницу, а пустой результат предлагает сброс. Выбранные строки считаются только среди найденных.
-- Пустое состояние, загрузка, ошибка и длинные значения учтены там, где они реально случаются.
+- Final copy in English. A button is a verb naming the result. A heading is up to seven words. Sentence case.
+- Plausible data: English names, real amounts through `formatMoney`, dates and times through `Intl` with `en-US`, tabular figures. A non-breaking space between a number and its unit is fine.
+- No lorem ipsum, "Test", "Item 1", made-up testimonials or "40% more" promises.
+- Icons and images may come from the internet. Gravity Icons from `@anyglade/kit/icons` first, a direct URL for photos and pictures. Check the response with `curl` before using it; an avatar always has `Avatar.Fallback`, a meaningful picture has `alt`.
+- Third-party logos only for their purpose, for example on sign-in buttons or payment methods. The product brand in a block is always its own.
+- No dead ends: every state has a way forward.
+- Everything interactive works: buttons, fields, switches, tabs, filters, sorting, pagination, export. A button without an action is a defect. If there is no real action, the block shows the result: a state, a toast, a file.
+- Every column where order makes sense is sortable, by value rather than by label: a date sorts as a date. Use `SortableColumn` and `useTableSort`.
+- Filters combine with search, reset the page, and an empty result offers a reset. Selected rows are counted only among the found ones.
+- Empty, loading, error states and long values are handled where they really happen.
 
-## 8. Движение
+## 8. Motion
 
-Перед сдачей пройдите по каждому действию и ответьте, что происходит между «нажали» и «готово». Значения и запреты в `docs/design-system/decisions.md`.
+Before handing in, walk through every action and answer what happens between "pressed" and "done". Values and bans are in `docs/design-system/decisions.md`.
 
-| Что происходит                                      | Что использовать                                                                         |
-| --------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| Кнопка запускает работу                             | `onPress` возвращает промис, формы через `action` и `type="submit"`. Своих спиннеров нет |
-| Экран или список загружается                        | `Loadable` со скелетоном той же формы, что и контент                                     |
-| Обратимое мелкое действие: отметка, переключатель   | Сразу применить, без лоадера                                                             |
-| Копирование                                         | `CopyButton`, подтверждение на самой кнопке                                              |
-| Выбор одного из нескольких                          | `SegmentedControl`                                                                       |
-| Смена порядка, фильтра, этапа, удаление, добавление | `withTransition` и `viewTransitionName` на объекте                                       |
-| Короткий текст сменил состояние: статус, кнопка     | `TextSwap`, одна строка на действие. Таймеры, таблицы и предложения без него             |
-| Новый элемент появляется сам                        | `<Box motion="enter">`                                                                   |
-| Успех после формы                                   | `motion="enter"` у нового состояния и путь дальше                                        |
+| What happens                                 | What to use                                                                             |
+| -------------------------------------------- | --------------------------------------------------------------------------------------- |
+| A button starts work                         | `onPress` returns a promise, forms use `action` and `type="submit"`. No custom spinners |
+| A screen or list loads                       | `Loadable` with a skeleton of the same shape as the content                             |
+| A reversible small action: a check, a switch | Apply immediately, no loader                                                            |
+| Copying                                      | `CopyButton`, confirmation on the button itself                                         |
+| Choosing one of several                      | `SegmentedControl`                                                                      |
+| Reorder, filter, stage change, delete, add   | `withTransition` and `viewTransitionName` on the object                                 |
+| Short text changed state: a status, a button | `TextSwap`, one line per action. Not for timers, tables and sentences                   |
+| A new element appears on its own             | `<Box motion="enter">`                                                                  |
+| Success after a form                         | `motion="enter"` on the new state and a way forward                                     |
 
-Запрещено анимировать основную навигацию, ввод с клавиатуры, графики, загрузку страницы каскадом, наведение на карточки и числа при открытии экрана. Для перехода в блоках используется задержка через `simulateRequest` из `apps/playground/src/simulate.ts`.
+Do not animate the main navigation, keyboard input, charts, a cascading page load, hover on cards or numbers when a screen opens. Blocks wait through `simulateRequest` from `apps/playground/src/simulate.ts`.
 
-## 9. Проверка
+## 9. Check
 
-Блок не готов, пока не пройдены все пункты.
+A block is not ready until every item passes.
 
 ```bash
 vp run ready
 bash .claude/skills/block-reference/scripts/verify.sh 5170 Hero,Pricing
 ```
 
-Скрипт собирает playground, открывает его в headless-браузере на 1280 и 390 px и выводит по каждому блоку переполнения, значения вне шкалы и счётчики индикаторов шаблонности. Затем сохраняет скриншоты указанных блоков в обеих темах и на телефоне и печатает пути.
+The script builds the playground, opens it in a headless browser at 1280 and 390 px and prints, per block, overflows, off-scale values and template indicator counters. Then it saves screenshots of the named blocks in both themes and on a phone and prints the paths.
 
-1. Переполнений и значений вне шкалы нет, кроме задокументированных исключений.
-2. Счётчики индикаторов обоснованы. `borders`, `separators`, `tags`, `alpha` выше нуля требуют причины.
-3. Посмотрите каждый скриншот глазами: обрезки, налезания, пустоты, контраст в тёмной теме, переносы.
-4. Проверьте взаимодействия. Headless не проигрывает CSS-переходы и может выдать пустой кадр при прокрутке, такие наблюдения проверяйте через `data-*` и без перехода.
-5. Сравните с соседними блоками: повторяется ли главный ход.
-6. Для набора блоков запустите отдельного агента на независимый просмотр скриншотов: он не должен знать ваших решений.
+1. No overflows and no off-scale values, except documented exceptions.
+2. The indicator counters are justified. `borders`, `separators`, `tags`, `alpha` above zero need a reason.
+3. Look at every screenshot with your own eyes: clipping, overlaps, gaps, dark theme contrast, line breaks.
+4. Check the interactions. Headless does not play CSS transitions and may return an empty frame while scrolling; check such observations through `data-*` and without the transition.
+5. Compare with the neighbouring blocks: does the main move repeat?
+6. For a set of blocks, run a separate agent for an independent review of the screenshots: it must not know your decisions.
 
-## 10. Сдача
+## 10. Handing in
 
-Ответ короткий: режим, идея, что изменилось в kit, результат проверки и что осталось непроверенным. Коммит только по просьбе.
+A short answer: the mode, the idea, what changed in the kit, the check result and what remains unchecked. Commit only when asked.

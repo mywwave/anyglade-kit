@@ -1,77 +1,77 @@
-# Аудит проекта
+# Project audit
 
-Используйте, когда просят проверить единообразие, найти нарушения дизайн-системы или понять, насколько проект следует kit. Аудит только сообщает, код не меняет, пока не попросят.
+Use it when asked to check consistency, find design system violations or understand how closely a project follows the kit. An audit only reports; it does not change code until asked.
 
-Совпадение поиска это кандидат, а не находка: подтверждайте чтением кода. Отчёт ценен, только если в нём нет ложных тревог.
+A search match is a candidate, not a finding: confirm it by reading the code. A report is valuable only if it has no false alarms.
 
-## 1. Автоматика
+## 1. Automation
 
-Запустите линт с правилами kit. Он ловит сырые элементы, утилиты типографики и отступов, `dark:`, произвольные значения и чужие импорты. Если правила не подключены, это первая находка.
+Run the lint with the kit rules. It catches raw elements, typography and spacing utilities, `dark:`, arbitrary values and foreign imports. If the rules are not connected, that is the first finding.
 
-Затем поиск того, что линт не видит:
+Then search for what the lint cannot see:
 
-| Что искать                                           | Нарушение                                                                          |
+| What to search for                                   | Violation                                                                          |
 | ---------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| `from "@heroui/`                                     | Импорт мимо kit, замены не применяются                                             |
-| `#[0-9a-fA-F]{3,8}`, `rgb(`, `oklch(` в коде экранов | Цвет мимо токенов                                                                  |
-| `style={{`                                           | Обход закрытого API. Допустимы только динамические значения и `viewTransitionName` |
-| `toLocaleString`, `toFixed` разрозненно              | Числа без единого форматирования                                                   |
-| `<Spinner` рядом с `<Button`                         | Свой лоадер вместо встроенного                                                     |
-| `animate-spin`, `animate-pulse`, `@keyframes`        | Самодельная анимация вместо компонентов kit                                        |
-| `<TextSwap`                                          | Несколько строк от одного действия, таймер, ячейка, предложение, другой объект     |
-| `Нет данных`, `No data`                              | Пустое состояние без объяснения                                                    |
-| `onPress` отсутствует у `<Button`                    | Возможна мёртвая кнопка                                                            |
+| `from "@heroui/`                                     | Import bypassing the kit, the replacements do not apply                            |
+| `#[0-9a-fA-F]{3,8}`, `rgb(`, `oklch(` in screen code | Color bypassing tokens                                                             |
+| `style={{`                                           | Bypassing the closed API. Only dynamic values and `viewTransitionName` are allowed |
+| Scattered `toLocaleString`, `toFixed`                | Numbers without unified formatting                                                 |
+| `<Spinner` next to `<Button`                         | A custom loader instead of the built-in one                                        |
+| `animate-spin`, `animate-pulse`, `@keyframes`        | Homemade animation instead of kit components                                       |
+| `<TextSwap`                                          | Several strings from one action, a timer, a cell, a sentence, a different object   |
+| `No data`, or the same in the project's language     | An empty state without an explanation                                              |
+| `<Button` without `onPress`                          | Possibly a dead button                                                             |
 
-Исключения: брендовые цвета данных из API, цвета сторонних сервисов, ширина прогресса в процентах.
+Exceptions: brand data colors from an API, colors of third-party services, progress width in percent.
 
-## 2. Покрытие kit
+## 2. Kit coverage
 
-Найдите самодельные версии того, что уже есть: метрики вместо `Stat`, пары подпись и значение вместо `DetailRow`, скелетоны вместо `Skeleton`, пустые блоки вместо `EmptyPanel`, сегменты вместо `SegmentedControl`, ручная сортировка вместо `useTableSort`.
+Find homemade versions of what already exists: metrics instead of `Stat`, label and value pairs instead of `DetailRow`, skeletons instead of `Skeleton`, empty blocks instead of `EmptyPanel`, segments instead of `SegmentedControl`, manual sorting instead of `useTableSort`.
 
-Поищите дубликаты: два и более близких компонента стоит объединить.
+Look for duplicates: two or more similar components should be merged.
 
-## 3. Единообразие между страницами
+## 3. Consistency across pages
 
-Для каждой рабочей страницы проверьте порядок из [archetypes.md](archetypes.md):
+For every work page, check the order from [archetypes.md](archetypes.md):
 
-| Элемент          | Правильно                 | Нарушение                     |
-| ---------------- | ------------------------- | ----------------------------- |
-| `PageHeader`     | Первый элемент            | Отсутствует или не первый     |
-| Главное действие | В шапке страницы          | Внутри контента или внизу     |
-| Вкладки          | В шапке или сразу под ней | Самодельные пилюли в контенте |
-| Показатели       | Сразу под шапкой          | Между фильтрами и таблицей    |
-| Фильтры          | Перед областью данных     | Внутри таблицы                |
-| Пагинация        | Внизу области данных      | Отдельно от таблицы           |
-| Пустое состояние | Заменяет область данных   | Стоит рядом с данными         |
-| Загрузка         | Скелетон той же раскладки | Спиннер в центре              |
-| Окна             | На уровне страницы        | Внутри `.map()`               |
+| Element      | Correct                         | Violation                           |
+| ------------ | ------------------------------- | ----------------------------------- |
+| `PageHeader` | The first element               | Missing or not first                |
+| Main action  | In the page header              | Inside the content or at the bottom |
+| Tabs         | In the header or right below it | Homemade pills in the content       |
+| Metrics      | Right below the header          | Between filters and the table       |
+| Filters      | Before the data area            | Inside the table                    |
+| Pagination   | At the bottom of the data area  | Separate from the table             |
+| Empty state  | Replaces the data area          | Sits next to the data               |
+| Loading      | A skeleton of the same layout   | A spinner in the center             |
+| Dialogs      | At page level                   | Inside `.map()`                     |
 
-Сравните, как решены одинаковые вещи на разных экранах: шапка, пустое состояние, пагинация, окна, формы, вкладки, тосты. Смешивать подходы плохо, даже если каждый по отдельности хорош.
+Compare how the same things are solved on different screens: header, empty state, pagination, dialogs, forms, tabs, toasts. Mixing approaches is bad, even if each one is good on its own.
 
-## 4. Правила из справочников
+## 4. Rules from the references
 
-- Основных кнопок на экран: одна.
-- Акцент только в разрешённых ролях, см. [color.md](color.md).
-- Ширина содержимого ограничена.
-- Иерархия не глубже трёх уровней размеров.
-- Индикаторы шаблонного дизайна из [layout.md](layout.md).
-- Анимации только на `opacity` и `transform`.
-- Одно действие катит не больше одной строки, см. [motion.md](motion.md).
-- Статусы текстом, а не тегами.
+- Primary buttons per screen: one.
+- Accent only in the allowed roles, see [color.md](color.md).
+- Content width is limited.
+- Hierarchy no deeper than three size levels.
+- Template design indicators from [layout.md](layout.md).
+- Animations only on `opacity` and `transform`.
+- One action rolls no more than one string, see [motion.md](motion.md).
+- Statuses as text, not tags.
 
-## 5. В браузере
+## 5. In the browser
 
-Откройте основные экраны в обеих темах и на телефоне. Пройдите края: пусто, ошибка, длинные значения, медленная сеть. Цвет считайте на реальной поверхности.
+Open the main screens in both themes and on a phone. Walk the edges: empty, error, long values, slow network. Measure color on the real surface.
 
-## Отчёт
+## Report
 
-Находки от тяжёлых к лёгким:
+Findings from heaviest to lightest:
 
 ```
-[Важно] Страница заказов, orders/page.tsx:42
-Что: своя таблица вместо Table и useTableSort.
-Почему плохо: нет сортировки по значению и перетекания строк.
-Как исправить: заменить, см. recipes.md.
+[Major] Orders page, orders/page.tsx:42
+What: a custom table instead of Table and useTableSort.
+Why it is bad: no sorting by value and no row reflow.
+How to fix: replace it, see recipes.md.
 ```
 
-Тяжесть: блокер ломает работу или доступность, важно заметно на глаз или мешает будущим изменениям, мелочь косметика. В конце посчитайте покрытие: сколько экранов следует системе полностью.
+Severity: a blocker breaks work or accessibility, major is visible to the eye or gets in the way of future changes, minor is cosmetic. At the end count the coverage: how many screens follow the system fully.

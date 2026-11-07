@@ -1,89 +1,89 @@
 ---
 name: design-system-sync
-description: Держит скилл anyglade-design-system актуальным. Использовать ВСЕГДА после любого изменения в kit (токены, компоненты, пропсы, стили, линт, README, decisions), после каждой правки пользователя по внешнему виду, анимации или UX, даже мелкой, и когда падает тест design-skill или pre-commit сообщает, что скилл устарел. Также по запросам «обнови скилл дизайн-системы», «синхронизируй правила», «запомни это как правило дизайна», «проверь, что скилл актуален».
+description: Keeps the anyglade-design-system skill up to date. Use ALWAYS after any change in the kit (tokens, components, props, styles, lint, README, decisions), after every user correction to look, animation or UX, however small, and when the design-skill test fails or pre-commit reports that the skill is outdated. Also on requests like "update the design system skill", "sync the rules", "remember this as a design rule", "check the skill is up to date", «обнови скилл дизайн-системы», «синхронизируй правила», «запомни это как правило дизайна», «проверь, что скилл актуален».
 ---
 
-# Синхронизация скилла дизайн-системы
+# Design system skill sync
 
-`anyglade-design-system` копируют в другие проекты, и там он единственный источник знаний о kit. Устаревшее правило в чужом проекте никто не заметит, поэтому его актуальность проверяется кодом, а не памятью.
+`anyglade-design-system` is copied into other projects, and there it is the only source of knowledge about the kit. Nobody will notice an outdated rule in someone else's project, so its accuracy is checked by code, not by memory.
 
-Что где живёт:
+What lives where:
 
-- `references/generated/tokens.md` и `api.md` создаются из кода. Вручную не правятся.
-- `references/generated/sources.json` хранит отпечатки файлов, с которыми правила сверены.
-- Всё остальное в скилле пишется руками: законы, причины, уроки.
+- `references/generated/tokens.md` and `api.md` are generated from code. Never edit them by hand.
+- `references/generated/sources.json` stores fingerprints of the files the rules were reconciled against.
+- Everything else in the skill is written by hand: laws, reasons, lessons.
 
-## Порядок
+## Steps
 
-### 1. Запустите скрипт
+### 1. Run the script
 
 ```bash
 node .claude/skills/design-system-sync/scripts/sync.mjs
 ```
 
-Он перегенерирует токены и API и выведет, что требует внимания:
+It regenerates the tokens and API and prints what needs attention:
 
-| Сообщение                    | Что сделать                                              |
-| ---------------------------- | -------------------------------------------------------- |
-| `Не сверено с правилами: X`  | Прочитать `git diff` файла X и шаг 2                     |
-| `Нет в правилах скилла: X`   | Описать новый компонент в подходящем справочнике         |
-| `Путь этого репозитория`     | Убрать путь: скилл должен работать вне этого репозитория |
-| `SKILL.md длиннее 500 строк` | Вынести детали в `references/`                           |
+| Message                             | What to do                                                   |
+| ----------------------------------- | ------------------------------------------------------------ |
+| `Not reconciled with the rules: X`  | Read `git diff` of file X, then step 2                       |
+| `Missing from the skill rules: X`   | Describe the new component in the matching reference         |
+| `Path of this repository`           | Remove the path: the skill must work outside this repository |
+| `SKILL.md is longer than 500 lines` | Move details into `references/`                              |
 
-### 2. Перенесите смысл
+### 2. Carry over the meaning
 
-Токены обновились сами. Рукописная часть обновляется только по смыслу изменения:
+Tokens update themselves. The handwritten part is updated only by the meaning of the change:
 
-| Что изменилось                        | Куда записать                                                                               |
-| ------------------------------------- | ------------------------------------------------------------------------------------------- |
-| Новый компонент или паттерн           | `references/components.md` или `ai.md`, составной компонент ещё и в `references/recipes.md` |
-| Цвет, акцент, контраст                | `references/color.md`                                                                       |
-| Отступы, ширины, сетка, композиция    | `references/layout.md`                                                                      |
-| Шрифт, числа                          | `references/typography.md`                                                                  |
-| Тексты интерфейса                     | `references/writing.md`, стоп-слова в `scripts/check-copy.mjs`                              |
-| Телефон                               | `references/mobile.md`                                                                      |
-| Структура типовых экранов             | `references/archetypes.md`                                                                  |
-| Что проверять в аудите                | `references/audit.md`                                                                       |
-| Анимация, лоадеры, производительность | `references/motion.md`                                                                      |
-| Состояния, формы, таблицы, сценарии   | `references/ux-flows.md`                                                                    |
-| Установка, тема, линт                 | `references/setup.md`                                                                       |
-| Правка пользователя                   | `references/lessons.md` и шаг 3                                                             |
+| What changed                       | Where to write it                                                                            |
+| ---------------------------------- | -------------------------------------------------------------------------------------------- |
+| New component or pattern           | `references/components.md` or `ai.md`; a composite component also in `references/recipes.md` |
+| Color, accent, contrast            | `references/color.md`                                                                        |
+| Spacing, widths, grid, composition | `references/layout.md`                                                                       |
+| Font, numbers                      | `references/typography.md`                                                                   |
+| Interface copy                     | `references/writing.md`, stop words in `scripts/check-copy.mjs`                              |
+| Phone                              | `references/mobile.md`                                                                       |
+| Structure of typical screens       | `references/archetypes.md`                                                                   |
+| What to check in an audit          | `references/audit.md`                                                                        |
+| Animation, loaders, performance    | `references/motion.md`                                                                       |
+| States, forms, tables, flows       | `references/ux-flows.md`                                                                     |
+| Installation, theme, lint          | `references/setup.md`                                                                        |
+| User correction                    | `references/lessons.md` and step 3                                                           |
 
-Удаляйте правила, которые перестали быть верными. Устаревшая строка хуже отсутствующей.
+Delete rules that are no longer true. An outdated line is worse than a missing one.
 
-### 3. Обобщите правку пользователя
+### 3. Generalize the user's correction
 
-Каждая правка по виду или поведению это правило, которое не должно потребоваться второй раз. Пишите не случай, а закономерность:
+Every correction to look or behavior is a rule that must never be needed a second time. Write the pattern, not the case:
 
-- Плохо: «В чате у шага убрали жирный заголовок».
-- Хорошо: «Вложенность показывают отступом. Вторая шапка внутри группы превращает список в лесенку блоков».
+- Bad: "Removed the bold heading from the step in the chat."
+- Good: "Show nesting with indentation. A second header inside a group turns the list into a staircase of blocks."
 
-Запись в `lessons.md` состоит из трёх частей: что было не так, почему, как делать. Если урок касается всех экранов, поднимите его в закон в `SKILL.md`. Если решение общесистемное, добавьте его и в решения kit.
+An entry in `lessons.md` has three parts: what was wrong, why, how to do it. If the lesson applies to every screen, promote it to a law in `SKILL.md`. If the decision is system-wide, add it to the kit decisions as well.
 
-Причина обязательна. Модель в другом проекте встретит случай, которого здесь не было, и решит его по причине, а не по букве.
+The reason is mandatory. A model in another project will meet a case that never came up here, and it will solve it by the reason, not by the letter.
 
-### 4. Зафиксируйте сверку
+### 4. Record the reconciliation
 
 ```bash
 node .claude/skills/design-system-sync/scripts/sync.mjs --accept
 ```
 
-Флаг означает «я прочитал изменения и перенёс их смысл». Не запускайте его, чтобы просто убрать сообщение: тогда защита перестаёт что-либо значить.
+The flag means "I have read the changes and carried over their meaning". Do not run it just to silence the message: then the safeguard stops meaning anything.
 
-### 5. Проверьте
+### 5. Verify
 
 ```bash
 node .claude/skills/design-system-sync/scripts/sync.mjs --check
 ```
 
-Выход без ошибок означает, что можно коммитить. Та же проверка стоит в тесте `design-skill` и в pre-commit.
+A clean exit means you can commit. The same check runs in the `design-skill` test and in pre-commit.
 
-## Как писать правила
+## How to write rules
 
-- Без путей этого репозитория: скилл копируется целиком в другой проект.
-- На русском, повелительно, с причиной.
-- Значения не дублируйте: ссылка на токен переживёт изменение шкалы, число устареет.
-- Запреты сопровождайте тем, что делать вместо.
-- `SKILL.md` короткий, детали в `references/`.
+- No paths of this repository: the skill is copied whole into another project.
+- In English, imperative, with a reason.
+- Do not duplicate values: a token reference survives a scale change, a number goes stale.
+- Pair every prohibition with what to do instead.
+- Keep `SKILL.md` short, details in `references/`.
 
-В ответе пользователю одной строкой скажите, какие правила добавились.
+In your reply to the user, say in one line which rules were added.

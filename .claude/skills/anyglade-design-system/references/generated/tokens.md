@@ -1,12 +1,12 @@
-# Токены
+# Tokens
 
-Файл создан автоматически. Не правьте его вручную.
+This file is generated. Do not edit it by hand.
 
-## Отступы
+## Spacing
 
-Пропсы `Box`: `padding*`, `margin*`, `gap`.
+`Box` props: `padding*`, `margin*`, `gap`.
 
-| Имя | Значение |
+| Name | Value |
 | --- | --- |
 | none | 0 |
 | 2xs | 2px |
@@ -20,11 +20,11 @@
 | 4xl | 64px |
 | 5xl | 96px |
 
-## Скругления
+## Radii
 
-Проп `borderRadius`.
+The `borderRadius` prop.
 
-| Имя | Значение |
+| Name | Value |
 | --- | --- |
 | none | 0 |
 | s | 8px |
@@ -34,11 +34,11 @@
 | xl | 32px |
 | full | 9999px |
 
-## Тени
+## Shadows
 
-Проп `boxShadow`.
+The `boxShadow` prop.
 
-| Имя |
+| Name |
 | --- |
 | none |
 | s |
@@ -46,33 +46,33 @@
 | l |
 | xl |
 
-## Ширины
+## Widths
 
-Значения `tokens.widths`, пиксели.
+Values of `tokens.widths`, in pixels.
 
-| Имя | Значение |
+| Name | Value |
 | --- | --- |
 | panel | 320 |
 | form | 400 |
 | content | 720 |
 | wide | 880 |
 
-## Точки перелома
+## Breakpoints
 
-Условия `sm`, `md`, `lg`, `xl` в пропсах `Box`.
+The `sm`, `md`, `lg`, `xl` conditions in `Box` props.
 
-| Имя | Значение |
+| Name | Value |
 | --- | --- |
 | sm | 40rem |
 | md | 48rem |
 | lg | 64rem |
 | xl | 80rem |
 
-## Роли текста
+## Text roles
 
-Проп `variant` у `Text`. Размер указан как базовый и от `md`.
+The `variant` prop of `Text`. Size is given as base and from `md`.
 
-| Роль | Размер | Интерлиньяж | Вес |
+| Role | Size | Line height | Weight |
 | --- | --- | --- | --- |
 | default | 0.875rem | 1.5 | 450 |
 | title | 0.875rem | 1.5 | 500 |
@@ -87,11 +87,11 @@
 | heading-xs | 1.25rem / 1.5rem | 1.375 | 400 |
 | heading-xxs | 1.125rem / 1.25rem | 1.375 | 400 |
 
-## Веса
+## Weights
 
-Проп `weight` у `Text`.
+The `weight` prop of `Text`.
 
-| Имя | Значение |
+| Name | Value |
 | --- | --- |
 | light | 300 |
 | book | 350 |
@@ -101,11 +101,11 @@
 | strong | 550 |
 | semibold | 600 |
 
-## Цвета текста
+## Text colors
 
-Проп `color` у `Text`.
+The `color` prop of `Text`.
 
-| Имя | Токен |
+| Name | Token |
 | --- | --- |
 | default | text-primary |
 | muted | text-secondary |
@@ -117,11 +117,11 @@
 | warning | text-warning |
 | danger | text-danger |
 
-## Семантические цвета
+## Semantic colors
 
-Пропсы `backgroundColor`, `color` и `borderColor` у `Box`.
+The `backgroundColor`, `color` and `borderColor` props of `Box`.
 
-| Токен | Светлая | Тёмная |
+| Token | Light | Dark |
 | --- | --- | --- |
 | background-canvas | oklch(0.967 0.003 264.542) | hsl(0 0% 3.5%) |
 | background-panel | #ffffff | hsl(0 0% 6.5%) |
@@ -154,11 +154,11 @@
 | chart-secondary | oklch(0.707 0.022 261.325) | hsl(0 0% 52%) |
 | chart-tertiary | oklch(0.928 0.006 264.531) | hsl(0 0% 16%) |
 
-## Длительности
+## Durations
 
-CSS-переменные `--ag-duration-*`.
+CSS variables `--ag-duration-*`.
 
-| Имя | Значение |
+| Name | Value |
 | --- | --- |
 | instant | 0ms |
 | fast | 120ms |
@@ -169,21 +169,21 @@ CSS-переменные `--ag-duration-*`.
 | drift | 3200ms |
 | stagger | 60ms |
 
-## Кривые
+## Easings
 
-CSS-переменные `--ag-ease-*`.
+CSS variables `--ag-ease-*`.
 
-| Имя | Значение |
+| Name | Value |
 | --- | --- |
 | standard | cubic-bezier(0.2, 0, 0, 1) |
 | decelerate | cubic-bezier(0, 0, 0, 1) |
 | accelerate | cubic-bezier(0.3, 0, 1, 1) |
 
-## Темп обратной связи
+## Feedback timing
 
-Значения `tokens.timings`, миллисекунды.
+Values of `tokens.timings`, in milliseconds.
 
-| Имя | Значение |
+| Name | Value |
 | --- | --- |
 | loaderDelay | 150 |
 | pageLoaderDelay | 400 |

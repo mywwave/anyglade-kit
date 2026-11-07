@@ -38,18 +38,18 @@ import {
 } from "@anyglade/kit/icons";
 import { useEffect, useState, type ReactNode } from "react";
 
-const rublesFormat = { style: "currency", currency: "RUB", maximumFractionDigits: 0 } as const;
+const dollarsFormat = { style: "currency", currency: "USD", maximumFractionDigits: 0 } as const;
 
-const ranges = ["1Д", "7Д", "1М", "1Г", "Все"];
+const ranges = ["1D", "7D", "1M", "1Y", "All"];
 
 const ASSETS = "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com";
 
 const team = [
-  { name: "Анна Смирнова", initials: "АС", image: `${ASSETS}/avatars/blue.jpg` },
-  { name: "Илья Воронов", initials: "ИВ", image: `${ASSETS}/avatars/green.jpg` },
-  { name: "Мария Ким", initials: "МК", image: `${ASSETS}/avatars/purple.jpg` },
-  { name: "Павел Орлов", initials: "ПО", image: `${ASSETS}/avatars/orange.jpg` },
-  { name: "Ольга Белова", initials: "ОБ", image: `${ASSETS}/avatars/red.jpg` },
+  { name: "Anna Smith", initials: "AS", image: `${ASSETS}/avatars/blue.jpg` },
+  { name: "Ethan Brooks", initials: "EB", image: `${ASSETS}/avatars/green.jpg` },
+  { name: "Maria Kim", initials: "MK", image: `${ASSETS}/avatars/purple.jpg` },
+  { name: "Paul Turner", initials: "PT", image: `${ASSETS}/avatars/orange.jpg` },
+  { name: "Olivia Bell", initials: "OB", image: `${ASSETS}/avatars/red.jpg` },
 ];
 
 const buttonVariants = [
@@ -62,8 +62,8 @@ const buttonVariants = [
 ] as const;
 
 const communities = [
-  { name: "Индихакеры", members: 148, author: "Иван", image: `${ASSETS}/docs/oranges.jpeg` },
-  { name: "ИИ-команды", members: 362, author: "Мария", image: `${ASSETS}/docs/robot1.jpeg` },
+  { name: "Indie hackers", members: 148, author: "Ivan", image: `${ASSETS}/docs/oranges.jpeg` },
+  { name: "AI teams", members: 362, author: "Maria", image: `${ASSETS}/docs/robot1.jpeg` },
 ];
 
 interface PanelProps {
@@ -97,7 +97,7 @@ function DismissiblePanel({ label, children }: DismissiblePanelProps) {
   if (!isOpen) {
     return (
       <Button variant="secondary" onPress={() => setIsOpen(true)}>
-        Показать снова
+        Show again
       </Button>
     );
   }
@@ -118,24 +118,24 @@ function FieldsExample() {
   return (
     <Box flexDirection="column" gap="xl">
       <TextField className="w-full" isRequired name="showcase-email" type="email">
-        <Label>Почта</Label>
+        <Label>Email</Label>
         <Input placeholder="anna@example.com" />
-        <Description>Никому её не покажем</Description>
+        <Description>We never share it</Description>
       </TextField>
-      <Select className="w-full" isRequired placeholder="Выберите">
-        <Label>Тариф</Label>
+      <Select className="w-full" isRequired placeholder="Choose">
+        <Label>Plan</Label>
         <Select.Trigger>
           <Select.Value />
           <Select.Indicator />
         </Select.Trigger>
         <Select.Popover>
           <ListBox>
-            <ListBox.Item id="start" textValue="Старт">
-              Старт
+            <ListBox.Item id="start" textValue="Starter">
+              Starter
               <ListBox.ItemIndicator />
             </ListBox.Item>
-            <ListBox.Item id="growth" textValue="Рост">
-              Рост
+            <ListBox.Item id="growth" textValue="Growth">
+              Growth
               <ListBox.ItemIndicator />
             </ListBox.Item>
           </ListBox>
@@ -148,14 +148,14 @@ function FieldsExample() {
 function ControlsExample() {
   return (
     <Box alignItems="center" justifyContent="between" gap="m">
-      <Checkbox aria-label="Согласие" defaultSelected name="showcase-agree">
+      <Checkbox aria-label="Consent" defaultSelected name="showcase-agree">
         <Checkbox.Content>
           <Checkbox.Control>
             <Checkbox.Indicator />
           </Checkbox.Control>
         </Checkbox.Content>
       </Checkbox>
-      <Switch aria-label="Уведомления" defaultSelected>
+      <Switch aria-label="Notifications" defaultSelected>
         <Switch.Content>
           <Switch.Control>
             <Switch.Thumb />
@@ -163,19 +163,19 @@ function ControlsExample() {
         </Switch.Content>
       </Switch>
       <RadioGroup
-        aria-label="Вариант"
+        aria-label="Option"
         defaultValue="b"
         name="showcase-option"
         orientation="horizontal"
       >
-        <Radio aria-label="Первый" value="a">
+        <Radio aria-label="First" value="a">
           <Radio.Content>
             <Radio.Control>
               <Radio.Indicator />
             </Radio.Control>
           </Radio.Content>
         </Radio>
-        <Radio aria-label="Второй" value="b">
+        <Radio aria-label="Second" value="b">
           <Radio.Content>
             <Radio.Control>
               <Radio.Indicator />
@@ -183,15 +183,15 @@ function ControlsExample() {
           </Radio.Content>
         </Radio>
       </RadioGroup>
-      <Spinner aria-label="Загрузка" size="sm" />
+      <Spinner aria-label="Loading" size="sm" />
     </Box>
   );
 }
 
 function PriceExample() {
   return (
-    <Slider className="w-full" defaultValue={25000} formatOptions={rublesFormat} maxValue={100000}>
-      <Label>Цена</Label>
+    <Slider className="w-full" defaultValue={250} formatOptions={dollarsFormat} maxValue={1000}>
+      <Label>Price</Label>
       <Slider.Output />
       <Slider.Track>
         <Slider.Fill />
@@ -203,9 +203,9 @@ function PriceExample() {
 
 function RangeExample() {
   return (
-    <Tabs className="w-full" defaultSelectedKey="1Д">
+    <Tabs className="w-full" defaultSelectedKey="1D">
       <Tabs.ListContainer>
-        <Tabs.List aria-label="Период">
+        <Tabs.List aria-label="Period">
           {ranges.map((range) => (
             <Tabs.Tab key={range} id={range}>
               {range}
@@ -222,15 +222,15 @@ function ChannelsExample() {
   return (
     <Tabs className="w-full" defaultSelectedKey="chats">
       <Tabs.ListContainer>
-        <Tabs.List aria-label="Канал">
+        <Tabs.List aria-label="Channel">
           <Tabs.Tab id="chats">
             <Comments />
-            Чаты
+            Chats
             <Tabs.Indicator />
           </Tabs.Tab>
           <Tabs.Tab id="mail">
             <Envelope />
-            Письма
+            Email
             <Tabs.Indicator />
           </Tabs.Tab>
         </Tabs.List>
@@ -268,33 +268,33 @@ function MenuExample() {
   return (
     <Panel>
       <Text variant="caption" color="muted">
-        Действия
+        Actions
       </Text>
-      <ListBox aria-label="Действия" selectionMode="none">
+      <ListBox aria-label="Actions" selectionMode="none">
         <MenuItem
           id="new"
-          title="Новый файл"
-          description="Пустой документ"
+          title="New file"
+          description="Blank document"
           icon={<FilePlus />}
           shortcut="N"
         />
         <MenuItem
           id="edit"
-          title="Изменить"
-          description="В редакторе"
+          title="Edit"
+          description="Open in the editor"
           icon={<Pencil />}
           shortcut="E"
         />
       </ListBox>
       <Separator />
       <Text variant="caption" color="muted">
-        Опасная зона
+        Danger zone
       </Text>
-      <ListBox aria-label="Опасная зона" selectionMode="none">
+      <ListBox aria-label="Danger zone" selectionMode="none">
         <MenuItem
           id="delete"
-          title="Удалить"
-          description="В корзину"
+          title="Delete"
+          description="Move to trash"
           icon={<TrashBin />}
           shortcut="D"
           variant="danger"
@@ -339,10 +339,10 @@ function VerifyExample() {
   return (
     <Box flexDirection="column" alignItems="center" gap="m">
       <Box flexDirection="column" gap="xs">
-        <Text variant="title">Подтвердите почту</Text>
-        <Text color="muted">Код отправлен на a****@example.com</Text>
+        <Text variant="title">Confirm your email</Text>
+        <Text color="muted">We sent a code to a****@example.com</Text>
       </Box>
-      <InputOTP aria-label="Код" maxLength={6} value={code} onChange={setCode}>
+      <InputOTP aria-label="Code" maxLength={6} value={code} onChange={setCode}>
         <InputOTP.Group>
           <InputOTP.Slot index={0} />
           <InputOTP.Slot index={1} />
@@ -357,7 +357,7 @@ function VerifyExample() {
       </InputOTP>
       <Box alignItems="center" gap="xs">
         <Text as="span" color="muted">
-          Нет кода?
+          No code?
         </Text>
         <Button
           isDisabled={secondsLeft > 0}
@@ -369,10 +369,10 @@ function VerifyExample() {
           }}
         >
           <Box as="span" display="block">
-            <TextSwap text={secondsLeft > 0 ? "Отправим через" : "Отправить снова"} />
+            <TextSwap text={secondsLeft > 0 ? "Resend in" : "Resend code"} />
             {secondsLeft > 0 ? (
               <Text as="span" tabularNums variant="label" weight="strong">
-                {` ${secondsLeft} с`}
+                {` ${secondsLeft}s`}
               </Text>
             ) : null}
           </Box>
@@ -392,7 +392,7 @@ function ButtonsExample() {
     >
       {buttonVariants.map((variant) => (
         <Button key={variant} fullWidth size="sm" variant={variant}>
-          Нажать
+          Press
         </Button>
       ))}
     </Box>
@@ -407,12 +407,12 @@ function ProfileExample() {
       <Box alignItems="center" justifyContent="between" gap="m">
         <Box alignItems="center" gap="m" minWidth={0}>
           <Avatar>
-            <Avatar.Image alt="Анна Смирнова" src={`${ASSETS}/avatars/blue.jpg`} />
-            <Avatar.Fallback>АС</Avatar.Fallback>
+            <Avatar.Image alt="Anna Smith" src={`${ASSETS}/avatars/blue.jpg`} />
+            <Avatar.Fallback>AS</Avatar.Fallback>
           </Avatar>
           <Box flexDirection="column" minWidth={0}>
             <Text variant="title" truncate>
-              Анна Смирнова
+              Anna Smith
             </Text>
             <Text variant="caption" color="muted" truncate>
               @anna
@@ -424,16 +424,16 @@ function ProfileExample() {
           variant={isFollowing ? "secondary" : "primary"}
           onPress={() => setIsFollowing(!isFollowing)}
         >
-          <TextSwap text={isFollowing ? "Вы читаете" : "Читать"} />
+          <TextSwap text={isFollowing ? "Following" : "Follow"} />
         </Button>
       </Box>
-      <Text>Делаю биллинг для небольших команд.</Text>
+      <Text>Building billing for small teams.</Text>
       <Box gap="m">
         <Text as="span" color="muted">
-          Читает 4
+          4 following
         </Text>
         <Text as="span" color="muted" tabularNums>
-          Читатели {isFollowing ? "97 101" : "97 100"}
+          {isFollowing ? "97,101" : "97,100"} followers
         </Text>
       </Box>
     </Panel>
@@ -451,14 +451,14 @@ function CreditsExample() {
         </Box>
         <Box flexDirection="column" flexGrow={1} minWidth={0}>
           <Text variant="title">
-            Осталось кредитов: <TextSwap text={String(credits)} />
+            Credits left: <TextSwap text={String(credits)} />
           </Text>
           <Text variant="caption" color="muted">
-            Пополните баланс
+            Top up your balance
           </Text>
         </Box>
         <Button size="sm" variant="secondary" onPress={() => setCredits(credits + 10)}>
-          Пополнить
+          Add 10 credits
         </Button>
       </Box>
     </Panel>
@@ -471,14 +471,14 @@ function NotificationsExample() {
   return (
     <Box alignItems="center" justifyContent="between" gap="l" paddingHorizontal="l">
       <Box flexDirection="column" minWidth={0}>
-        <Text variant="title">Уведомления</Text>
+        <Text variant="title">Notifications</Text>
         <Box key={String(isOn)} display="block" motion="fade">
           <Text variant="caption" color="muted">
-            {isOn ? "Присылать письма о новых заказах" : "Письма о заказах не приходят"}
+            {isOn ? "Email me about new orders" : "Order emails are off"}
           </Text>
         </Box>
       </Box>
-      <Switch aria-label="Уведомления о заказах" isSelected={isOn} onChange={setIsOn}>
+      <Switch aria-label="Order notifications" isSelected={isOn} onChange={setIsOn}>
         <Switch.Content>
           <Switch.Control>
             <Switch.Thumb />
@@ -491,7 +491,7 @@ function NotificationsExample() {
 
 function SignUpExample() {
   return (
-    <DismissiblePanel label="Закрыть регистрацию">
+    <DismissiblePanel label="Close sign-up">
       <Box flexDirection="column" alignItems="center" gap="m" textAlign="center">
         <Avatar>
           <Avatar.Fallback>
@@ -499,19 +499,19 @@ function SignUpExample() {
           </Avatar.Fallback>
         </Avatar>
         <Box flexDirection="column" gap="xs">
-          <Text variant="title">Создайте аккаунт</Text>
+          <Text variant="title">Create an account</Text>
           <Text color="muted">
-            Первый год бесплатно.
+            First year free.
             <br />
-            Карта не нужна.
+            No card required.
           </Text>
         </Box>
         <Button fullWidth>
-          Начать
+          Get started
           <ArrowRight />
         </Button>
         <Text variant="caption" color="subtle">
-          или
+          or
         </Text>
         <Box flexDirection="column" gap="s" width="100%">
           <Button fullWidth variant="secondary">
@@ -521,11 +521,11 @@ function SignUpExample() {
               width={16}
               height={16}
             />
-            Продолжить с Google
+            Continue with Google
           </Button>
           <Button fullWidth variant="secondary">
             <LogoApple />
-            Продолжить с Apple
+            Continue with Apple
           </Button>
         </Box>
       </Box>
@@ -546,11 +546,11 @@ function CommunitiesExample() {
               {community.name}
             </Text>
             <Text variant="caption" color="muted">
-              {community.members} участников
+              {community.members} members
             </Text>
           </Box>
           <Text variant="caption" color="muted">
-            Автор: {community.author}
+            By {community.author}
           </Text>
         </Panel>
       ))}
@@ -559,9 +559,9 @@ function CommunitiesExample() {
 }
 
 const changeStates = {
-  dirty: { title: "Несохранённые изменения", description: "Сохранить их или отменить?" },
-  saved: { title: "Изменения сохранены", description: "Новая версия уже доступна команде." },
-  discarded: { title: "Изменения отменены", description: "Вернули последнюю сохранённую версию." },
+  dirty: { title: "Unsaved changes", description: "Save them or discard?" },
+  saved: { title: "Changes saved", description: "Your team can see the new version." },
+  discarded: { title: "Changes discarded", description: "Restored the last saved version." },
 };
 
 type ChangeState = keyof typeof changeStates;
@@ -571,7 +571,7 @@ function UnsavedExample() {
   const isDirty = state === "dirty";
 
   return (
-    <DismissiblePanel label="Закрыть предупреждение">
+    <DismissiblePanel label="Close warning">
       <Box flexDirection="column" gap="m">
         <Box color="text-warning">
           <FloppyDisk />
@@ -587,11 +587,11 @@ function UnsavedExample() {
             onPress={() => setState(isDirty ? "discarded" : "dirty")}
           >
             <Box key={String(isDirty)} as="span" display="block" motion="fade">
-              {isDirty ? "Отменить" : "Изменить снова"}
+              {isDirty ? "Discard" : "Edit again"}
             </Box>
           </Button>
           <Button fullWidth isDisabled={!isDirty} onPress={() => setState("saved")}>
-            <TextSwap text={state === "saved" ? "Сохранено" : "Сохранить"} />
+            <TextSwap text={state === "saved" ? "Saved" : "Save"} />
           </Button>
         </Box>
       </Box>

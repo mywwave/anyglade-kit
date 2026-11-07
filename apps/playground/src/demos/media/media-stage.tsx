@@ -3,11 +3,11 @@ import { MicrophoneSlash, Pin, PinSlash } from "@anyglade/kit/icons";
 import { useState } from "react";
 
 const people = [
-  { id: "anna", name: "Анна Смирнова", isMuted: false },
-  { id: "ilya", name: "Илья Воронов", isMuted: true },
-  { id: "olga", name: "Ольга Белова", isMuted: false },
-  { id: "pavel", name: "Павел Орлов", isMuted: false },
-  { id: "elena", name: "Елена Жукова", isMuted: true },
+  { id: "anna", name: "Anna Wright", isMuted: false },
+  { id: "ethan", name: "Ethan Cole", isMuted: true },
+  { id: "olivia", name: "Olivia Bell", isMuted: false },
+  { id: "paul", name: "Paul Morgan", isMuted: false },
+  { id: "ellen", name: "Ellen Hughes", isMuted: true },
 ];
 
 export function MediaStageDemo() {
@@ -20,9 +20,9 @@ export function MediaStageDemo() {
         <MediaStage
           focusId={focusId}
           items={people}
-          label="Участники звонка"
+          label="Call participants"
           more={{
-            label: (count) => `Ещё ${count}, показать всех`,
+            label: (count) => `${count} more, show all`,
             onPress: () => setIsAllShown(true),
           }}
           renderItem={(person) => (
@@ -30,7 +30,7 @@ export function MediaStageDemo() {
               actions={
                 <Button
                   isIconOnly
-                  aria-label={person.id === focusId ? "Открепить" : "Закрепить"}
+                  aria-label={person.id === focusId ? "Unpin" : "Pin"}
                   size="sm"
                   variant="secondary"
                   onPress={() => setFocusId(person.id === focusId ? null : person.id)}
@@ -43,7 +43,7 @@ export function MediaStageDemo() {
               status={
                 person.isMuted ? (
                   <Box as="span" display="inline-flex" color="text-danger">
-                    <MicrophoneSlash aria-label="Микрофон выключен" />
+                    <MicrophoneSlash aria-label="Microphone off" />
                   </Box>
                 ) : null
               }
@@ -57,7 +57,7 @@ export function MediaStageDemo() {
       </Box>
       {isAllShown ? (
         <Text variant="caption" color="muted">
-          Здесь откроется список всех участников.
+          The full participant list opens here.
         </Text>
       ) : null}
     </Box>

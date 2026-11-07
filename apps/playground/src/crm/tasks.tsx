@@ -15,15 +15,15 @@ import type { Task, TaskGroup } from "./data.ts";
 type TaskFilter = "all" | "open" | "done";
 
 const groups: { id: TaskGroup; label: string }[] = [
-  { id: "today", label: "Сегодня" },
-  { id: "tomorrow", label: "Завтра" },
-  { id: "later", label: "Позже" },
+  { id: "today", label: "Today" },
+  { id: "tomorrow", label: "Tomorrow" },
+  { id: "later", label: "Later" },
 ];
 
 const filters: { id: TaskFilter; label: string }[] = [
-  { id: "all", label: "Все" },
-  { id: "open", label: "Активные" },
-  { id: "done", label: "Выполненные" },
+  { id: "all", label: "All" },
+  { id: "open", label: "Open" },
+  { id: "done", label: "Done" },
 ];
 
 const matches = (task: Task, filter: TaskFilter) =>
@@ -65,43 +65,43 @@ export function Tasks({ tasks, onToggle, onAdd, onRemove, onClearDone }: TasksPr
     >
       <Box flexDirection="column" gap="xs">
         <Text as="h1" variant="heading-xs" weight="medium">
-          Задачи
+          Tasks
         </Text>
-        <Text color="muted">Осталось {remaining}</Text>
+        <Text color="muted">{remaining} left</Text>
       </Box>
       <Box as="form" flexDirection="column" gap="m" onSubmit={submit}>
         <Box gap="s">
           <Input
-            aria-label="Новая задача"
+            aria-label="New task"
             className="w-full"
-            placeholder="Что нужно сделать?"
+            placeholder="What needs doing?"
             value={title}
             onChange={(event) => setTitle(event.target.value)}
           />
           <Button isDisabled={!title.trim()} type="submit">
-            Добавить
+            Add task
           </Button>
         </Box>
-        <SegmentedControl label="Срок задачи" options={groups} value={group} onChange={setGroup} />
+        <SegmentedControl label="Due" options={groups} value={group} onChange={setGroup} />
       </Box>
       <Box alignItems="center" justifyContent="between" flexWrap="wrap" gap="m">
         <SegmentedControl
-          label="Какие задачи показать"
+          label="Tasks to show"
           options={filters}
           value={filter}
           onChange={(next) => withTransition(() => setFilter(next))}
         />
         {doneCount > 0 ? (
           <Button size="sm" variant="ghost" onPress={onClearDone}>
-            Убрать выполненные
+            Clear completed
           </Button>
         ) : null}
       </Box>
       {visible.length === 0 ? (
         <Box flexDirection="column" alignItems="center" gap="m" padding="2xl" textAlign="center">
-          <Text color="muted">{filter === "done" ? "Выполненных нет" : "Активных нет"}</Text>
+          <Text color="muted">{filter === "done" ? "Nothing done yet" : "No open tasks"}</Text>
           <Button size="sm" variant="secondary" onPress={() => setFilter("all")}>
-            Показать все
+            Show all
           </Button>
         </Box>
       ) : null}
@@ -147,7 +147,7 @@ export function Tasks({ tasks, onToggle, onAdd, onRemove, onClearDone }: TasksPr
                   </Checkbox>
                   <Button
                     isIconOnly
-                    aria-label={`Удалить задачу ${task.title}`}
+                    aria-label={`Delete task ${task.title}`}
                     size="sm"
                     variant="ghost"
                     onPress={() => onRemove(task.id)}

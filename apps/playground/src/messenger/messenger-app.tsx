@@ -65,7 +65,7 @@ import {
   type Ref,
   type RefObject,
 } from "react";
-import { formatRubles } from "../blocks/format.ts";
+import { formatMoney } from "../blocks/format.ts";
 import { ChatMenuItems, LabelIcon, type ChatMenuActions } from "./chat-menu.tsx";
 import { contactById, contacts, labels, type Chat, type LabelId, type Note } from "./data.ts";
 import { formatListTime, formatMessageTime, startOfDay, formatDay } from "./format.ts";
@@ -82,11 +82,11 @@ const NO_NOTES: Note[] = [];
 type Section = "all" | "unread" | "starred" | "archive" | "trash" | LabelId;
 
 const sections: { id: Section; label: string; icon: ComponentType }[] = [
-  { id: "all", label: "Все чаты", icon: Comments },
-  { id: "unread", label: "Непрочитанные", icon: Tray },
-  { id: "starred", label: "Избранные", icon: Star },
-  { id: "archive", label: "Архив", icon: Archive },
-  { id: "trash", label: "Корзина", icon: TrashBin },
+  { id: "all", label: "All chats", icon: Comments },
+  { id: "unread", label: "Unread", icon: Tray },
+  { id: "starred", label: "Starred", icon: Star },
+  { id: "archive", label: "Archive", icon: Archive },
+  { id: "trash", label: "Trash", icon: TrashBin },
 ];
 
 const LOAD_MS = 700;
@@ -95,22 +95,25 @@ const WINDOW_SIZE = { width: tokens.widths.form, height: 520 };
 const isWideScreen = () => matchMedia(`(min-width: ${tokens.breakpoints.md})`).matches;
 
 const deliveryLabels = {
-  sending: "Отправляется",
-  sent: "Отправлено",
-  delivered: "Доставлено",
-  read: "Прочитано",
+  sending: "Sending",
+  sent: "Sent",
+  delivered: "Delivered",
+  read: "Read",
 };
 
 const emptyStates: Partial<Record<Section, { title: string; description: string }>> = {
-  unread: { title: "Всё прочитано", description: "Новые сообщения появятся здесь." },
+  unread: { title: "All caught up", description: "New messages will show up here." },
   starred: {
-    title: "Пока нет избранных",
-    description: "Отметьте чат звездой, чтобы он был под рукой.",
+    title: "No starred chats yet",
+    description: "Star a chat to keep it close at hand.",
   },
-  archive: { title: "Архив пуст", description: "Сюда попадают чаты, убранные из списка." },
+  archive: {
+    title: "Archive is empty",
+    description: "Chats you remove from the list end up here.",
+  },
   trash: {
-    title: "Корзина пуста",
-    description: "Удалённые чаты хранятся здесь до окончательного удаления.",
+    title: "Trash is empty",
+    description: "Deleted chats stay here until they are removed for good.",
   },
 };
 
@@ -148,7 +151,7 @@ function ContactAvatar({ contactId, isSmall = false, showsPresence = false }: Co
   return showsPresence && contact?.isOnline ? (
     <Badge.Anchor>
       {avatar}
-      <Badge aria-label="В сети" color="success" placement="bottom-right" size="sm" />
+      <Badge aria-label="Online" color="success" placement="bottom-right" size="sm" />
     </Badge.Anchor>
   ) : (
     avatar
@@ -200,7 +203,7 @@ const Sections = memo(function Sections({ section, chats, onSelect, onCompose }:
   return (
     <Box flexDirection="column" justifyContent="between" gap="xl" flexGrow={1} minHeight={0}>
       <Box flexDirection="column" gap="xl" minHeight={0} overflowY="auto">
-        <Box as="nav" aria-label="Разделы сообщений" flexDirection="column" gap="xs">
+        <Box as="nav" aria-label="Message sections" flexDirection="column" gap="xs">
           {sections.map(({ id, label, icon: Icon }) => (
             <NavButton
               key={id}
@@ -212,10 +215,10 @@ const Sections = memo(function Sections({ section, chats, onSelect, onCompose }:
             />
           ))}
         </Box>
-        <Box as="nav" aria-label="Метки" flexDirection="column" gap="xs">
+        <Box as="nav" aria-label="Labels" flexDirection="column" gap="xs">
           <Box display="block" paddingHorizontal="m">
             <Text variant="caption" color="muted">
-              Метки
+              Labels
             </Text>
           </Box>
           {labels.map(({ id, label }) => (
@@ -232,7 +235,7 @@ const Sections = memo(function Sections({ section, chats, onSelect, onCompose }:
       </Box>
       <Button fullWidth variant="secondary" onPress={onCompose}>
         <Pencil />
-        Новое сообщение
+        New message
       </Button>
     </Box>
   );
@@ -269,16 +272,16 @@ const ChatRow = memo(function ChatRow({ chat, last, onToggleStar }: ChatRowProps
         <Box alignItems="center" justifyContent="between" gap="s" minWidth={0}>
           <Text as="span" variant="caption" color={isUnread ? "default" : "muted"} truncate>
             {chat.isTyping ? (
-              <Shimmer>печатает</Shimmer>
+              <Shimmer>typing</Shimmer>
             ) : (
-              `${last?.mine ? "Вы: " : ""}${last?.text ?? ""}`
+              `${last?.mine ? "You: " : ""}${last?.text ?? ""}`
             )}
           </Text>
           <Box as="span" display="inline-flex" alignItems="center" gap="xs" flexShrink={0}>
             {isUnread ? <CountBadge count={chat.unread} /> : null}
             <Button
               isIconOnly
-              aria-label={chat.isStarred ? "Убрать из избранных" : "В избранные"}
+              aria-label={chat.isStarred ? "Remove from starred" : "Add to starred"}
               aria-pressed={chat.isStarred}
               className="size-6"
               size="sm"
@@ -319,7 +322,7 @@ const MessageItem = memo(function MessageItem({
           {dayLabel}
         </Text>
       ) : null}
-      {isFirstNew ? <ConversationNewMark label="Новые сообщения" /> : null}
+      {isFirstNew ? <ConversationNewMark label="New messages" /> : null}
       <Box flexDirection="column" gap="xs" minWidth={0} motion={isHistory ? undefined : "enter"}>
         {isGrouped ? null : (
           <Text variant="caption" color="subtle" align={side}>
@@ -374,7 +377,7 @@ function Messages({ chat, notes }: { chat: Chat; notes: Note[] }) {
       {chat.isTyping ? (
         <Box display="block" motion="fade">
           <Text variant="caption" color="muted">
-            <Shimmer>{`${contact?.name.split(" ")[0]} печатает`}</Shimmer>
+            <Shimmer>{`${contact?.name.split(" ")[0]} is typing`}</Shimmer>
           </Text>
         </Box>
       ) : null}
@@ -399,8 +402,8 @@ function CopyField({ label, value }: { label: string; value: string }) {
       <Box alignItems="center" justifyContent="between" gap="s" minWidth={0}>
         <Text truncate>{value}</Text>
         <CopyButton
-          copiedLabel={`${label} скопирован`}
-          label={`Скопировать: ${label.toLowerCase()}`}
+          copiedLabel={`${label} copied`}
+          label={`Copy ${label.toLowerCase()}`}
           size="sm"
           value={value}
           variant="ghost"
@@ -428,25 +431,25 @@ const ClientCard = memo(function ClientCard({ chat, onComment }: ClientCardProps
         <Box flexDirection="column" minWidth={0}>
           <Text truncate>{contact.role}</Text>
           <Text variant="caption" color="muted">
-            С нами с {contact.since}
+            With us since {contact.since}
           </Text>
         </Box>
       </Box>
       <Box flexDirection="column" gap="s">
-        <CopyField label="Почта" value={contact.email} />
-        <CopyField label="Телефон" value={contact.phone} />
+        <CopyField label="Email" value={contact.email} />
+        <CopyField label="Phone" value={contact.phone} />
         {contact.deals ? (
-          <CardField label="Сделки">
+          <CardField label="Deals">
             <Text tabularNums>
-              {contact.deals.count} на {formatRubles(contact.deals.total)}
+              {contact.deals.count} totaling {formatMoney(contact.deals.total)}
             </Text>
           </CardField>
         ) : null}
       </Box>
       <TextArea
-        aria-label={`Заметка о клиенте ${contact.name}`}
+        aria-label={`Note about ${contact.name}`}
         fullWidth
-        placeholder="Заметка о клиенте"
+        placeholder="Note about the client"
         rows={3}
         value={chat.comment}
         variant="secondary"
@@ -472,15 +475,15 @@ function Footer({
 
   return (
     <PromptComposer
-      attachLabel="Прикрепить файл"
+      attachLabel="Attach file"
       attachments={attachments}
       inputRef={inputRef}
       isRunning={false}
-      label={`Сообщение для ${contact?.name}`}
-      placeholder="Напишите сообщение"
-      removeAttachmentLabel="Убрать"
-      stopLabel="Остановить"
-      submitLabel="Отправить"
+      label={`Message to ${contact?.name}`}
+      placeholder="Write a message"
+      removeAttachmentLabel="Remove"
+      stopLabel="Stop"
+      submitLabel="Send"
       value={chat.draft}
       onAttach={(files) =>
         setAttachments((list) => [
@@ -525,9 +528,9 @@ function ChatView({ chat, notes, inputRef, onDraft, onRead, onSend }: ChatViewPr
           onSend={(text, files) => onSend(chat.id, text, files)}
         />
       }
-      label={`Переписка с ${contactById(chat.contactId)?.name}`}
+      label={`Conversation with ${contactById(chat.contactId)?.name}`}
       newCount={chat.unread}
-      scrollLabel="К последнему сообщению"
+      scrollLabel="Jump to latest message"
       onReachEnd={() => onRead(chat.id)}
     >
       <Messages chat={chat} notes={notes} />
@@ -564,10 +567,10 @@ const ChatWindow = memo(function ChatWindow({
   return (
     <FloatingPanel
       isBodyFlush
-      closeLabel={`Закрыть окно: ${name}`}
+      closeLabel={`Close window: ${name}`}
       isOpen={isOpen}
-      moveLabel={`Переместить окно: ${name}`}
-      resize={{ label: `Изменить размер окна: ${name}`, defaultSize: WINDOW_SIZE }}
+      moveLabel={`Move window: ${name}`}
+      resize={{ label: `Resize window: ${name}`, defaultSize: WINDOW_SIZE }}
       title={name}
       onExited={() => onExited(chat.id)}
       onOpenChange={() => onClose(chat.id)}
@@ -621,12 +624,12 @@ function ChatHeader({
   return (
     <Box alignItems="center" gap="s" flexShrink={0} paddingHorizontal="l" paddingVertical="m">
       <Box display={{ base: "flex", md: "none" }}>
-        <Button isIconOnly aria-label="К списку чатов" size="sm" variant="ghost" onPress={onClose}>
+        <Button isIconOnly aria-label="Back to chats" size="sm" variant="ghost" onPress={onClose}>
           <ArrowLeft />
         </Button>
       </Box>
       <Box display={{ base: "none", md: "flex" }}>
-        <Button isIconOnly aria-label="Закрыть чат" size="sm" variant="ghost" onPress={onClose}>
+        <Button isIconOnly aria-label="Close chat" size="sm" variant="ghost" onPress={onClose}>
           <Xmark />
         </Button>
       </Box>
@@ -636,13 +639,13 @@ function ChatHeader({
           {contact?.name}
         </Text>
         <Text variant="caption" color={contact?.isOnline ? "success" : "muted"} truncate>
-          {chat.isTyping ? "печатает" : contact?.isOnline ? "в сети" : contact?.role}
+          {chat.isTyping ? "typing" : contact?.isOnline ? "online" : contact?.role}
         </Text>
       </Box>
       <Box display={{ base: "none", sm: "flex" }} alignItems="center" gap="2xs">
         <Button
           isIconOnly
-          aria-label="Предыдущий чат"
+          aria-label="Previous chat"
           isDisabled={position.index <= 0}
           size="sm"
           variant="ghost"
@@ -652,7 +655,7 @@ function ChatHeader({
         </Button>
         <Button
           isIconOnly
-          aria-label="Следующий чат"
+          aria-label="Next chat"
           isDisabled={position.index < 0 || position.index >= position.total - 1}
           size="sm"
           variant="ghost"
@@ -665,7 +668,7 @@ function ChatHeader({
         ref={cardTriggerRef}
         isIconOnly
         aria-expanded={isCardOpen}
-        aria-label="Карточка клиента"
+        aria-label="Client card"
         size="sm"
         variant={isCardOpen ? "secondary" : "ghost"}
         onPress={onToggleCard}
@@ -675,7 +678,7 @@ function ChatHeader({
       <Box display={{ base: "none", sm: "flex" }}>
         <Button
           isIconOnly
-          aria-label={chat.isStarred ? "Убрать из избранных" : "В избранные"}
+          aria-label={chat.isStarred ? "Remove from starred" : "Add to starred"}
           size="sm"
           variant="ghost"
           onPress={onToggleStar}
@@ -684,36 +687,30 @@ function ChatHeader({
         </Button>
       </Box>
       {chat.place === "inbox" ? (
-        <Button isIconOnly aria-label="В архив" size="sm" variant="ghost" onPress={onArchive}>
+        <Button isIconOnly aria-label="Archive" size="sm" variant="ghost" onPress={onArchive}>
           <Archive />
         </Button>
       ) : (
-        <Button isIconOnly aria-label="Вернуть" size="sm" variant="ghost" onPress={onRestore}>
+        <Button isIconOnly aria-label="Restore" size="sm" variant="ghost" onPress={onRestore}>
           <ArrowUturnCcwLeft />
         </Button>
       )}
       {isTrash ? (
-        <Button
-          isIconOnly
-          aria-label="Удалить навсегда"
-          size="sm"
-          variant="ghost"
-          onPress={onRemove}
-        >
+        <Button isIconOnly aria-label="Delete forever" size="sm" variant="ghost" onPress={onRemove}>
           <TrashBin />
         </Button>
       ) : (
-        <Button isIconOnly aria-label="В корзину" size="sm" variant="ghost" onPress={onTrash}>
+        <Button isIconOnly aria-label="Move to trash" size="sm" variant="ghost" onPress={onTrash}>
           <TrashBin />
         </Button>
       )}
       <Dropdown>
-        <Button isIconOnly aria-label="Ещё" size="sm" variant="ghost">
+        <Button isIconOnly aria-label="More" size="sm" variant="ghost">
           <EllipsisVertical />
         </Button>
         <Dropdown.Popover>
           <Dropdown.Menu
-            aria-label="Действия с чатом"
+            aria-label="Chat actions"
             onAction={(key) => {
               const label = labels.find(({ id }) => id === key);
               if (label) {
@@ -723,12 +720,12 @@ function ChatHeader({
               }
             }}
           >
-            <Dropdown.Item id="unread" textValue="Отметить непрочитанным">
-              <Label>Отметить непрочитанным</Label>
+            <Dropdown.Item id="unread" textValue="Mark as unread">
+              <Label>Mark as unread</Label>
             </Dropdown.Item>
             <Separator />
-            <Dropdown.Section aria-label="Метка">
-              <Header>Метка</Header>
+            <Dropdown.Section aria-label="Label">
+              <Header>Label</Header>
               {labels.map(({ id, label }) => (
                 <Dropdown.Item key={id} id={id} textValue={label}>
                   <LabelIcon id={id} />
@@ -776,13 +773,13 @@ function ComposeModal({
           <Modal.Dialog>
             <Modal.CloseTrigger />
             <Modal.Header>
-              <Modal.Heading>Новое сообщение</Modal.Heading>
+              <Modal.Heading>New message</Modal.Heading>
             </Modal.Header>
             <Box as="form" flexDirection="column" gap="l" onSubmit={submit}>
               <Modal.Body>
                 <Box flexDirection="column" gap="m">
                   <Select
-                    aria-label="Кому"
+                    aria-label="To"
                     className="w-full"
                     value={contactId}
                     onChange={(key) => setContactId(String(key))}
@@ -803,9 +800,9 @@ function ComposeModal({
                     </Select.Popover>
                   </Select>
                   <TextArea
-                    aria-label="Текст сообщения"
+                    aria-label="Message text"
                     fullWidth
-                    placeholder="Напишите сообщение"
+                    placeholder="Write a message"
                     rows={4}
                     value={text}
                     onChange={(event) => setText(event.target.value)}
@@ -814,10 +811,10 @@ function ComposeModal({
               </Modal.Body>
               <Modal.Footer>
                 <Button slot="close" variant="tertiary">
-                  Отменить
+                  Cancel
                 </Button>
                 <Button isDisabled={!text.trim()} type="submit">
-                  Отправить
+                  Send
                 </Button>
               </Modal.Footer>
             </Box>
@@ -846,17 +843,17 @@ function RemoveDialog({
           <AlertDialog.Dialog>
             <AlertDialog.Header>
               <AlertDialog.Icon status="danger" />
-              <AlertDialog.Heading>Удалить чат с {contactName}?</AlertDialog.Heading>
+              <AlertDialog.Heading>Delete chat with {contactName}?</AlertDialog.Heading>
             </AlertDialog.Header>
             <AlertDialog.Body>
-              <Text as="p">Переписка удалится без возможности восстановить.</Text>
+              <Text as="p">The conversation will be deleted and can't be restored.</Text>
             </AlertDialog.Body>
             <AlertDialog.Footer>
               <Button slot="close" variant="tertiary">
-                Отменить
+                Cancel
               </Button>
               <Button slot="close" variant="danger" onPress={onRemove}>
-                Удалить чат
+                Delete chat
               </Button>
             </AlertDialog.Footer>
           </AlertDialog.Dialog>
@@ -1080,7 +1077,7 @@ export function MessengerApp() {
         <Drawer>
           <Drawer.Backdrop isOpen={isMenuOpen} onOpenChange={setIsMenuOpen}>
             <Drawer.Content placement="left">
-              <Drawer.Dialog aria-label="Разделы сообщений">
+              <Drawer.Dialog aria-label="Message sections">
                 <Drawer.Body>
                   <Box flexDirection="column" minHeight="100%">
                     {sectionsPanel}
@@ -1103,7 +1100,7 @@ export function MessengerApp() {
             <Box display={{ base: "flex", lg: "none" }}>
               <Button
                 isIconOnly
-                aria-label="Открыть разделы"
+                aria-label="Open sections"
                 size="sm"
                 variant="secondary"
                 onPress={() => setIsMenuOpen(true)}
@@ -1112,10 +1109,10 @@ export function MessengerApp() {
               </Button>
             </Box>
             <Box display="block" flexGrow={1} minWidth={0}>
-              <SearchField aria-label="Поиск по чатам" value={query} onChange={setQuery}>
+              <SearchField aria-label="Search chats" value={query} onChange={setQuery}>
                 <SearchField.Group>
                   <SearchField.SearchIcon />
-                  <SearchField.Input className="w-full" placeholder="Поиск" />
+                  <SearchField.Input className="w-full" placeholder="Search" />
                   <SearchField.ClearButton />
                 </SearchField.Group>
               </SearchField>
@@ -1127,12 +1124,12 @@ export function MessengerApp() {
                 currentId={openId}
                 getText={(chat) => {
                   const name = contactById(chat.contactId)?.name ?? "";
-                  return chat.unread > 0 ? `${name}, непрочитанных: ${chat.unread}` : name;
+                  return chat.unread > 0 ? `${name}, ${chat.unread} unread` : name;
                 }}
                 items={visible}
-                label="Чаты"
+                label="Chats"
                 menu={{
-                  label: "Действия с чатом",
+                  label: "Chat actions",
                   renderItems: (chat) => (
                     <ChatMenuItems
                       actions={chatActions}
@@ -1160,16 +1157,16 @@ export function MessengerApp() {
                     <Box color="text-secondary">
                       <Magnifier />
                     </Box>
-                    <Text color="muted">Никого не нашли</Text>
+                    <Text color="muted">No one found</Text>
                     <Button size="sm" variant="secondary" onPress={() => setQuery("")}>
-                      Сбросить поиск
+                      Clear search
                     </Button>
                   </>
                 ) : (
                   <>
-                    <Text variant="title">{empty?.title ?? "В этой метке пусто"}</Text>
+                    <Text variant="title">{empty?.title ?? "Nothing under this label"}</Text>
                     <Text color="muted">
-                      {empty?.description ?? "Чаты с этой меткой появятся здесь."}
+                      {empty?.description ?? "Chats with this label will show up here."}
                     </Text>
                   </>
                 )}
@@ -1224,24 +1221,24 @@ export function MessengerApp() {
               <EmptyPanel
                 actions={
                   <Button size="sm" variant="secondary" onPress={() => setIsComposing(true)}>
-                    Новое сообщение
+                    New message
                   </Button>
                 }
-                description="Откройте чат из списка или начните новый."
+                description="Open a chat from the list or start a new one."
                 icon={<Comments />}
-                title="Чат не выбран"
+                title="No chat selected"
               />
             </Box>
           )}
         </Box>
         <FloatingPanel
-          closeLabel="Закрыть карточку"
+          closeLabel="Close card"
           isOpen={isCardOpen && cardChat !== undefined}
-          moveLabel="Переместить карточку"
-          pinLabel="Закрепить на экране"
+          moveLabel="Move card"
+          pinLabel="Pin to screen"
           title={contactById(cardChatId ?? "")?.name ?? ""}
           triggerRef={cardTrigger}
-          unpinLabel="Вернуть к кнопке"
+          unpinLabel="Return to button"
           onOpenChange={setIsCardOpen}
         >
           {cardChat ? <ClientCard chat={cardChat} onComment={setComment} /> : null}

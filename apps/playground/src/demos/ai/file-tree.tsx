@@ -10,7 +10,7 @@ const files = [
 export function FileTreeDemo() {
   return (
     <Box display="block" width="100%" maxWidth={400}>
-      <FileTree files={files} label="Изменённые файлы" onOpen={(path) => toast(path)} />
+      <FileTree files={files} label="Changed files" onOpen={(path) => toast(path)} />
     </Box>
   );
 }

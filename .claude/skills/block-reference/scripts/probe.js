@@ -39,7 +39,7 @@ function inspect(article) {
 
     if (rect.right > box.right + 1 && !element.closest(SCROLLABLE)) {
       issues.add(
-        `переполнение ${element.tagName.toLowerCase()} на ${Math.round(rect.right - box.right)}px`,
+        `overflow ${element.tagName.toLowerCase()} by ${Math.round(rect.right - box.right)}px`,
       );
     }
     for (const property of ["paddingTop", "paddingLeft", "marginTop", "rowGap", "columnGap"]) {
@@ -61,7 +61,7 @@ function inspect(article) {
       element.matches("input:not([type=range], [type=checkbox], [type=radio]), textarea") &&
       rect.width > MAX_FIELD_WIDTH
     ) {
-      issues.add(`поле шире ${MAX_FIELD_WIDTH}px: ${Math.round(rect.width)}px`);
+      issues.add(`field wider than ${MAX_FIELD_WIDTH}px: ${Math.round(rect.width)}px`);
     }
     if (element.matches("hr, [role=separator], .separator")) signals.separators += 1;
     if (element.matches(".chip, .badge")) signals.tags += 1;
@@ -72,18 +72,18 @@ function inspect(article) {
       .map((node) => node.textContent)
       .join("")
       .trim();
-    if (/^0\d\b/.test(text) || /^шаг \d/i.test(text)) signals.numbering += 1;
+    if (/^0\d\b/.test(text) || /^step \d/i.test(text)) signals.numbering += 1;
   }
 
   const primaryButtons = preview.querySelectorAll(".button--primary").length;
-  if (primaryButtons > 1) issues.add(`основных кнопок ${primaryButtons}`);
+  if (primaryButtons > 1) issues.add(`${primaryButtons} primary buttons`);
 
   return { issues: [...issues].slice(0, 6), signals };
 }
 
 function openBlocksView() {
   const tab = [...document.querySelectorAll("nav button")].find(
-    (button) => button.textContent.trim() === "Блоки",
+    (button) => button.textContent.trim() === "Blocks",
   );
   tab?.click();
 }

@@ -1,7 +1,12 @@
 import { Box, Button, Text, TextSwap } from "@anyglade/kit";
 import { useState } from "react";
 
-const states = ["Смотрю воронку", "Ищу сделки без движения", "Готовлю", "Думал 4 с"];
+const states = [
+  "Reviewing the pipeline",
+  "Looking for stalled deals",
+  "Preparing",
+  "Thought for 4s",
+];
 
 export function TextSwapDemo() {
   const [index, setIndex] = useState(0);
@@ -17,7 +22,7 @@ export function TextSwapDemo() {
         </Text>
       </Box>
       <Button size="sm" variant="secondary" onPress={() => setIndex(index + 1)}>
-        Следующее состояние
+        Next state
       </Button>
     </Box>
   );

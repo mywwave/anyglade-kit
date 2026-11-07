@@ -11,30 +11,30 @@ import {
 import { CircleCheckFill } from "@anyglade/kit/icons";
 import { useEffect, useRef, useState } from "react";
 import { simulateRequest } from "../../simulate.ts";
-import { formatRubles } from "../format.ts";
+import { formatMoney } from "../format.ts";
 
 const people = [
-  { id: "me", name: "Вы", initials: "Вы", photo: 12 },
-  { id: "olya", name: "Оля", initials: "О", photo: 5 },
-  { id: "katya", name: "Катя", initials: "К", photo: 32 },
-  { id: "dima", name: "Дима", initials: "Д", photo: 53 },
+  { id: "me", name: "You", initials: "You", photo: 12 },
+  { id: "olya", name: "Emma", initials: "E", photo: 5 },
+  { id: "katya", name: "Kate", initials: "K", photo: 32 },
+  { id: "dima", name: "Dan", initials: "D", photo: 53 },
 ] as const;
 
 type PersonId = (typeof people)[number]["id"];
 type Person = (typeof people)[number];
 
 const dishes = [
-  { id: "khachapuri", name: "Хачапури по-аджарски", price: 690 },
-  { id: "khinkali", name: "Хинкали, 12 шт.", price: 1080 },
-  { id: "shashlik", name: "Шашлык из баранины", price: 1290 },
-  { id: "saperavi", name: "Саперави, бутылка", price: 2400 },
-  { id: "tarkhun", name: "Тархун, кувшин", price: 720 },
+  { id: "khachapuri", name: "Adjarian khachapuri", price: 16 },
+  { id: "khinkali", name: "Khinkali, 12 pcs", price: 24 },
+  { id: "shashlik", name: "Lamb shashlik", price: 28 },
+  { id: "saperavi", name: "Saperavi, bottle", price: 52 },
+  { id: "tarkhun", name: "Tarragon soda, jug", price: 14 },
 ] as const;
 
 type DishId = (typeof dishes)[number]["id"];
 type Shares = Record<DishId, readonly PersonId[]>;
 
-/** Who shared what, as the table remembers it: Дима drove, so no wine. */
+/** Who shared what, as the table remembers it: Dan drove, so no wine. */
 const initialShares: Shares = {
   khachapuri: ["me", "olya", "katya", "dima"],
   khinkali: ["me", "olya", "dima"],
@@ -44,9 +44,9 @@ const initialShares: Shares = {
 };
 
 const tipOptions = [
-  { id: "0", label: "0 %" },
-  { id: "5", label: "5 %" },
-  { id: "10", label: "10 %" },
+  { id: "0", label: "0%" },
+  { id: "5", label: "5%" },
+  { id: "10", label: "10%" },
 ] as const;
 
 type Tip = (typeof tipOptions)[number]["id"];
@@ -61,7 +61,7 @@ const photo = (person: Person) => `https://i.pravatar.cc/80?img=${person.photo}`
 
 /**
  * Splits every dish between those who shared it, adds the tip in proportion and rounds
- * to whole rubles. The kopecks lost in rounding stay with the one who pays the restaurant.
+ * to whole dollars. The cents lost in rounding stay with the one who pays the restaurant.
  */
 function settle(shares: Shares, tip: number) {
   const exact = new Map<PersonId, number>(people.map((person) => [person.id, 0]));
@@ -136,11 +136,11 @@ function DishRow({
 }) {
   const note =
     eaters.length === 0
-      ? { text: "никто не отмечен", color: "warning" as const }
+      ? { text: "no one marked", color: "warning" as const }
       : eaters.length === 1
-        ? { text: "без деления", color: "subtle" as const }
+        ? { text: "not shared", color: "subtle" as const }
         : {
-            text: `по ${formatRubles(Math.round(dish.price / eaters.length))}`,
+            text: `${formatMoney(Math.round(dish.price / eaters.length))} each`,
             color: "muted" as const,
           };
 
@@ -149,11 +149,11 @@ function DishRow({
       <Box alignItems="baseline" justifyContent="between" gap="m">
         <Text truncate>{dish.name}</Text>
         <Text tabularNums wrap="nowrap">
-          {formatRubles(dish.price)}
+          {formatMoney(dish.price)}
         </Text>
       </Box>
       <Box alignItems="center" justifyContent="between" gap="m">
-        <Box as="fieldset" aria-label={`Кто делил: ${dish.name}`} gap="xs">
+        <Box as="fieldset" aria-label={`Who shared: ${dish.name}`} gap="xs">
           {people.map((person) => {
             const isTaken = eaters.includes(person.id);
             return isSettled ? (
@@ -260,7 +260,7 @@ function Debtor({
           {person.name}
         </Text>
         <Text variant="title" tabularNums wrap="nowrap">
-          {formatRubles(amount)}
+          {formatMoney(amount)}
         </Text>
       </Box>
     </Box>
@@ -299,12 +299,12 @@ export function SplitBillBlock() {
   }
 
   const status = isSent
-    ? { text: "Запросы отправлены", color: "success" as const }
+    ? { text: "Requests sent", color: "success" as const }
     : unclaimed.length > 0
-      ? { text: "Не все позиции отмечены", color: "warning" as const }
+      ? { text: "Some items are not marked", color: "warning" as const }
       : debtors.length === 0
-        ? { text: "Весь счёт на вас", color: "muted" as const }
-        : { text: "Счёт оплачиваете вы", color: "muted" as const };
+        ? { text: "The whole bill is on you", color: "muted" as const }
+        : { text: "You pay the restaurant", color: "muted" as const };
 
   return (
     <Box flexDirection="column" alignItems="center" gap="xl" width="100%" maxWidth={300}>
@@ -318,9 +318,9 @@ export function SplitBillBlock() {
         boxShadow="l"
       >
         <Box alignItems="baseline" justifyContent="between" gap="m">
-          <Text variant="title">Сулугуни</Text>
+          <Text variant="title">Suluguni</Text>
           <Text variant="caption" color="muted" tabularNums>
-            Стол 7, счёт № 2184
+            Table 7, check #2184
           </Text>
         </Box>
 
@@ -345,21 +345,21 @@ export function SplitBillBlock() {
           borderColor="border-control"
         >
           <Box alignItems="center" justifyContent="between" gap="m" minHeight={36}>
-            <Text color="muted">Чаевые</Text>
+            <Text color="muted">Tip</Text>
             {isSent ? (
               <Box display="block" motion="fade">
                 <Text color="muted" tabularNums>
-                  {tip} %, {formatRubles(tipAmount)}
+                  {tip}%, {formatMoney(tipAmount)}
                 </Text>
               </Box>
             ) : (
-              <SegmentedControl label="Чаевые" options={tipOptions} value={tip} onChange={setTip} />
+              <SegmentedControl label="Tip" options={tipOptions} value={tip} onChange={setTip} />
             )}
           </Box>
           <Box alignItems="baseline" justifyContent="between" gap="m">
-            <Text variant="title">Итого</Text>
+            <Text variant="title">Total</Text>
             <Text variant="title" tabularNums wrap="nowrap">
-              {formatRubles(total)}
+              {formatMoney(total)}
             </Text>
           </Box>
         </Box>
@@ -387,12 +387,12 @@ export function SplitBillBlock() {
           {isSent ? (
             <Box display="block" motion="fade">
               <Button variant="ghost" onPress={restart}>
-                Разделить заново
+                Split again
               </Button>
             </Box>
           ) : (
             <Button fullWidth isDisabled={!canSend} onPress={send}>
-              Отправить запросы
+              Send requests
             </Button>
           )}
         </Box>
@@ -401,4 +401,4 @@ export function SplitBillBlock() {
   );
 }
 
-SplitBillBlock.displayName = "Разделить счёт";
+SplitBillBlock.displayName = "Split the bill";

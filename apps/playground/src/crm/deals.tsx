@@ -12,9 +12,9 @@ import {
 } from "@anyglade/kit";
 import { EllipsisVertical } from "@anyglade/kit/icons";
 import { useMemo, useState } from "react";
-import { formatRubles } from "../blocks/format.ts";
+import { formatMoney } from "../blocks/format.ts";
 import { STALLED_AFTER_DAYS, stages, type Deal, type StageId } from "./data.ts";
-import { formatCompactRubles, pluralize } from "./format.ts";
+import { formatCompactMoney, pluralize } from "./format.ts";
 
 export type DealsView = "all" | "stalled";
 type DealsOrder = "amount" | "idle";
@@ -22,13 +22,13 @@ type DealsOrder = "amount" | "idle";
 const ALL_OWNERS = "all";
 
 const views: { id: DealsView; label: string }[] = [
-  { id: "all", label: "Все" },
-  { id: "stalled", label: "Застряли" },
+  { id: "all", label: "All" },
+  { id: "stalled", label: "Stalled" },
 ];
 
 const orders: { id: DealsOrder; label: string }[] = [
-  { id: "amount", label: "По сумме" },
-  { id: "idle", label: "По простою" },
+  { id: "amount", label: "By amount" },
+  { id: "idle", label: "By idle time" },
 ];
 
 const isStalled = (deal: Deal) => deal.stage !== "won" && deal.daysInStage >= STALLED_AFTER_DAYS;
@@ -58,12 +58,12 @@ function DealCard({ deal, onMove }: DealCardProps) {
           </Text>
         </Box>
         <Dropdown>
-          <Button isIconOnly aria-label={`Переместить ${deal.title}`} size="sm" variant="ghost">
+          <Button isIconOnly aria-label={`Move ${deal.title}`} size="sm" variant="ghost">
             <EllipsisVertical />
           </Button>
           <Dropdown.Popover>
             <Dropdown.Menu
-              aria-label="Этап сделки"
+              aria-label="Deal stage"
               onAction={(key) => onMove(deal.id, key as StageId)}
             >
               {stages
@@ -79,7 +79,7 @@ function DealCard({ deal, onMove }: DealCardProps) {
       </Box>
       <Box alignItems="baseline" justifyContent="between" gap="s">
         <Text as="span" tabularNums>
-          {formatRubles(deal.amount)}
+          {formatMoney(deal.amount)}
         </Text>
         <Text as="span" variant="caption" color="muted">
           {deal.owner}
@@ -87,7 +87,7 @@ function DealCard({ deal, onMove }: DealCardProps) {
       </Box>
       {isStalled(deal) ? (
         <Text variant="caption" color="warning">
-          {deal.daysInStage} {pluralize(deal.daysInStage, "день", "дня", "дней")} без движения
+          {deal.daysInStage} {pluralize(deal.daysInStage, "day", "days")} idle
         </Text>
       ) : null}
     </Box>
@@ -134,31 +134,31 @@ export function Deals({ deals, view, onViewChange, onMove }: DealsProps) {
         gap="m"
       >
         <Text as="h1" variant="heading-xs" weight="medium">
-          Сделки
+          Deals
         </Text>
         <Input
-          aria-label="Поиск по сделкам"
+          aria-label="Search deals"
           className="w-full md:w-64"
-          placeholder="Сделка, компания или менеджер"
+          placeholder="Deal, company or owner"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
         />
       </Box>
       <Box alignItems="center" flexWrap="wrap" gap="m">
         <SegmentedControl
-          label="Какие сделки показать"
+          label="Deals to show"
           options={views}
           value={view}
           onChange={(next) => withTransition(() => onViewChange(next))}
         />
         <SegmentedControl
-          label="Порядок сделок"
+          label="Sort deals"
           options={orders}
           value={order}
           onChange={(next) => withTransition(() => setOrder(next))}
         />
         <Select
-          aria-label="Менеджер"
+          aria-label="Owner"
           className="w-48"
           value={owner}
           onChange={(key) => withTransition(() => setOwner(String(key)))}
@@ -169,8 +169,8 @@ export function Deals({ deals, view, onViewChange, onMove }: DealsProps) {
           </Select.Trigger>
           <Select.Popover>
             <ListBox>
-              <ListBox.Item id={ALL_OWNERS} textValue="Все менеджеры">
-                Все менеджеры
+              <ListBox.Item id={ALL_OWNERS} textValue="All owners">
+                All owners
                 <ListBox.ItemIndicator />
               </ListBox.Item>
               {owners.map((name) => (
@@ -185,9 +185,9 @@ export function Deals({ deals, view, onViewChange, onMove }: DealsProps) {
       </Box>
       {found.length === 0 ? (
         <Box flexDirection="column" alignItems="center" gap="m" padding="3xl" textAlign="center">
-          <Text color="muted">Таких сделок нет</Text>
+          <Text color="muted">No matching deals</Text>
           <Button size="sm" variant="secondary" onPress={reset}>
-            Сбросить фильтры
+            Reset filters
           </Button>
         </Box>
       ) : (
@@ -218,7 +218,7 @@ export function Deals({ deals, view, onViewChange, onMove }: DealsProps) {
                     {stage.label}
                   </Text>
                   <Text as="span" variant="caption" color="muted" tabularNums>
-                    {formatCompactRubles(total)}
+                    {formatCompactMoney(total)}
                   </Text>
                 </Box>
                 <Box as="ul" flexDirection="column" gap="s" minHeight={64}>

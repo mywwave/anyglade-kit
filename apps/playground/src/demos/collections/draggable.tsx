@@ -2,15 +2,15 @@ import { Box, Draggable, ItemList, Text } from "@anyglade/kit";
 import { useState } from "react";
 
 const rooms = [
-  { id: "standup", name: "Планёрка" },
-  { id: "client", name: "Созвон с клиентом" },
+  { id: "standup", name: "Standup" },
+  { id: "client", name: "Client call" },
 ];
 
 export function DraggableDemo() {
   const [placed, setPlaced] = useState<Record<string, string>>({
-    Анна: "standup",
-    Илья: "standup",
-    Ольга: "client",
+    Anna: "standup",
+    Ethan: "standup",
+    Olivia: "client",
   });
 
   return (
@@ -23,7 +23,7 @@ export function DraggableDemo() {
         }}
         getText={(room) => room.name}
         items={rooms}
-        label="Каналы"
+        label="Rooms"
         renderItem={(room) => (
           <Box flexDirection="column" gap="xs">
             <Text>{room.name}</Text>

@@ -1,57 +1,57 @@
-# Телефон
+# Phone
 
-Телефон это ширина меньше точки `md`. Значения до неё пишутся как `base`, от неё как `md`. Промежуточная граница в 640 px даёт зону, где настольная вёрстка падает на узкий экран.
+The phone is any width below the `md` breakpoint. Values below it are written as `base`, from it as `md`. An intermediate boundary at 640 px creates a zone where the desktop layout lands on a narrow screen.
 
-Ручка перетаскивания получает `touch-action: none`, иначе браузер заберёт жест на прокрутку. На телефоне `FloatingPanel` остаётся рабочим, но экран узкий: для постоянных деталей лучше `Sheet`.
+A drag handle gets `touch-action: none`, otherwise the browser takes the gesture for scrolling. On the phone `FloatingPanel` keeps working, but the screen is narrow: for persistent details `Sheet` is better.
 
-## Прокрутка и слои
+## Scrolling and layers
 
-- На телефоне прокручивается документ, а не внутренний контейнер. Иначе ломаются сворачивание адресной строки, возврат наверх по нажатию и прилипание.
-- У предков прилипших элементов нет `overflow: hidden` или `auto`: они отменяют `position: sticky`. Если нужно обрезать содержимое, используйте `overflow: clip`.
-- Высоту `100dvh` странице с прокруткой документа не ставьте, задавайте `minHeight`.
-- Ряд с горизонтальной прокруткой внутри колонки получает `flexShrink={0}`, иначе схлопывается в полоску и режет содержимое.
+- On the phone the document scrolls, not an inner container. Otherwise the address bar collapse, tap-to-top and sticky positioning break.
+- Ancestors of sticky elements have no `overflow: hidden` or `auto`: they cancel `position: sticky`. If you need to clip content, use `overflow: clip`.
+- Do not give a page with document scrolling a height of `100dvh`; set `minHeight`.
+- A horizontally scrolling row inside a column gets `flexShrink={0}`, otherwise it collapses into a strip and clips its content.
 
-## Каркас
+## Shell
 
-- Боковая панель становится `Drawer` по кнопке с `aria-label`.
-- Главное действие остаётся в строке заголовка. Вторичные действия уходят в меню, а не выстраиваются рядом с ним.
-- Экран со своей нижней полосой, например с формой или режимом выбора, прячет остальные нижние панели.
-- Таблица скроллится в своём контейнере, но на телефоне часто лучше список строк: главное значение, подпись, переход к деталям.
+- The sidebar becomes a `Drawer` opened by a button with `aria-label`.
+- The main action stays in the title row. Secondary actions go into a menu instead of lining up next to it.
+- A screen with its own bottom bar, for example a form or a selection mode, hides the other bottom bars.
+- A table scrolls in its own container, but on the phone a list of rows is often better: the main value, a label, a way to the details.
 
-## Шторки вместо всплывающих слоёв
+## Sheets instead of popovers
 
-На телефоне панель снизу удобнее всплывающего окна: она у большого пальца и не закрывает контекст.
+On the phone a bottom panel is more convenient than a popup: it is near the thumb and does not cover the context.
 
-- Детали и выбор: `Sheet` или `Drawer`.
-- Меню из нескольких действий: шторка действий.
-- Длинный выбор: шторка с поиском.
-- Шторка, открытая поверх окна, принимает касания и ввод. Проверяйте: открыть, покрутить, напечатать, закрыть, окно под ней живо.
-- Конец длинного списка в шторке достижим при любой высоте.
-- Фокус идёт в шторку и возвращается на место при закрытии.
+- Details and selection: `Sheet` or `Drawer`.
+- A menu of several actions: an action sheet.
+- A long selection: a sheet with search.
+- A sheet opened over a modal accepts taps and input. Check it: open, scroll, type, close, and the modal beneath is still alive.
+- The end of a long list in a sheet is reachable at any height.
+- Focus moves into the sheet and returns to its place on close.
 
-## Касание
+## Touch
 
-- Цель касания не меньше 44 px. Мелкий контрол может выглядеть меньше, но зона нажатия остаётся 44.
-- Наведение только при `(hover: hover) and (pointer: fine)`. Обратная связь нажатия это `:active`.
-- Ничего не открывается только наведением.
-- Важные действия не прячутся за свайпом или удержанием: это ускорение, у него должна быть видимая альтернатива.
-- Перетаскивание это тоже ускорение. У каждого переноса есть пункт в меню, иначе на касании и с клавиатуры действие недоступно.
-- `prefers-reduced-motion` убирает анимацию, но не жесты: свайп и удержание продолжают работать.
-- Ряд чипов или вкладок со скрытой полосой прокрутки должен прокручиваться и колесом мыши: узкое окно настольного браузера это тоже «телефон».
+- A touch target is at least 44 px. A small control may look smaller, but its hit area stays 44.
+- Hover only under `(hover: hover) and (pointer: fine)`. Press feedback is `:active`.
+- Nothing opens on hover alone.
+- Important actions do not hide behind a swipe or long press: those are shortcuts and must have a visible alternative.
+- Dragging is a shortcut too. Every move has a menu item, otherwise the action is unavailable on touch and with the keyboard.
+- `prefers-reduced-motion` removes animation, but not gestures: swipe and long press keep working.
+- A row of chips or tabs with a hidden scrollbar must also scroll with the mouse wheel: a narrow desktop browser window is a "phone" too.
 
-## Поля
+## Fields
 
-- Правильный `inputMode` и `autoComplete` дают нужную клавиатуру и автозаполнение.
-- Поле не перекрывается клавиатурой, кнопка отправки достижима.
-- Форма на весь экран лучше окна, если полей больше трёх.
-- Поля и кнопки не сжимаются: кнопка на всю ширину блока, но в разумных пределах.
+- The right `inputMode` and `autoComplete` give the right keyboard and autofill.
+- The keyboard does not cover the field, and the submit button is reachable.
+- A full-screen form is better than a modal if there are more than three fields.
+- Fields and buttons do not shrink: a button spans the block width, within reason.
 
-## Проверка
+## Verification
 
-1. 390×844 и 360×780 в светлой и тёмной теме, с эмуляцией касания.
-2. Отдельно узкое окно настольного браузера около 400 px, с мышью и видимыми полосами прокрутки. Там всплывают другие дефекты.
-3. Режим `prefers-reduced-motion` для экранов с жестами.
-4. Шторки поверх окон.
-5. Широкий экран не изменился, горизонтальной прокрутки страницы нет.
+1. 390×844 and 360×780 in the light and dark themes, with touch emulation.
+2. Separately, a narrow desktop browser window of about 400 px, with a mouse and visible scrollbars. Different defects show up there.
+3. `prefers-reduced-motion` mode for screens with gestures.
+4. Sheets over modals.
+5. The wide screen has not changed, and there is no horizontal page scroll.
 
-Эмуляция не доказывает ощущение бросков, поведение клавиатуры, вырезы экрана и инерцию iOS. Так и пишите в отчёте, а не заявляйте, что проверено.
+Emulation does not prove the feel of flings, keyboard behavior, screen notches or iOS momentum. Say exactly that in the report instead of claiming it was checked.

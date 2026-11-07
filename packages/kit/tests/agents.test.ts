@@ -21,7 +21,7 @@ function run(command: string, cwd = project, env: NodeJS.ProcessEnv = {}) {
 function installSkill(root = project) {
   const folder = join(root, "node_modules/@anyglade/kit/skills/anyglade-design-system");
   mkdirSync(folder, { recursive: true });
-  writeFileSync(join(folder, "SKILL.md"), "---\nname: x\ndescription: Правила интерфейса\n---\n");
+  writeFileSync(join(folder, "SKILL.md"), "---\nname: x\ndescription: Interface rules\n---\n");
 }
 
 beforeEach(() => {
@@ -38,7 +38,7 @@ test("init points every agent at the skill inside the package", () => {
   run("init");
 
   const path = "node_modules/@anyglade/kit/skills/anyglade-design-system/SKILL.md";
-  expect(read(STUB)).toContain(`description: Правила интерфейса`);
+  expect(read(STUB)).toContain(`description: Interface rules`);
   expect(read(STUB)).toContain(path);
   expect(read(".agents/skills/anyglade-design-system/SKILL.md")).toBe(read(STUB));
   expect(read("AGENTS.md")).toContain(path);
@@ -57,22 +57,34 @@ test("init finds a package installed above the app, as in a monorepo", () => {
 
 test("init runs again without repeating itself or touching the text around it", () => {
   installSkill();
-  writeFileSync(join(project, "AGENTS.md"), "# Наши правила\n");
+  writeFileSync(join(project, "AGENTS.md"), "# Our rules\n");
   run("init");
   run("init");
 
   const agents = read("AGENTS.md");
-  expect(agents.startsWith("# Наши правила\n")).toBe(true);
+  expect(agents.startsWith("# Our rules\n")).toBe(true);
   expect(agents.match(/anyglade-kit:start/g)).toHaveLength(1);
 });
 
 test("init leaves a skill written by hand alone", () => {
   installSkill();
   mkdirSync(join(project, ".claude/skills/anyglade-design-system"), { recursive: true });
-  writeFileSync(join(project, STUB), "мой скилл");
+  writeFileSync(join(project, STUB), "my skill");
   run("init");
 
-  expect(read(STUB)).toBe("мой скилл");
+  expect(read(STUB)).toBe("my skill");
+});
+
+test("init replaces a stub written by an older version in Russian", () => {
+  installSkill();
+  mkdirSync(join(project, ".claude/skills/anyglade-design-system"), { recursive: true });
+  writeFileSync(
+    join(project, STUB),
+    "<!-- \u0421\u043e\u0437\u0434\u0430\u043d\u043e @anyglade/kit. -->",
+  );
+  run("init");
+
+  expect(read(STUB)).toContain("<!-- Created by @anyglade/kit");
 });
 
 test("init explains what to do when the package is not installed", () => {

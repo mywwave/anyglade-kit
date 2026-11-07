@@ -12,10 +12,10 @@ export function LoadableDemo() {
   return (
     <Box flexDirection="column" alignItems="start" gap="l" width={250}>
       <Loadable isLoading={isLoading} skeleton={<Skeleton className="h-16 w-full rounded-lg" />}>
-        <Stat label="Выручка" value="1 848 885 ₽" />
+        <Stat label="Revenue" value="$184,890" />
       </Loadable>
       <Button isDisabled={isLoading} size="sm" variant="secondary" onPress={reload}>
-        Обновить
+        Refresh
       </Button>
     </Box>
   );

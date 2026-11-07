@@ -34,10 +34,10 @@ function ParticipantRow({ member, isSpeaking, isOrganizer }: ParticipantRowProps
       <PersonAvatar personId={member.personId} />
       <Box flexDirection="column" flexGrow={1} minWidth={0}>
         <Text as="span" weight={isSpeaking ? "medium" : undefined} truncate>
-          {isSelf ? `${person.name} (вы)` : person.name}
+          {isSelf ? `${person.name} (you)` : person.name}
         </Text>
         <Text as="span" variant="caption" color={isSpeaking ? "default" : "muted"} truncate>
-          {isSpeaking ? "Говорит" : isOrganizer ? "Организатор" : person.role}
+          {isSpeaking ? "Speaking" : isOrganizer ? "Organizer" : person.role}
         </Text>
       </Box>
       <Box as="span" display="inline-flex" alignItems="center" gap="xs" flexShrink={0}>
@@ -84,7 +84,7 @@ export function ParticipantList({
       <Box alignItems="center" justifyContent="between" gap="s" paddingHorizontal="s" height={32}>
         <Box as="span" display="inline-flex" alignItems="baseline" gap="s">
           <Text as="span" variant="title">
-            Участники
+            Participants
           </Text>
           <Text as="span" color="muted" tabularNums>
             {roster.length}
@@ -92,7 +92,7 @@ export function ParticipantList({
         </Box>
         {canMuteAll ? (
           <Button size="sm" variant="ghost" onPress={onMuteAll}>
-            Выключить всем
+            Mute everyone
           </Button>
         ) : null}
       </Box>
@@ -101,9 +101,9 @@ export function ParticipantList({
           currentId={focusId}
           getText={(member) => personById(member.personId).name}
           items={items}
-          label="Участники"
+          label="Participants"
           menu={{
-            label: "Действия с участником",
+            label: "Participant actions",
             renderItems: (member) => <PersonMenuItems showsPin actions={actions} member={member} />,
           }}
           renderItem={(member) => (
@@ -141,7 +141,7 @@ export function VolumeModal({ personId, volume, onChange, onClose }: VolumeModal
           <Modal.Dialog>
             <Modal.CloseTrigger />
             <Modal.Header>
-              <Modal.Heading>{personId ? firstName(personId) : ""}: громкость</Modal.Heading>
+              <Modal.Heading>{personId ? firstName(personId) : ""}: volume</Modal.Heading>
             </Modal.Header>
             <Modal.Body>
               <Slider
@@ -157,7 +157,7 @@ export function VolumeModal({ personId, volume, onChange, onClose }: VolumeModal
                   }
                 }}
               >
-                <Label>Слышно только вам</Label>
+                <Label>Only you hear this change</Label>
                 <Slider.Output />
                 <Slider.Track>
                   <Slider.Fill />
@@ -167,7 +167,7 @@ export function VolumeModal({ personId, volume, onChange, onClose }: VolumeModal
             </Modal.Body>
             <Modal.Footer>
               <Button slot="close" variant="tertiary">
-                Готово
+                Done
               </Button>
             </Modal.Footer>
           </Modal.Dialog>
@@ -192,15 +192,17 @@ export function RemoveDialog({ personId, onClose, onRemove }: RemoveDialogProps)
             <AlertDialog.Header>
               <AlertDialog.Icon status="danger" />
               <AlertDialog.Heading>
-                Убрать из канала: {personId ? personById(personId).name : ""}?
+                Remove {personId ? personById(personId).name : ""} from the channel?
               </AlertDialog.Heading>
             </AlertDialog.Header>
             <AlertDialog.Body>
-              <Text as="p">Человек отключится сразу и сможет вернуться только по ссылке.</Text>
+              <Text as="p">
+                They will be disconnected right away and can only return with a link.
+              </Text>
             </AlertDialog.Body>
             <AlertDialog.Footer>
               <Button slot="close" variant="tertiary">
-                Отменить
+                Cancel
               </Button>
               <Button
                 slot="close"
@@ -211,7 +213,7 @@ export function RemoveDialog({ personId, onClose, onRemove }: RemoveDialogProps)
                   }
                 }}
               >
-                Убрать
+                Remove
               </Button>
             </AlertDialog.Footer>
           </AlertDialog.Dialog>

@@ -7,15 +7,15 @@ export function SignaturePadDemo() {
   return (
     <Box flexDirection="column" gap="m" width="100%" maxWidth={400}>
       <SignaturePad
-        clearLabel="Стереть подпись"
-        label="Подпись под актом"
-        placeholder="Подпишите здесь"
+        clearLabel="Clear signature"
+        label="Sign the acceptance form"
+        placeholder="Sign here"
         onChange={setSignature}
       />
       <Text variant="caption" color="muted" tabularNums>
         {signature
-          ? `Готово: PNG, ${Math.round(signature.length / 1024)} КБ в data URL`
-          : "Подписи пока нет, onChange отдал null"}
+          ? `Ready: PNG, ${Math.round(signature.length / 1024)} KB as a data URL`
+          : "No signature yet, onChange returned null"}
       </Text>
     </Box>
   );

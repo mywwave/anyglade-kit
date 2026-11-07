@@ -9,11 +9,11 @@ const BAR_COUNT = 40;
 const WAVE_HEIGHT = 28;
 const SPEEDS = [
   { rate: 1, label: "1×" },
-  { rate: 1.5, label: "1,5×" },
+  { rate: 1.5, label: "1.5×" },
   { rate: 2, label: "2×" },
 ] as const;
 const TRANSCRIPT =
-  "Привет! Я у входа в кофейню на Покровке, столик у окна свободен. Возьму тебе флэт уайт без сахара, подходи, как освободишься.";
+  "Hey, I’m at the door of the coffee shop on Elm Street, and the window table is free. I’ll get you a flat white, no sugar. Come over when you’re done.";
 /** One word of the transcript appears every so often, as if the text were being recognised. */
 const WORD_STREAM_MS = 45;
 
@@ -302,13 +302,13 @@ export function VoiceNoteBlock() {
       <Box flexShrink={0}>
         <Avatar size="sm">
           <Avatar.Image alt="" src="https://i.pravatar.cc/80?img=5" />
-          <Avatar.Fallback>ВС</Avatar.Fallback>
+          <Avatar.Fallback>VC</Avatar.Fallback>
         </Avatar>
       </Box>
       <Box flexDirection="column" gap="xs" flexGrow={1} minWidth={0}>
         <Box paddingHorizontal="m">
           <Text variant="caption" color="muted">
-            Вера Соколова
+            Vera Cole
           </Text>
         </Box>
         <Box
@@ -321,7 +321,7 @@ export function VoiceNoteBlock() {
           borderRadius="l"
         >
           <Box alignItems="center" gap="m">
-            <Button isIconOnly aria-label={isPlaying ? "Пауза" : "Слушать"} onPress={togglePlay}>
+            <Button isIconOnly aria-label={isPlaying ? "Pause" : "Play"} onPress={togglePlay}>
               <Box key={String(isPlaying)} as="span" display="inline-flex" motion="pop">
                 {isPlaying ? <PauseFill /> : <PlayFill />}
               </Box>
@@ -373,8 +373,8 @@ export function VoiceNoteBlock() {
                   pointerEvents="none"
                 >
                   <input
-                    aria-label="Позиция в голосовом"
-                    aria-valuetext={`${clock(second)} из ${clock(DURATION)}`}
+                    aria-label="Position in the voice message"
+                    aria-valuetext={`${clock(second)} of ${clock(DURATION)}`}
                     max={DURATION}
                     min={0}
                     step={1}
@@ -391,7 +391,7 @@ export function VoiceNoteBlock() {
                 {isHeard ? (
                   <Box display="block" motion="fade">
                     <Text variant="caption" color="subtle">
-                      Прослушано
+                      Played
                     </Text>
                   </Box>
                 ) : null}
@@ -435,17 +435,17 @@ export function VoiceNoteBlock() {
               <Button
                 size="sm"
                 variant="secondary"
-                aria-label={`Скорость ${speed.label}`}
+                aria-label={`Speed ${speed.label}`}
                 onPress={cycleSpeed}
               >
                 <TextSwap text={speed.label} />
               </Button>
               <Button size="sm" variant="ghost" onPress={toggleTranscript}>
-                <TextSwap text={transcript === "hidden" ? "Расшифровать" : "Скрыть текст"} />
+                <TextSwap text={transcript === "hidden" ? "Transcribe" : "Hide text"} />
               </Button>
             </Box>
             <Text variant="caption" color="subtle" tabularNums>
-              18:42
+              6:42 PM
             </Text>
           </Box>
         </Box>
@@ -454,4 +454,4 @@ export function VoiceNoteBlock() {
   );
 }
 
-VoiceNoteBlock.displayName = "Голосовое";
+VoiceNoteBlock.displayName = "Voice message";

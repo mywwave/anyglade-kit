@@ -1,40 +1,40 @@
-# Подключение kit
+# Setting up the kit
 
-Требования: React 19+, Tailwind CSS 4+.
+Requirements: React 19+, Tailwind CSS 4+.
 
 ```bash
 bun add @anyglade/kit
 ```
 
-HeroUI и React Aria ставятся вместе с пакетом, Provider не нужен. Полная документация лежит в `node_modules/@anyglade/kit/README.md`.
+HeroUI and React Aria are installed together with the package; no Provider is needed. Full documentation is in `node_modules/@anyglade/kit/README.md`.
 
-Чтобы агенты проекта знали эти правила, выполните `bunx @anyglade/kit init`. Команда положит в проект ссылки на правила из пакета, поэтому они обновляются вместе с ним.
+So that the project's agents know these rules, run `bunx @anyglade/kit init`. The command puts links to the rules from the package into the project, so they update together with it.
 
-## Стили
+## Styles
 
-В главном CSS-файле, строго в таком порядке:
+In the main CSS file, strictly in this order:
 
 ```css
 @import "tailwindcss";
 @import "@anyglade/kit/styles.css";
 ```
 
-Порядок важен: kit подменяет шкалу текста, веса и трекинг Tailwind, поэтому утилиты и компоненты HeroUI идут по той же шкале.
+The order matters: the kit replaces Tailwind's text scale, weights and tracking, so utilities and HeroUI components follow the same scale.
 
-## Входы
+## Entries
 
-| Импорт                 | Что даёт                                                                                              |
-| ---------------------- | ----------------------------------------------------------------------------------------------------- |
-| `@anyglade/kit`        | Все компоненты HeroUI, `Box`, `Text`, паттерны kit, `tokens`                                          |
-| `@anyglade/kit/icons`  | Gravity UI Icons. Отдельный вход, потому что имена `Link`, `Calendar`, `Tag` совпадают с компонентами |
-| `@anyglade/kit/charts` | Графики. Отдельно, чтобы Recharts не попадал в бандл без нужды                                        |
-| `@anyglade/kit/ai`     | Интерфейс с агентом                                                                                   |
+| Import                 | What it provides                                                                                     |
+| ---------------------- | ---------------------------------------------------------------------------------------------------- |
+| `@anyglade/kit`        | All HeroUI components, `Box`, `Text`, kit patterns, `tokens`                                         |
+| `@anyglade/kit/icons`  | Gravity UI Icons. A separate entry because the names `Link`, `Calendar`, `Tag` clash with components |
+| `@anyglade/kit/charts` | Charts. Separate so that Recharts does not end up in the bundle needlessly                           |
+| `@anyglade/kit/ai`     | Agent interface                                                                                      |
 
-Никогда не импортируйте напрямую из `@heroui/react`: тогда не применятся замены kit, например `Button` со встроенным лоадером. Иконку `Box` импортируйте как `Box as BoxIcon`.
+Never import directly from `@heroui/react`: then the kit replacements do not apply, for example `Button` with a built-in loader. Import the `Box` icon as `Box as BoxIcon`.
 
-## Линт
+## Lint
 
-Правила публикуются вместе с kit и держат проект в рамках системы. Подключите их сразу, в `vite.config.ts` для Vite+ или в конфиге oxlint:
+The rules are published together with the kit and keep the project within the system. Connect them right away, in `vite.config.ts` for Vite+ or in the oxlint config:
 
 ```ts
 lint: {
@@ -51,25 +51,25 @@ lint: {
 },
 ```
 
-## Тема
+## Theme
 
-По умолчанию тема следует настройке ОС и работает без JavaScript через `light-dark()`. Зафиксировать её можно на `<html>`:
+By default the theme follows the OS setting and works without JavaScript through `light-dark()`. You can pin it on `<html>`:
 
 ```html
 <html class="dark" data-theme="dark"></html>
 ```
 
-Пользовательский переключатель это `useTheme()`. Обе темы равноправны, проверяйте каждый экран в обеих.
+A user-facing switch is `useTheme()`. Both themes are equal; check every screen in both.
 
-## Бренд
+## Brand
 
-Настройки задаются CSS-переменными после импорта kit. Готовый CSS удобнее всего получить в панели «Тема» витрины kit: она сама выводит читаемые значения из одного цвета.
+Settings are set with CSS variables after the kit import. The easiest way to get ready CSS is the "Theme" panel of the kit showcase: it derives readable values from a single color by itself.
 
-- Акцент: `--accent`, `--accent-foreground`, `--ag-accent-control`, `--ag-accent-control-foreground`, `--focus`, `--link`, `--ag-text-accent`, `--ag-chart-primary`. Правила в [color.md](color.md).
-- Форма кнопок: `--ag-button-radius`.
-- Плотность: `--spacing` и `--ag-space-*`.
-- Шрифт: `@theme { --font-sans: "Your Font", sans-serif; }`. По умолчанию Inter и Geist Mono, они раздаются приложением, внешних запросов нет.
+- Accent: `--accent`, `--accent-foreground`, `--ag-accent-control`, `--ag-accent-control-foreground`, `--focus`, `--link`, `--ag-text-accent`, `--ag-chart-primary`. Rules in [color.md](color.md).
+- Button shape: `--ag-button-radius`.
+- Density: `--spacing` and `--ag-space-*`.
+- Font: `@theme { --font-sans: "Your Font", sans-serif; }`. Inter and Geist Mono by default; they are served by the app, with no external requests.
 
-## Серверные компоненты
+## Server components
 
-`Box` и `Text` работают в серверных компонентах и не вставляют стили при рендере. Компоненты с поведением помечены `"use client"`.
+`Box` and `Text` work in server components and do not inject styles during render. Components with behavior are marked `"use client"`.

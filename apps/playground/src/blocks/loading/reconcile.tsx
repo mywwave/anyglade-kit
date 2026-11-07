@@ -1,7 +1,7 @@
 import { Box, Button, Popover, Text, TextSwap, tokens } from "@anyglade/kit";
 import { memo, useEffect, useRef, useState } from "react";
 import { simulateRequest } from "../../simulate.ts";
-import { formatRubles } from "../format.ts";
+import { formatMoney } from "../format.ts";
 
 type Phase = "idle" | "running" | "done";
 type DotState = "waiting" | "matched" | "mismatch" | "resolved";
@@ -21,26 +21,26 @@ const COLUMNS = 12;
 const ROWS = 8;
 const PAYMENTS = COLUMNS * ROWS;
 const LAST_DIAGONAL = COLUMNS + ROWS - 2;
-const CASH_TOTAL = 1_286_400;
+const CASH_TOTAL = 32_160;
 
 const MISMATCHES: readonly Mismatch[] = [
   {
     index: 37,
-    place: "Студия «Север»",
-    difference: 147,
-    detail: `В кассе ${formatRubles(4900)}, в банке ${formatRubles(4753)}, разница ${formatRubles(147)} — комиссия эквайринга.`,
-    action: "Учесть комиссию",
-    resolution: `Комиссия ${formatRubles(147)} учтена в расходах октября.`,
-    resolvedLabel: "Учтено",
+    place: "North Studio",
+    difference: 14,
+    detail: `${formatMoney(480)} at the register, ${formatMoney(466)} at the bank: the ${formatMoney(14)} gap is the card processing fee.`,
+    action: "Book the fee",
+    resolution: `The ${formatMoney(14)} fee is booked as an October expense.`,
+    resolvedLabel: "Booked",
   },
   {
     index: 95,
-    place: "Кофейня «Зерно»",
-    difference: 2300,
-    detail: `В кассе ${formatRubles(2300)} 31 октября в 23:52, а банк зачислил платёж 1 ноября.`,
-    action: "Перенести в ноябрь",
-    resolution: `Платёж ${formatRubles(2300)} перенесён в сверку ноября.`,
-    resolvedLabel: "В ноябре",
+    place: "Grain Coffee",
+    difference: 58,
+    detail: `${formatMoney(58)} hit the register on October 31 at 11:52 PM, but the bank credited it on November 1.`,
+    action: "Move to November",
+    resolution: `The ${formatMoney(58)} payment moved to the November reconciliation.`,
+    resolvedLabel: "In November",
   },
 ];
 const BANK_TOTAL = MISMATCHES.reduce((total, item) => total - item.difference, CASH_TOTAL);
@@ -59,9 +59,9 @@ const SETTLE_STEPS = 3;
 
 function mismatchCount(count: number) {
   if (count === 1) {
-    return "1 расхождение";
+    return "1 mismatch";
   }
-  return `${count} расхождения`;
+  return `${count} mismatches`;
 }
 
 interface DotProps {
@@ -179,7 +179,7 @@ function MismatchRow({
             </Text>
           </Box>
           <Text as="span" color={isResolved ? "muted" : "default"} tabularNums wrap="nowrap">
-            {isResolved ? item.resolvedLabel : formatRubles(item.difference)}
+            {isResolved ? item.resolvedLabel : formatMoney(item.difference)}
           </Text>
         </Box>
       </Button>
@@ -194,7 +194,7 @@ function MismatchRow({
           <Box display="block" marginTop="m">
             {isResolved ? (
               <Button size="sm" variant="secondary" onPress={onReopen}>
-                Вернуть в расхождения
+                Reopen mismatch
               </Button>
             ) : (
               <Button size="sm" onPress={onResolve}>
@@ -220,7 +220,7 @@ function TotalRow({ label, amount }: { label: string; amount: number }) {
     >
       <Text color="muted">{label}</Text>
       <Text tabularNums wrap="nowrap">
-        {formatRubles(amount)}
+        {formatMoney(amount)}
       </Text>
     </Box>
   );
@@ -272,18 +272,18 @@ export function ReconcileBlock() {
   const lit = open ?? pointed;
   const status =
     phase === "idle"
-      ? "Ждёт сверки"
+      ? "Ready to reconcile"
       : phase === "running"
-        ? "Сверяю с выпиской"
+        ? "Matching the statement"
         : openCount > 0
           ? mismatchCount(openCount)
-          : "Всё сошлось";
+          : "Everything matches";
   const counter =
     phase === "idle"
-      ? `${PAYMENTS} платежей за октябрь`
+      ? `${PAYMENTS} payments in October`
       : phase === "running"
-        ? `${checked} из ${PAYMENTS}`
-        : `${PAYMENTS - openCount} из ${PAYMENTS} сошлись`;
+        ? `${checked} of ${PAYMENTS}`
+        : `${PAYMENTS - openCount} of ${PAYMENTS} match`;
 
   function dotState(index: number): DotState {
     if (diagonalOf(index) > front) {
@@ -349,16 +349,16 @@ export function ReconcileBlock() {
               </Box>
             ))
           : [
-              <TotalRow key="cash" amount={CASH_TOTAL} label="Касса" />,
-              <TotalRow key="bank" amount={BANK_TOTAL} label="Выписка банка" />,
+              <TotalRow key="cash" amount={CASH_TOTAL} label="Register" />,
+              <TotalRow key="bank" amount={BANK_TOTAL} label="Bank statement" />,
             ]}
       </Box>
 
       <Button isDisabled={phase === "running"} variant="secondary" onPress={start}>
-        {phase === "done" ? "Сверить снова" : "Сверить"}
+        {phase === "done" ? "Reconcile again" : "Reconcile"}
       </Button>
     </Box>
   );
 }
 
-ReconcileBlock.displayName = "Сверка";
+ReconcileBlock.displayName = "Reconciliation";
