@@ -234,6 +234,46 @@
   align-items: center;
 }
 
+/*
+ * HeroUI fills the row on hover but gives it no corners. A rounded fill must not touch the
+ * separator, so it floats between the lines. The space comes out of the row's own padding,
+ * so the row keeps its height.
+ */
+.accordion__item {
+  padding-block: var(--ag-space-xs);
+}
+
+.accordion__trigger {
+  padding-block: var(--ag-space-m);
+  border-radius: var(--ag-radius-m);
+}
+
+.accordion__body-inner {
+  padding-bottom: var(--ag-space-m);
+}
+
+/* The default accent is monochrome, so the line is what marks a link. It tints with the accent. */
+.link {
+  text-decoration-line: underline;
+  text-decoration-color: color-mix(in oklab, currentColor 40%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition:
+    color var(--ag-duration-fast) var(--ag-ease-standard),
+    text-decoration-color var(--ag-duration-fast) var(--ag-ease-standard);
+
+  &:hover,
+  &:active,
+  &[data-hovered="true"],
+  &[data-pressed="true"] {
+    text-decoration-color: currentColor;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
 .ag-page-loader {
   position: fixed;
   inset: 0;
@@ -854,6 +894,14 @@ html[data-ag-dragging] * {
   }
 }
 
+/* A pressed toggle is a choice, not the accent: an opaque neutral layer, like the current item in a list. */
+.toggle-button {
+  --toggle-button-bg-selected: var(--default);
+  --toggle-button-bg-selected-hover: var(--default-hover);
+  --toggle-button-bg-selected-pressed: var(--default-hover);
+  --toggle-button-fg-selected: var(--ag-text-primary);
+}
+
 .ag-segmented {
   gap: var(--ag-space-2xs);
   padding: var(--ag-space-2xs);
@@ -1118,4 +1166,127 @@ html[data-ag-dragging] * {
 
 .slider[data-orientation="vertical"] .slider__fill::after {
   top: calc(var(--ag-space-xs) * -1);
+}
+
+/* SlideToConfirm: a drag is a deliberate gesture, so a stray click cannot send money. */
+.ag-slide-confirm {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  /* tokens.widths.panel */
+  max-width: 20rem;
+  padding: var(--ag-space-xs);
+  border-radius: var(--ag-radius-full);
+  background-color: var(--ag-background-panel);
+  user-select: none;
+}
+
+.ag-slide-confirm__rail {
+  position: absolute;
+  inset: var(--ag-space-xs);
+  overflow: hidden;
+  border-radius: var(--ag-radius-full);
+  pointer-events: none;
+}
+
+.ag-slide-confirm__fill {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--ag-radius-full);
+  background-color: var(--ag-background-inverse);
+  transform: translateX(-100%);
+}
+
+/* The thumb sits on the fill, so whatever the fill covers reads in the inverse colour. */
+.ag-slide-confirm:not([data-phase="idle"]) .ag-slide-confirm__label {
+  color: var(--ag-text-inverse);
+}
+
+.ag-slide-confirm__label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  /* Centred on the whole track, clear of the thumb on either side. */
+  padding-inline: var(--ag-space-3xl);
+  pointer-events: none;
+}
+
+.ag-slide-confirm__thumb {
+  position: relative;
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: var(--ag-space-3xl);
+  height: var(--ag-space-3xl);
+  border-radius: var(--ag-radius-full);
+  color: var(--ag-text-inverse);
+  background-color: var(--ag-background-inverse);
+  outline: none;
+  cursor: grab;
+  touch-action: none;
+  transition: scale var(--ag-duration-fast) var(--ag-ease-standard);
+
+  & svg {
+    width: var(--ag-font-size-3);
+    height: var(--ag-font-size-3);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  &[data-dragging] {
+    cursor: grabbing;
+  }
+}
+
+.ag-slide-confirm:not([data-phase="idle"]) .ag-slide-confirm__thumb {
+  cursor: default;
+}
+
+/* SignaturePad: ink takes the text colour, the line shows where to sign. */
+.ag-signature {
+  position: relative;
+  width: 100%;
+  height: 10rem;
+  border-radius: var(--ag-radius-l);
+  color: var(--ag-text-primary);
+  background-color: var(--ag-background-panel);
+
+  & canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    cursor: crosshair;
+    touch-action: none;
+  }
+
+  &::after {
+    position: absolute;
+    right: var(--ag-space-xl);
+    bottom: var(--ag-space-2xl);
+    left: var(--ag-space-xl);
+    border-bottom: 1px dashed var(--ag-border-control);
+    content: "";
+    pointer-events: none;
+  }
+}
+
+.ag-signature__placeholder {
+  position: absolute;
+  bottom: calc(var(--ag-space-2xl) + var(--ag-space-s));
+  left: var(--ag-space-xl);
+  pointer-events: none;
+}
+
+.ag-signature__clear {
+  position: absolute;
+  top: var(--ag-space-s);
+  right: var(--ag-space-s);
 }

@@ -38,20 +38,6 @@
   }
 }
 
-@keyframes ag-swap-in {
-  from {
-    opacity: 0;
-    transform: translateY(var(--ag-space-s));
-  }
-}
-
-@keyframes ag-swap-out {
-  to {
-    opacity: 0;
-    transform: translateY(calc(var(--ag-space-s) * -1));
-  }
-}
-
 .ag-swap {
   position: relative;
   display: inline-block;
@@ -63,22 +49,27 @@
   white-space: nowrap;
 }
 
-.ag-swap__entering {
+.ag-swap__line {
   display: inline-block;
-  animation: ag-swap-in var(--ag-duration-base) var(--ag-ease-decelerate) backwards;
 }
 
-.ag-swap__leaving {
+/* Spaces at the edge of the changing part must keep their width. */
+.ag-swap__text {
+  white-space: pre;
+}
+
+/* The changing part slides inside its own line, like a digit on a clock. */
+.ag-swap__slot {
+  position: relative;
+  display: inline-block;
+  overflow: clip;
+  vertical-align: bottom;
+}
+
+.ag-swap__line--leaving {
   position: absolute;
   inset-block-start: 0;
   inset-inline-start: 0;
-  animation: ag-swap-out var(--ag-duration-fast) var(--ag-ease-accelerate) forwards;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ag-swap__entering {
-    animation-name: ag-fade;
-  }
 }
 
 .ag-turn {

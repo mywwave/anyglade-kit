@@ -56,7 +56,7 @@
   --ag-text-tertiary: light-dark(var(--ag-gray-400), var(--ag-ink-500));
   --ag-text-disabled: light-dark(var(--ag-gray-300), var(--ag-ink-600));
   --ag-text-inverse: light-dark(var(--ag-white), var(--ag-black));
-  --ag-text-accent: light-dark(var(--ag-blue-600), var(--ag-blue-400));
+  --ag-text-accent: light-dark(var(--ag-black), var(--ag-ink-100));
   --ag-text-success: light-dark(var(--ag-emerald-500), var(--ag-emerald-500));
   --ag-text-danger: light-dark(var(--ag-red-500), var(--ag-red-500));
   --ag-text-warning: light-dark(var(--ag-amber-500), var(--ag-amber-500));

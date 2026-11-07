@@ -1,4 +1,5 @@
 import { renderToStaticMarkup } from "react-dom/server";
+import { splitChange } from "../src/text-swap/split-change.ts";
 import { expect, test } from "vite-plus/test";
 import { DeliveryStatus, Message, Plan, Run, StreamingText } from "../src/ai.ts";
 import { overallStatus } from "../src/ai/status.tsx";
@@ -24,9 +25,36 @@ test("TextSwap shows plain text until it changes and can shimmer", () => {
   const active = renderToStaticMarkup(<TextSwap isShimmering text="Думаю" />);
 
   expect(quiet).toContain("Думаю");
-  expect(quiet).not.toContain("ag-swap__entering");
-  expect(quiet).not.toContain("ag-swap__leaving");
+  expect(quiet).not.toContain("ag-swap__line--leaving");
   expect(active).toContain("data-active");
+});
+
+test("TextSwap moves only the part that changed", () => {
+  expect(splitChange("97 100", "97 101")).toEqual({
+    prefix: "97 10",
+    leaving: "0",
+    arriving: "1",
+    suffix: "",
+  });
+  expect(splitChange("Отправим через 15 с", "Отправим через 14 с")).toEqual({
+    prefix: "Отправим через 1",
+    leaving: "5",
+    arriving: "4",
+    suffix: " с",
+  });
+  expect(splitChange("Читать", "Вы читаете").prefix).toBe("");
+});
+
+test("TextSwap handles growing, shrinking and repeated letters", () => {
+  expect(splitChange("100", "1000")).toMatchObject({ leaving: "", arriving: "0" });
+  expect(splitChange("1000", "100")).toMatchObject({ leaving: "0", arriving: "" });
+  expect(splitChange("aaa", "aa")).toEqual({
+    prefix: "aa",
+    leaving: "a",
+    arriving: "",
+    suffix: "",
+  });
+  expect(splitChange("👍🏽 да", "👍🏿 да")).toMatchObject({ leaving: "👍🏽", arriving: "👍🏿" });
 });
 
 test("a group reports its most urgent status", () => {

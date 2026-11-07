@@ -138,7 +138,7 @@
 | text-tertiary | oklch(0.707 0.022 261.325) | hsl(0 0% 46%) |
 | text-disabled | oklch(0.872 0.01 258.338) | hsl(0 0% 16%) |
 | text-inverse | #ffffff | #000000 |
-| text-accent | oklch(0.546 0.245 262.881) | oklch(0.707 0.165 254.624) |
+| text-accent | #000000 | hsl(0 0% 88%) |
 | text-success | oklch(0.696 0.17 162.48) | oklch(0.696 0.17 162.48) |
 | text-danger | oklch(0.637 0.237 25.331) | oklch(0.637 0.237 25.331) |
 | text-warning | oklch(0.769 0.188 70.08) | oklch(0.769 0.188 70.08) |

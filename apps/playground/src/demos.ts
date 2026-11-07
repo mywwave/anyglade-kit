@@ -4,6 +4,8 @@ type Modules = Record<string, Record<string, ComponentType>>;
 
 export interface Demo {
   name: string;
+  /** What people read: the component's `displayName`, otherwise its name. */
+  title: string;
   Component: ComponentType;
 }
 
@@ -29,7 +31,8 @@ function collect(modules: Modules): DemoCategory[] {
     }
     const [exportName, Component] = entry;
     const demos = byCategory.get(id) ?? [];
-    demos.push({ name: exportName.replace(/(Demo|Block)$/, ""), Component });
+    const name = exportName.replace(/(Demo|Block)$/, "");
+    demos.push({ name, title: Component.displayName ?? name, Component });
     byCategory.set(id, demos);
   }
 

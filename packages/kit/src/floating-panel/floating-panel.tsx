@@ -16,7 +16,6 @@ import { createPortal } from "react-dom";
 import { FocusScope, useMove, useOverlay } from "react-aria";
 import { Button } from "../button/button.tsx";
 import { Text } from "../text/text.tsx";
-import { TextSwap } from "../text-swap/text-swap.tsx";
 import { durations, easings, widths } from "../tokens.ts";
 import {
   cascadePoint,
@@ -308,7 +307,7 @@ export function FloatingPanel({
               type="button"
             >
               <Text as="span" id={titleId} variant="title" truncate>
-                <TextSwap text={title} />
+                {title}
               </Text>
             </button>
             {triggerRef ? (

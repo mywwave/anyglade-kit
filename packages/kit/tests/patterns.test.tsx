@@ -11,6 +11,10 @@ import { VideoSlash } from "../src/icons.ts";
 import {
   DetailRow,
   Draggable,
+  Masonry,
+  MasonryTile,
+  SignaturePad,
+  SlideToConfirm,
   EmptyPanel,
   Frame,
   CountBadge,
@@ -268,4 +272,49 @@ test("FloatingPanel renders nothing while closed", () => {
   );
 
   expect(html).toBe("");
+});
+
+test("MasonryTile is an anchored article and omits an empty note", () => {
+  const withNote = renderToStaticMarkup(
+    <Masonry>
+      <MasonryTile id="Receipt" note="Нажатие" title="Чек">
+        Деталь
+      </MasonryTile>
+    </Masonry>,
+  );
+  const withoutNote = renderToStaticMarkup(<MasonryTile title="Чек">Деталь</MasonryTile>);
+
+  expect(withNote).toContain('<article id="Receipt"');
+  expect(withNote).toContain("ag-break-avoid");
+  expect(withNote).toContain("Нажатие");
+  expect(withoutNote).not.toContain("<p");
+});
+
+test("SlideToConfirm names its thumb by the action and starts idle", () => {
+  const html = renderToStaticMarkup(
+    <SlideToConfirm
+      doneLabel="Отправлено"
+      label="Перевести 48 000 ₽"
+      pendingLabel="Отправляем"
+      onConfirm={() => undefined}
+    />,
+  );
+
+  expect(html).toContain('data-phase="idle"');
+  expect(html).toContain('aria-label="Перевести 48 000 ₽"');
+  expect(html).not.toContain("Отправлено");
+});
+
+test("SignaturePad shows the placeholder until the first stroke", () => {
+  const html = renderToStaticMarkup(
+    <SignaturePad
+      clearLabel="Очистить"
+      label="Подпись под договором"
+      placeholder="Подпишите здесь"
+      onChange={() => undefined}
+    />,
+  );
+
+  expect(html).toContain("Подпишите здесь");
+  expect(html).not.toContain("Очистить");
 });

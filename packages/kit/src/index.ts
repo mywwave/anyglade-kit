@@ -25,7 +25,15 @@ export {
   type SortableColumnProps,
 } from "./sortable-table/sortable-table.tsx";
 export { Shimmer, type ShimmerProps } from "./shimmer/shimmer.tsx";
+export { SignaturePad, type SignaturePadProps } from "./signature-pad/signature-pad.tsx";
+export { SlideToConfirm, type SlideToConfirmProps } from "./slide-to-confirm/slide-to-confirm.tsx";
 export { Draggable, type DraggableProps } from "./item-list/draggable.tsx";
+export {
+  Masonry,
+  MasonryTile,
+  type MasonryProps,
+  type MasonryTileProps,
+} from "./masonry/masonry.tsx";
 export { MediaStage, type MediaStageProps } from "./media-stage/media-stage.tsx";
 export {
   MediaTile,

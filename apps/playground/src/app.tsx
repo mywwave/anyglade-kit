@@ -1,6 +1,7 @@
 import { Box, Button, PageHeader, Text, Toast } from "@anyglade/kit";
 import { useEffect, useState } from "react";
 import { AssistantApp } from "./assistant/assistant-app.tsx";
+import { BlockGallery } from "./block-gallery.tsx";
 import { CrmApp } from "./crm/crm-app.tsx";
 import { blockCategories, componentCategories } from "./demos.ts";
 import { MeetApp } from "./meet/meet-app.tsx";
@@ -28,7 +29,7 @@ const descriptions: Record<View, string> = {
   messenger: "",
   meet: "",
   components: "Компоненты и токены из исходников пакета.",
-  blocks: "Готовые секции из компонентов kit.",
+  blocks: "Живые детали из kit: нажмите, потяните, введите.",
 };
 
 const viewNames = Object.keys(views) as View[];
@@ -114,7 +115,7 @@ function Documentation({
       paddingBottom={{ base: "none", md: "s" }}
       gap="s"
     >
-      {categories.length > 0 ? (
+      {categories.length > 0 && !isBlocks ? (
         <Box
           as="nav"
           aria-label="Содержание"
@@ -173,38 +174,26 @@ function Documentation({
         >
           <PageHeader title="@anyglade/kit" description={descriptions[view]} />
           {view === "showcase" ? <Showcase /> : null}
-          {categories.map((category) => (
-            <Box as="section" key={category.id} flexDirection="column" gap="3xl">
-              <Text as="h2" variant="heading-xs">
-                {category.label}
-              </Text>
-              {category.demos.map(({ name, Component }) => (
-                <Box as="article" key={name} id={name} flexDirection="column" gap="l">
-                  <Text as="h3" variant="title">
-                    {name}
+          {isBlocks ? <BlockGallery categories={categories} /> : null}
+          {isBlocks
+            ? null
+            : categories.map((category) => (
+                <Box as="section" key={category.id} flexDirection="column" gap="3xl">
+                  <Text as="h2" variant="heading-xs">
+                    {category.label}
                   </Text>
-                  {isBlocks ? (
-                    <Box
-                      display="block"
-                      minWidth={0}
-                      overflow="hidden"
-                      backgroundColor="background-primary"
-                      borderRadius="l"
-                      borderWidth={1}
-                      borderStyle="solid"
-                      borderColor="border-primary"
-                    >
-                      <Component />
+                  {category.demos.map(({ name, Component }) => (
+                    <Box as="article" key={name} id={name} flexDirection="column" gap="l">
+                      <Text as="h3" variant="title">
+                        {name}
+                      </Text>
+                      <Box display="block" minWidth={0} overflowX="auto" padding="xs">
+                        <Component />
+                      </Box>
                     </Box>
-                  ) : (
-                    <Box display="block" minWidth={0} overflowX="auto" padding="xs">
-                      <Component />
-                    </Box>
-                  )}
+                  ))}
                 </Box>
               ))}
-            </Box>
-          ))}
         </Box>
       </Box>
     </Box>

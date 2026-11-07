@@ -392,6 +392,8 @@
 .ag-select-none { user-select: none; }
 .ag-select-text { user-select: text; }
 .ag-select-all { user-select: all; }
+.ag-break-auto { break-inside: auto; }
+.ag-break-avoid { break-inside: avoid; }
 .ag-motion-fade { animation: ag-fade var(--ag-duration-base) var(--ag-ease-standard) backwards; }
 .ag-motion-enter { animation: ag-enter var(--ag-duration-base) var(--ag-ease-decelerate) backwards; }
 .ag-motion-pop { animation: ag-pop var(--ag-duration-fast) var(--ag-ease-decelerate) backwards; }
@@ -434,6 +436,7 @@
 .ag-col { grid-column: var(--ag-col); }
 .ag-row { grid-row: var(--ag-row); }
 .ag-area { grid-area: var(--ag-area); }
+.ag-columns { columns: var(--ag-columns); }
 .ag-opacity { opacity: var(--ag-opacity); }
 .ag-transform { transform: var(--ag-transform); }
 .ag-role-default { font-size: var(--ag-font-size-2); line-height: var(--ag-leading-normal); }
@@ -877,6 +880,8 @@
   .sm\:ag-select-none { user-select: none; }
   .sm\:ag-select-text { user-select: text; }
   .sm\:ag-select-all { user-select: all; }
+  .sm\:ag-break-auto { break-inside: auto; }
+  .sm\:ag-break-avoid { break-inside: avoid; }
   .sm\:ag-motion-fade { animation: ag-fade var(--ag-duration-base) var(--ag-ease-standard) backwards; }
   .sm\:ag-motion-enter { animation: ag-enter var(--ag-duration-base) var(--ag-ease-decelerate) backwards; }
   .sm\:ag-motion-pop { animation: ag-pop var(--ag-duration-fast) var(--ag-ease-decelerate) backwards; }
@@ -919,6 +924,7 @@
   .sm\:ag-col { grid-column: var(--ag-col-sm); }
   .sm\:ag-row { grid-row: var(--ag-row-sm); }
   .sm\:ag-area { grid-area: var(--ag-area-sm); }
+  .sm\:ag-columns { columns: var(--ag-columns-sm); }
   .sm\:ag-opacity { opacity: var(--ag-opacity-sm); }
   .sm\:ag-transform { transform: var(--ag-transform-sm); }
 }
@@ -1316,6 +1322,8 @@
   .md\:ag-select-none { user-select: none; }
   .md\:ag-select-text { user-select: text; }
   .md\:ag-select-all { user-select: all; }
+  .md\:ag-break-auto { break-inside: auto; }
+  .md\:ag-break-avoid { break-inside: avoid; }
   .md\:ag-motion-fade { animation: ag-fade var(--ag-duration-base) var(--ag-ease-standard) backwards; }
   .md\:ag-motion-enter { animation: ag-enter var(--ag-duration-base) var(--ag-ease-decelerate) backwards; }
   .md\:ag-motion-pop { animation: ag-pop var(--ag-duration-fast) var(--ag-ease-decelerate) backwards; }
@@ -1358,6 +1366,7 @@
   .md\:ag-col { grid-column: var(--ag-col-md); }
   .md\:ag-row { grid-row: var(--ag-row-md); }
   .md\:ag-area { grid-area: var(--ag-area-md); }
+  .md\:ag-columns { columns: var(--ag-columns-md); }
   .md\:ag-opacity { opacity: var(--ag-opacity-md); }
   .md\:ag-transform { transform: var(--ag-transform-md); }
 }
@@ -1755,6 +1764,8 @@
   .lg\:ag-select-none { user-select: none; }
   .lg\:ag-select-text { user-select: text; }
   .lg\:ag-select-all { user-select: all; }
+  .lg\:ag-break-auto { break-inside: auto; }
+  .lg\:ag-break-avoid { break-inside: avoid; }
   .lg\:ag-motion-fade { animation: ag-fade var(--ag-duration-base) var(--ag-ease-standard) backwards; }
   .lg\:ag-motion-enter { animation: ag-enter var(--ag-duration-base) var(--ag-ease-decelerate) backwards; }
   .lg\:ag-motion-pop { animation: ag-pop var(--ag-duration-fast) var(--ag-ease-decelerate) backwards; }
@@ -1797,6 +1808,7 @@
   .lg\:ag-col { grid-column: var(--ag-col-lg); }
   .lg\:ag-row { grid-row: var(--ag-row-lg); }
   .lg\:ag-area { grid-area: var(--ag-area-lg); }
+  .lg\:ag-columns { columns: var(--ag-columns-lg); }
   .lg\:ag-opacity { opacity: var(--ag-opacity-lg); }
   .lg\:ag-transform { transform: var(--ag-transform-lg); }
 }
@@ -2194,6 +2206,8 @@
   .xl\:ag-select-none { user-select: none; }
   .xl\:ag-select-text { user-select: text; }
   .xl\:ag-select-all { user-select: all; }
+  .xl\:ag-break-auto { break-inside: auto; }
+  .xl\:ag-break-avoid { break-inside: avoid; }
   .xl\:ag-motion-fade { animation: ag-fade var(--ag-duration-base) var(--ag-ease-standard) backwards; }
   .xl\:ag-motion-enter { animation: ag-enter var(--ag-duration-base) var(--ag-ease-decelerate) backwards; }
   .xl\:ag-motion-pop { animation: ag-pop var(--ag-duration-fast) var(--ag-ease-decelerate) backwards; }
@@ -2236,6 +2250,7 @@
   .xl\:ag-col { grid-column: var(--ag-col-xl); }
   .xl\:ag-row { grid-row: var(--ag-row-xl); }
   .xl\:ag-area { grid-area: var(--ag-area-xl); }
+  .xl\:ag-columns { columns: var(--ag-columns-xl); }
   .xl\:ag-opacity { opacity: var(--ag-opacity-xl); }
   .xl\:ag-transform { transform: var(--ag-transform-xl); }
 }

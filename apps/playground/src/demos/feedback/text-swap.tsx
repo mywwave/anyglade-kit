@@ -13,7 +13,7 @@ export function TextSwapDemo() {
           <TextSwap text={states[index % states.length] ?? ""} />
         </Text>
         <Text as="span" variant="caption" color="subtle" tabularNums>
-          <TextSwap text={`${(index % states.length) + 1}/${states.length}`} />
+          {(index % states.length) + 1}/{states.length}
         </Text>
       </Box>
       <Button size="sm" variant="secondary" onPress={() => setIndex(index + 1)}>

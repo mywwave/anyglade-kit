@@ -21,6 +21,7 @@ import {
   Switch,
   Tabs,
   Text,
+  TextSwap,
   TextField,
 } from "@anyglade/kit";
 import {
@@ -35,7 +36,7 @@ import {
   Person,
   TrashBin,
 } from "@anyglade/kit/icons";
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 const rublesFormat = { style: "currency", currency: "RUB", maximumFractionDigits: 0 } as const;
 
@@ -321,8 +322,19 @@ function TeamExample() {
   );
 }
 
+const RESEND_SECONDS = 15;
+
 function VerifyExample() {
   const [code, setCode] = useState("4320");
+  const [secondsLeft, setSecondsLeft] = useState(0);
+
+  useEffect(() => {
+    if (secondsLeft === 0) {
+      return;
+    }
+    const timer = setTimeout(() => setSecondsLeft(secondsLeft - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [secondsLeft]);
 
   return (
     <Box flexDirection="column" alignItems="center" gap="m">
@@ -347,8 +359,23 @@ function VerifyExample() {
         <Text as="span" color="muted">
           Нет кода?
         </Text>
-        <Button size="sm" variant="ghost" onPress={() => setCode("")}>
-          Отправить снова
+        <Button
+          isDisabled={secondsLeft > 0}
+          size="sm"
+          variant="ghost"
+          onPress={() => {
+            setCode("");
+            setSecondsLeft(RESEND_SECONDS);
+          }}
+        >
+          <Box as="span" display="block">
+            <TextSwap text={secondsLeft > 0 ? "Отправим через" : "Отправить снова"} />
+            {secondsLeft > 0 ? (
+              <Text as="span" tabularNums variant="label" weight="strong">
+                {` ${secondsLeft} с`}
+              </Text>
+            ) : null}
+          </Box>
         </Button>
       </Box>
     </Box>
@@ -397,7 +424,7 @@ function ProfileExample() {
           variant={isFollowing ? "secondary" : "primary"}
           onPress={() => setIsFollowing(!isFollowing)}
         >
-          {isFollowing ? "Вы читаете" : "Читать"}
+          <TextSwap text={isFollowing ? "Вы читаете" : "Читать"} />
         </Button>
       </Box>
       <Text>Делаю биллинг для небольших команд.</Text>
@@ -405,7 +432,7 @@ function ProfileExample() {
         <Text as="span" color="muted">
           Читает 4
         </Text>
-        <Text as="span" color="muted">
+        <Text as="span" color="muted" tabularNums>
           Читатели {isFollowing ? "97 101" : "97 100"}
         </Text>
       </Box>
@@ -423,7 +450,9 @@ function CreditsExample() {
           <CircleInfo />
         </Box>
         <Box flexDirection="column" flexGrow={1} minWidth={0}>
-          <Text variant="title">Осталось кредитов: {credits}</Text>
+          <Text variant="title">
+            Осталось кредитов: <TextSwap text={String(credits)} />
+          </Text>
           <Text variant="caption" color="muted">
             Пополните баланс
           </Text>
@@ -437,15 +466,19 @@ function CreditsExample() {
 }
 
 function NotificationsExample() {
+  const [isOn, setIsOn] = useState(true);
+
   return (
     <Box alignItems="center" justifyContent="between" gap="l" paddingHorizontal="l">
       <Box flexDirection="column" minWidth={0}>
         <Text variant="title">Уведомления</Text>
-        <Text variant="caption" color="muted">
-          Присылать письма о новых заказах
-        </Text>
+        <Box key={String(isOn)} display="block" motion="fade">
+          <Text variant="caption" color="muted">
+            {isOn ? "Присылать письма о новых заказах" : "Письма о заказах не приходят"}
+          </Text>
+        </Box>
       </Box>
-      <Switch aria-label="Уведомления о заказах" defaultSelected>
+      <Switch aria-label="Уведомления о заказах" isSelected={isOn} onChange={setIsOn}>
         <Switch.Content>
           <Switch.Control>
             <Switch.Thumb />
@@ -525,22 +558,41 @@ function CommunitiesExample() {
   );
 }
 
+const changeStates = {
+  dirty: { title: "Несохранённые изменения", description: "Сохранить их или отменить?" },
+  saved: { title: "Изменения сохранены", description: "Новая версия уже доступна команде." },
+  discarded: { title: "Изменения отменены", description: "Вернули последнюю сохранённую версию." },
+};
+
+type ChangeState = keyof typeof changeStates;
+
 function UnsavedExample() {
+  const [state, setState] = useState<ChangeState>("dirty");
+  const isDirty = state === "dirty";
+
   return (
     <DismissiblePanel label="Закрыть предупреждение">
       <Box flexDirection="column" gap="m">
         <Box color="text-warning">
           <FloppyDisk />
         </Box>
-        <Box flexDirection="column" gap="xs">
-          <Text variant="title">Несохранённые изменения</Text>
-          <Text color="muted">Сохранить их или отменить?</Text>
+        <Box key={state} flexDirection="column" gap="xs" motion="fade">
+          <Text variant="title">{changeStates[state].title}</Text>
+          <Text color="muted">{changeStates[state].description}</Text>
         </Box>
         <Box display="grid" gridTemplateColumns="repeat(2, minmax(0, 1fr))" gap="s">
-          <Button fullWidth variant="secondary">
-            Отменить
+          <Button
+            fullWidth
+            variant="secondary"
+            onPress={() => setState(isDirty ? "discarded" : "dirty")}
+          >
+            <Box key={String(isDirty)} as="span" display="block" motion="fade">
+              {isDirty ? "Отменить" : "Изменить снова"}
+            </Box>
           </Button>
-          <Button fullWidth>Сохранить</Button>
+          <Button fullWidth isDisabled={!isDirty} onPress={() => setState("saved")}>
+            <TextSwap text={state === "saved" ? "Сохранено" : "Сохранить"} />
+          </Button>
         </Box>
       </Box>
     </DismissiblePanel>

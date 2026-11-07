@@ -149,6 +149,7 @@ export const tokenProps = {
   pointerEvents: { slug: "events", css: "pointer-events", values: keywords("none", "auto") },
   visibility: { slug: "visibility", css: "visibility", values: keywords("visible", "hidden") },
   userSelect: { slug: "select", css: "user-select", values: keywords("none", "text", "all") },
+  breakInside: { slug: "break", css: "break-inside", values: keywords("auto", "avoid") },
 
   motion: {
     slug: "motion",
@@ -208,6 +209,7 @@ export const freeProps = {
   gridColumn: { slug: "col", css: "grid-column" },
   gridRow: { slug: "row", css: "grid-row" },
   gridArea: { slug: "area", css: "grid-area" },
+  columns: { slug: "columns", css: "columns" },
   opacity: { slug: "opacity", css: "opacity", states: true },
   transform: { slug: "transform", css: "transform", states: true },
 } as const;

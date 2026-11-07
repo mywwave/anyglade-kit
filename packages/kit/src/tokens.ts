@@ -70,7 +70,7 @@ export const colors = {
   "text-tertiary": ["gray-400", "ink-500"],
   "text-disabled": ["gray-300", "ink-600"],
   "text-inverse": ["white", "black"],
-  "text-accent": ["blue-600", "blue-400"],
+  "text-accent": ["black", "ink-100"],
   "text-success": ["emerald-500", "emerald-500"],
   "text-danger": ["red-500", "red-500"],
   "text-warning": ["amber-500", "amber-500"],

@@ -4,7 +4,7 @@
 
 ## @anyglade/kit
 
-`Box`, `Button`, `CopyButton`, `CountBadge`, `DetailRow`, `Draggable`, `EmptyPanel`, `FloatingPanel`, `Frame`, `FrameTile`, `ItemList`, `Loadable`, `MediaStage`, `MediaTile`, `PageHeader`, `PageLoader`, `SegmentedControl`, `Shimmer`, `SortableColumn`, `Stat`, `StreamVideo`, `Text`, `TextSwap`, `TreeNav`, `useLoadingIndicator`, `useTableSort`, `withTransition`
+`Box`, `Button`, `CopyButton`, `CountBadge`, `DetailRow`, `Draggable`, `EmptyPanel`, `FloatingPanel`, `Frame`, `FrameTile`, `ItemList`, `Loadable`, `Masonry`, `MasonryTile`, `MediaStage`, `MediaTile`, `PageHeader`, `PageLoader`, `SegmentedControl`, `Shimmer`, `SignaturePad`, `SlideToConfirm`, `SortableColumn`, `Stat`, `StreamVideo`, `Text`, `TextSwap`, `TreeNav`, `useLoadingIndicator`, `useTableSort`, `withTransition`
 
 ## @anyglade/kit/ai
 
@@ -79,12 +79,13 @@ type StatusLabels = Record<AgentStatus, string>;
 | `pointerEvents` | none, auto |
 | `visibility` | visible, hidden |
 | `userSelect` | none, text, all |
+| `breakInside` | auto, avoid |
 | `motion` | fade, enter, pop |
 | `transitionProperty` | none, colors, opacity, shadow, transform, common |
 | `transitionDuration` | instant, fast, base, slow, slower, shimmer, drift, stagger |
 | `ease` | standard, decelerate, accelerate |
 
-Свободные значения: `width`, `height`, `minWidth`, `maxWidth`, `minHeight`, `maxHeight`, `flexBasis`, `top`, `right`, `bottom`, `left`, `inset`, `viewTransitionName`, `flex`, `aspectRatio`, `zIndex`, `gridTemplateColumns`, `gridTemplateRows`, `gridTemplateAreas`, `gridColumn`, `gridRow`, `gridArea`, `opacity`, `transform`.
+Свободные значения: `width`, `height`, `minWidth`, `maxWidth`, `minHeight`, `maxHeight`, `flexBasis`, `top`, `right`, `bottom`, `left`, `inset`, `viewTransitionName`, `flex`, `aspectRatio`, `zIndex`, `gridTemplateColumns`, `gridTemplateRows`, `gridTemplateAreas`, `gridColumn`, `gridRow`, `gridArea`, `columns`, `opacity`, `transform`.
 
 ## Пропсы Text
 
@@ -331,6 +332,28 @@ export interface LoadableProps {
 ```
 
 ```ts
+export interface MasonryProps {
+  /** `MasonryTile`s. Each takes the height of its content, columns fill top to bottom. */
+  children: ReactNode;
+}
+```
+
+```ts
+export interface MasonryTileProps {
+  /** What the piece is called, under it. */
+  title: string;
+  /** A short fact about it beside the title, such as how it is used. */
+  note?: string;
+  /** Anchor for a link to this tile. */
+  id?: string;
+  /** Lets the tile glide to its new place when the gallery is filtered. */
+  viewTransitionName?: string;
+  /** The live piece itself. It stands in the middle of a calm stage. */
+  children: ReactNode;
+}
+```
+
+```ts
 export interface MediaStageProps<T extends { id: string }> {
   label: string;
   items: readonly T[];
@@ -505,6 +528,33 @@ export interface ShimmerProps {
 ```
 
 ```ts
+export interface SignaturePadProps {
+  /** What is being signed, for a screen reader. */
+  label: string;
+  /** Sits on the line until the first stroke: "Подпишите здесь". */
+  placeholder: string;
+  clearLabel: string;
+  /** A PNG data URL after every stroke, `null` once cleared. */
+  onChange: (signature: string | null) => void;
+}
+```
+
+```ts
+export interface SlideToConfirmProps {
+  /** The action and its stake, short enough for one line: "Перевести 48 000 ₽". */
+  label: string;
+  /** Shown while `onConfirm` runs, with a shimmer. */
+  pendingLabel: string;
+  doneLabel: string;
+  /**
+   * Runs once the thumb reaches the end, or on Enter for a keyboard.
+   * Return a promise and the thumb waits at the end. A rejection sends it back.
+   */
+  onConfirm: () => unknown;
+}
+```
+
+```ts
 export interface SortableColumnProps extends Omit<
   ComponentProps<typeof Table.Column>,
   "allowsSorting" | "children"
@@ -575,7 +625,10 @@ export interface SuggestionsProps {
 ```ts
 export interface TextSwapProps {
   text: string;
-  /** The text is in progress: see `Shimmer`. */
+  /**
+   * The text is in progress: see `Shimmer`. Passing it at all keeps the whole line
+   * together, because the highlight runs along the line and not along a part of it.
+   */
   isShimmering?: boolean;
 }
 ```
