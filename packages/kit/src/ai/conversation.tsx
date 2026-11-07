@@ -122,9 +122,12 @@ export function Conversation({
     const element = ownScroller.current ?? findScroller(root.current);
     const target = element === document.documentElement ? window : element;
     scroller.current = element;
-    let lastTop = element.scrollTop;
-    let lastHeight = element.scrollHeight;
-    let lastViewHeight = element.clientHeight;
+    // What the last measurement saw. Listeners update it between renders.
+    const seen = {
+      top: element.scrollTop,
+      height: element.scrollHeight,
+      viewHeight: element.clientHeight,
+    };
 
     function measure() {
       const room = element.clientHeight - topInset - (footerBox.current?.offsetHeight ?? 0);
@@ -139,12 +142,12 @@ export function Conversation({
         reachEnd.current?.();
       } else if (
         (isContained && !isEasing.current) ||
-        (scrollTop < lastTop && scrollHeight >= lastHeight)
+        (scrollTop < seen.top && scrollHeight >= seen.height)
       ) {
         isFollowing.current = false;
       }
-      lastTop = scrollTop;
-      lastHeight = scrollHeight;
+      seen.top = scrollTop;
+      seen.height = scrollHeight;
       // Content grows a few frames before the easing catches up, and that is not leaving the end.
       setIsAtEnd(isFollowing.current);
     }
@@ -152,8 +155,8 @@ export function Conversation({
     function update() {
       measure();
       // A taller field keeps the end in view. In a contained chat new content does not move it.
-      const isViewResized = element.clientHeight !== lastViewHeight;
-      lastViewHeight = element.clientHeight;
+      const isViewResized = element.clientHeight !== seen.viewHeight;
+      seen.viewHeight = element.clientHeight;
       if (isFollowing.current && isViewResized) {
         follow();
       }
