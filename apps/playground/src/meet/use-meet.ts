@@ -112,18 +112,6 @@ export function useMeet() {
     };
   }, [liveId]);
 
-  useEffect(() => {
-    let step = 0;
-    const timer = setInterval(() => {
-      const message = incoming[step % incoming.length];
-      step += 1;
-      if (message) {
-        receive(message.channelId, newNote(message.authorId, message.text));
-      }
-    }, INCOMING_MS);
-    return () => clearInterval(timer);
-  }, []);
-
   function receive(channelId: string, note: Note) {
     setNotes((all) => addNote(all, channelId, note));
     setChannels((list) =>
@@ -134,6 +122,19 @@ export function useMeet() {
       ),
     );
   }
+
+  // Declared after receive: the timer calls it, and it must exist by then.
+  useEffect(() => {
+    const counter = { step: 0 };
+    const timer = setInterval(() => {
+      const message = incoming[counter.step % incoming.length];
+      counter.step += 1;
+      if (message) {
+        receive(message.channelId, newNote(message.authorId, message.text));
+      }
+    }, INCOMING_MS);
+    return () => clearInterval(timer);
+  }, []);
 
   function markRead(channelId: string) {
     setChannels((list) =>

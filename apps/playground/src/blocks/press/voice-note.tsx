@@ -189,15 +189,16 @@ export function VoiceNoteBlock() {
     if (!isPlaying) {
       return undefined;
     }
-    let last: number | null = null;
-    let frame = requestAnimationFrame(function tick(now) {
-      if (!isScrubbingRef.current && last !== null) {
+    // Frame state lives in one object: the loop updates it between renders.
+    const loop: { last: number | null; frame: number } = { last: null, frame: 0 };
+    loop.frame = requestAnimationFrame(function tick(now) {
+      if (!isScrubbingRef.current && loop.last !== null) {
         position.current = Math.min(
-          position.current + ((now - last) / 1000) * speed.rate,
+          position.current + ((now - loop.last) / 1000) * speed.rate,
           DURATION,
         );
       }
-      last = now;
+      loop.last = now;
       if (position.current >= DURATION) {
         setIsPlaying(false);
         setIsHeard(true);
@@ -206,9 +207,9 @@ export function VoiceNoteBlock() {
       }
       paint();
       sync();
-      frame = requestAnimationFrame(tick);
+      loop.frame = requestAnimationFrame(tick);
     });
-    return () => cancelAnimationFrame(frame);
+    return () => cancelAnimationFrame(loop.frame);
     // paint, sync and rewind only touch refs and setters.
   }, [isPlaying, speed.rate]);
 
