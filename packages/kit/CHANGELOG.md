@@ -1,5 +1,11 @@
 # @anyglade/kit
 
+## 0.4.1
+
+### Patch Changes
+
+- 21fd5ab: Everything is in English now: the README is rewritten for the current kit, and the bundled design skill, the generated API and token references, the `anyglade-kit` CLI messages and the changelog are translated.
+
 ## 0.4.0
 
 ### Minor Changes
